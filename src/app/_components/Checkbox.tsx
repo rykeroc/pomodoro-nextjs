@@ -11,7 +11,8 @@ interface CheckboxProps {
 
 const Checkbox = ({children, checked, onChange}: CheckboxProps) => (
 	<div className={clsx(
-		'flex flex-row gap-3 items-center'
+		'flex flex-row gap-3 items-center',
+		"hover:brightness-125",
 	)}>
 		<HeadlessUiCheckbox
 			checked={checked} onChange={onChange}

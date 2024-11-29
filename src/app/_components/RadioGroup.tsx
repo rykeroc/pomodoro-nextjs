@@ -15,7 +15,8 @@ const RadioGroup = ({items, selected, setSelected}: RadioGroupProps) => {
 
 	const Radio = ({value}: RadioProps) => (
 		<div className={clsx(
-			'flex flex-row gap-3 items-center'
+			'flex flex-row gap-3 items-center',
+			"hover:brightness-125",
 		)}>
 			<HeadlessUiRadio
 				value={value}
