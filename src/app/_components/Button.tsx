@@ -5,22 +5,20 @@ import clsx from "clsx";
 type ButtonColor = "primary" | "secondary" | "glass" | "none"
 
 interface ButtonProps {
-	children: ReactNode
+	children?: ReactNode
 	color?: ButtonColor
 }
 
 const classes = {
-	default: "w-fit h-fit py-3 px-6 rounded-full text-lg font-semibold",
-	primary: "bg-primary border-primary",
-	secondary: "bg-secondary-text border-secondary-text",
-	glass: "border border-primary-container bg-gradient-to-br from-primary-container",
-	none: "bg-transparent py-0 px-0"
+	default: "w-fit h-fit rounded-full text-lg font-semibold hover:brightness-110",
+	primary: "py-3 px-6 bg-primary border-primary",
+	secondary: "py-3 px-6 bg-secondary-text border-secondary-text",
+	glass: "py-3 px-6 border border-primary-container bg-gradient-to-br from-primary-container hover:brightness-125",
+	none: "bg-transparent hover:brightness-125"
 }
 
 const Button = ({children, color = "primary"}: ButtonProps) => (
-	<HeadlessUiButton className={clsx(
-		classes.default, classes[color]
-	)}>
+	<HeadlessUiButton className={clsx(classes.default, classes[color])}>
 		{children}
 	</HeadlessUiButton>
 )
