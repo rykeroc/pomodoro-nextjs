@@ -2,6 +2,7 @@ import {ReactNode} from "react";
 import {Checkbox as HeadlessUiCheckbox} from "@headlessui/react";
 import clsx from "clsx";
 import {CheckIcon} from "@heroicons/react/16/solid";
+import {fadeTransitionClasses} from "@/app/_components/common";
 
 interface CheckboxProps {
 	children?: ReactNode
@@ -13,6 +14,7 @@ const Checkbox = ({children, checked, onChange}: CheckboxProps) => (
 	<div className={clsx(
 		'flex flex-row gap-3 items-center',
 		"hover:brightness-125",
+		fadeTransitionClasses
 	)}>
 		<HeadlessUiCheckbox
 			checked={checked} onChange={onChange}
@@ -21,12 +23,12 @@ const Checkbox = ({children, checked, onChange}: CheckboxProps) => (
 				"data-[checked]:bg-primary data-[checked]:ring-primary",
 			)}
 		>
-			<CheckIcon className={clsx("hidden bg-primary size-4 fill-primary-text",
+			<CheckIcon className={clsx(
+				"hidden bg-primary size-4 fill-primary-text",
 				"group-data-[checked]:block")}/>
 		</HeadlessUiCheckbox>
-		<label className={clsx({
-			"text-secondary-text": checked === true
-		})}>{children}</label>
+
+		<label className={clsx({"text-secondary-text": checked === true})}>{children}</label>
 	</div>
 )
 

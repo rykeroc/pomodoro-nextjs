@@ -1,5 +1,6 @@
 import {RadioGroup as HeadlessUiRadioGroup, Radio as HeadlessUiRadio, Field} from "@headlessui/react";
 import clsx from "clsx";
+import {fadeTransitionClasses} from "@/app/_components/common";
 
 interface RadioProps {
 	value: string
@@ -17,6 +18,7 @@ const RadioGroup = ({items, selected, setSelected}: RadioGroupProps) => {
 		<div className={clsx(
 			'flex flex-row gap-3 items-center',
 			"hover:brightness-125",
+			fadeTransitionClasses
 		)}>
 			<HeadlessUiRadio
 				value={value}
@@ -30,9 +32,7 @@ const RadioGroup = ({items, selected, setSelected}: RadioGroupProps) => {
 				)}/>
 			</HeadlessUiRadio>
 
-			<label className={clsx({
-				"text-secondary-text": selected !== value
-			})}>{value}</label>
+			<label className={clsx({"text-secondary-text": selected !== value})}>{value}</label>
 		</div>
 	)
 
@@ -41,11 +41,7 @@ const RadioGroup = ({items, selected, setSelected}: RadioGroupProps) => {
 		'flex flex-col gap-3'
 	)}>
 		{
-			items.map(i => (
-				<Field key={i}>
-					<Radio value={i}/>
-				</Field>
-			))
+			items.map(i => <Field key={i}>	<Radio value={i}/></Field>)
 		}
 	</HeadlessUiRadioGroup>
 }
