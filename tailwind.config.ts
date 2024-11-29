@@ -10,7 +10,11 @@ export default {
     extend: {
       colors: {
         background: "var(--background)",
-        foreground: "var(--foreground)",
+        primary: "var(--primary)",
+        'primary-text': "var(--primary-text)",
+        'secondary-text': "var(--secondary-text)",
+        'primary-container': "var(--primary-container)",
+        'secondary-container': "var(--secondary-container)",
       },
     },
   },
