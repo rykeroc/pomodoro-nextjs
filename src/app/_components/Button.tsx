@@ -1,5 +1,5 @@
 import {Button as HeadlessUiButton} from "@headlessui/react";
-import {ButtonHTMLAttributes, } from "react";
+import {ButtonHTMLAttributes,} from "react";
 import {fadeTransitionClasses, glassEffectClasses} from "@/app/_components/common";
 import {cva, VariantProps} from "class-variance-authority";
 
@@ -7,12 +7,13 @@ const buttonClasses = cva(
 	[
 		"w-fit", "h-fit", "rounded-full", "text-lg", "font-semibold",
 		"flex", "flex-row", "items-center", "gap-1",
+		'cursor-pointer',
 		"hover:brightness-110",
 		...fadeTransitionClasses
 	],
 	{
 		variants: {
-			intent: {
+			variant: {
 				primary: [
 					"py-3", "px-6",
 					"bg-primary", "border-primary"
@@ -23,7 +24,7 @@ const buttonClasses = cva(
 				],
 				glass: [
 					"py-3", "px-6",
-					"hover:brightness-125", ...glassEffectClasses
+					...glassEffectClasses
 				],
 				none: [
 					"bg-transparent", "hover:brightness-125"
@@ -34,12 +35,13 @@ const buttonClasses = cva(
 )
 
 interface ButtonProps
-	extends ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonClasses> {}
+	extends ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonClasses> {
+}
 
 
-const Button = ({className, intent = "none", ...props}: ButtonProps) =>
+const Button = ({className, variant = "none", ...props}: ButtonProps) =>
 	<HeadlessUiButton
-		className={buttonClasses({className, intent})}
+		className={buttonClasses({variant, className,})}
 		{...props}
 	/>
 
