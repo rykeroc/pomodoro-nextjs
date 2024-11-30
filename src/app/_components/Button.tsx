@@ -18,7 +18,7 @@ const buttonClasses = cva(
 				],
 				glass: [
 					"py-3", "px-6",
-					"border", "border-primary-container", "bg-gradient-to-br", "from-primary-container",
+					"border", "border-primary-container", "bg-gradient-to-br", "from-primary-container", "backdrop-blur-sm",
 					"hover:brightness-125"
 				],
 				"none": [
