@@ -5,10 +5,10 @@ import {HTMLAttributes, ReactNode, useState} from "react";
 import PomodoroStage from "@/app/_lib/PomodoroStage";
 import {cx} from "class-variance-authority";
 import Button from "@/app/_components/Button";
-import PomodoroTimerStatus from "@/app/_lib/PomodoroTimerStatus";
+import PomodoroCountdownTimerStatus from "@/app/_lib/PomodoroCountdownTimerStatus";
 import {Bars3Icon} from "@heroicons/react/16/solid";
 
-function getTimerButtons(pomodoroStage: PomodoroStage, pomodoroTimerStatus: PomodoroTimerStatus): ReactNode {
+function getTimerButtons(pomodoroStage: PomodoroStage, pomodoroTimerStatus: PomodoroCountdownTimerStatus): ReactNode {
 	return (
 		<div className={cx(
 			['flex', 'flex-col', 'gap-3']
@@ -24,7 +24,7 @@ export default function Home() {
 	const [taskName, setTaskName] = useState("Focus")
 
 	const [pomodoroStage, setPomodoroStage] = useState(PomodoroStage.shortBreak)
-	const [pomodoroTimerStatus, setPomodoroTimerStatus] = useState(PomodoroTimerStatus.Stopped)
+	const [pomodoroTimerStatus, setPomodoroTimerStatus] = useState(PomodoroCountdownTimerStatus.Stopped)
 
 	const [quote, setQuote] = useState("Focus")
 

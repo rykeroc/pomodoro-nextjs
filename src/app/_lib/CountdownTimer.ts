@@ -1,4 +1,4 @@
-import PomodoroCountdownTimerStatus from "@/app/_lib/PomodoroTimerStatus";
+import PomodoroCountdownTimerStatus from "@/app/_lib/PomodoroCountdownTimerStatus";
 import {clearInterval} from "node:timers";
 
 export default class CountdownTimer {
