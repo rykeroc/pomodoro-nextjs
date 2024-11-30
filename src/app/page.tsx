@@ -23,7 +23,7 @@ export default function Home() {
 	const [maxSeconds, setMaxSeconds] = useState(15000)
 	const [taskName, setTaskName] = useState("Focus")
 
-	const [pomodoroStage, setPomodoroStage] = useState(PomodoroStage.ShortBreak)
+	const [pomodoroStage, setPomodoroStage] = useState(PomodoroStage.shortBreak)
 	const [pomodoroTimerStatus, setPomodoroTimerStatus] = useState(PomodoroTimerStatus.Stopped)
 
 	const [quote, setQuote] = useState("Focus")

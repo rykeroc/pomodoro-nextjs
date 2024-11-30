@@ -17,7 +17,7 @@ const PomodoroTimerIndicator = (
 		seconds,
 		maxSeconds,
 		taskName = "",
-		stage = PomodoroStage.FocusSession,
+		stage = PomodoroStage.focusSession,
 		...props
 	}: PomodoroTimerIndicatorProps) => {
 	const size = 450
@@ -76,9 +76,9 @@ const PomodoroTimerIndicator = (
 					<h5
 						className={cx(
 							["text-primary-text"],
-							{"invisible": stage === PomodoroStage.FocusSession}
+							{"invisible": stage === PomodoroStage.focusSession}
 						)}>
-						{stage}
+						{stage.name}
 					</h5>
 					<h1>
 						{minutesString}
