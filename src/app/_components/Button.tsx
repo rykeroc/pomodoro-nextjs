@@ -1,7 +1,7 @@
 import {Button as HeadlessUiButton} from "@headlessui/react";
 import {ButtonHTMLAttributes, } from "react";
 import {fadeTransitionClasses} from "@/app/_components/common";
-import {cva, VariantProps} from "cva";
+import {cva, VariantProps} from "class-variance-authority";
 
 const buttonClasses = cva(
 	["w-fit", "h-fit", "rounded-full", "text-lg", "font-semibold", "hover:brightness-110", ...fadeTransitionClasses],
