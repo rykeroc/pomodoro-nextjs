@@ -19,7 +19,7 @@ body {
 
 @layer base {
   h1 {
-    @apply text-6xl;
+    @apply text-8xl;
     @apply font-medium
   }
 
@@ -61,3 +61,4 @@ body {
     @apply text-sm
   }
 }
+
