@@ -1,7 +1,7 @@
 enum PomodoroTimerStatus {
-	Stopped,
 	Started,
-	Paused
+	Stopped,
+	Complete
 }
 
 export default PomodoroTimerStatus
