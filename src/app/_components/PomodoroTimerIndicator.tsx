@@ -1,12 +1,7 @@
 import Button from "@/app/_components/Button";
 import {ChevronRightIcon} from "@heroicons/react/16/solid";
 import {cx} from "class-variance-authority";
-
-function secondsToMinutes(seconds: number): string {
-	const minutesStr = Math.floor(seconds / 60).toString().padStart(2, "0")
-	const secondsStr = (seconds % 60).toString().padStart(2, "0")
-	return `${minutesStr}:${secondsStr}`
-}
+import {secondsToMinutes} from "@/app/_lib/dateTimeUtils";
 
 interface PomodoroTimerIndicatorProps {
 	seconds: number
