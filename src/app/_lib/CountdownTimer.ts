@@ -37,8 +37,8 @@ export default class CountdownTimer {
 
 	constructor(
 		totalSeconds: number,
+		onComplete: () => void,
 		onInterval: (remainingSeconds: number) => void,
-		onComplete: () => void
 	) {
 		this._totalSeconds = this._remainingSeconds = totalSeconds;
 		this._onComplete = onComplete
