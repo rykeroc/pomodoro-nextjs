@@ -2,22 +2,21 @@ import Button from "@/app/_components/Button";
 import {ChevronRightIcon} from "@heroicons/react/16/solid";
 import {cx} from "class-variance-authority";
 import {secondsToMinutes} from "@/app/_lib/dateTimeUtils";
+import PomodoroStage from "@/app/_lib/PomodoroStage";
 
 interface PomodoroTimerIndicatorProps {
 	seconds: number
 	maxSeconds: number
-	label?: string
-	hideLabel?: boolean
-	taskName?: string,
+	taskName?: string
+	stage: PomodoroStage
 }
 
 const PomodoroTimerIndicator = (
 	{
 		seconds,
 		maxSeconds,
-		label = "",
-		hideLabel = true,
-		taskName = "Focus"
+		taskName = "",
+		stage = PomodoroStage.FocusSession
 	}: PomodoroTimerIndicatorProps) => {
 	const size = 450
 	const strokeWidth = 8
@@ -74,9 +73,9 @@ const PomodoroTimerIndicator = (
 					<h4
 						className={cx(
 							["text-primary-text"],
-							{"invisible": hideLabel}
+							{"invisible": stage === PomodoroStage.FocusSession}
 						)}>
-						{label}
+						{stage}
 					</h4>
 					<h1>
 						{minutesString}
