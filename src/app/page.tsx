@@ -1,7 +1,7 @@
 "use client"
 
 import PomodoroTimerIndicator from "@/app/_components/PomodoroTimerIndicator";
-import {ReactNode, useState} from "react";
+import {HTMLAttributes, ReactNode, useState} from "react";
 import PomodoroStage from "@/app/_lib/PomodoroStage";
 import {cx} from "class-variance-authority";
 import Button from "@/app/_components/Button";
@@ -38,22 +38,10 @@ export default function Home() {
 			]
 		)}>
 			{/* Menu button */}
-			<nav className={cx(
-				[
-					'w-full', 'p-5',
-					'flex', 'flex-row', 'justify-end'
-				])}>
-				<Button variant={'glass'} className={'px-3'}>
-					<Bars3Icon className={'size-5'}/>
-				</Button>
-			</nav>
+			<NavMenu/>
 
 			{/* Timer elements */}
-			<div className={cx(
-				[
-					'flex', 'flex-col', 'justify-center', 'items-center', 'gap-6'
-				]
-			)}>
+			<div className={'flex flex-col justify-center items-center gap-6'}>
 				{/* Timer indicator */}
 				<PomodoroTimerIndicator
 					seconds={seconds} maxSeconds={maxSeconds}
@@ -65,9 +53,23 @@ export default function Home() {
 				{timerButtons}
 			</div>
 
-			<h6 className={"text-secondary-text p-5"}>
-				"{quote}"
-			</h6>
+			<FocusQuote>
+				{quote}
+			</FocusQuote>
 		</div>
 	);
 }
+
+const NavMenu = () =>
+	<nav className={cx(
+		[
+			'w-full', 'p-5',
+			'flex', 'flex-row', 'justify-end'
+		])}>
+		<Button variant={'glass'} className={'px-3'}>
+			<Bars3Icon className={'size-5'}/>
+		</Button>
+	</nav>
+
+const FocusQuote = ({children}: HTMLAttributes<HTMLHeadingElement>) =>
+	<h6 className={"text-secondary-text p-5"}>"{children}"</h6>
