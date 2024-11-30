@@ -9,6 +9,7 @@ interface PomodoroTimerIndicatorProps {
 	maxSeconds: number
 	taskName?: string
 	stage: PomodoroStage
+	className?: string
 }
 
 const PomodoroTimerIndicator = (
@@ -16,7 +17,8 @@ const PomodoroTimerIndicator = (
 		seconds,
 		maxSeconds,
 		taskName = "",
-		stage = PomodoroStage.FocusSession
+		stage = PomodoroStage.FocusSession,
+		...props
 	}: PomodoroTimerIndicatorProps) => {
 	const size = 450
 	const strokeWidth = 8
@@ -28,7 +30,7 @@ const PomodoroTimerIndicator = (
 	const minutesString = secondsToMinutes(seconds)
 	return (
 		<svg
-			width={size} height={size} viewBox={viewBox}>
+			width={size} height={size} viewBox={viewBox} {...props}>
 			{/* Background */}
 			<defs>
 				<linearGradient id={"timerGradient"} x1="0%" y1="0%" x2="100%" y2="100%" className={"backdrop-blur-sm"}>
@@ -63,27 +65,28 @@ const PomodoroTimerIndicator = (
 				transform={`rotate(-90 ${size / 2} ${size / 2})`}
 			/>
 
+			{/* Timer details */}
 			<foreignObject
 				x={"0%"}
 				y={"0%"}
 				width={size}
 				height={size}>
 				<div
-					className={"flex flex-col items-center justify-center w-full h-full gap-3"}>
-					<h4
+					className={"flex flex-col items-center justify-center w-full h-full gap-5"}>
+					<h5
 						className={cx(
 							["text-primary-text"],
 							{"invisible": stage === PomodoroStage.FocusSession}
 						)}>
 						{stage}
-					</h4>
+					</h5>
 					<h1>
 						{minutesString}
 					</h1>
 					<Button>
-						<h3 className={"text-secondary-text"}>
+						<h4 className={"text-secondary-text"}>
 							{taskName}
-						</h3>
+						</h4>
 						<ChevronRightIcon className={"size-8 fill-secondary-text"}/>
 					</Button>
 				</div>
