@@ -11,7 +11,8 @@ interface PomodoroStatus {
 }
 
 interface PomodoroManagerConstructorArgs {
-	onComplete: () => void
+	onStateChange: (pomodoroStatus: PomodoroStatus) => void,
+	onStageComplete: () => void,
 	onInterval: (remainingSeconds: number) => void
 	assignedTask?: FocusTask | null
 	focusSessionCount?: number
@@ -24,13 +25,15 @@ export default class PomodoroManager {
 	private _focusSessionCount: number
 	private _currentStage: PomodoroStage
 	private _currentState: PomodoroState
-	private readonly _onComplete: () => void
+	private readonly _onStateChange: (pomodoroStatus: PomodoroStatus) => void
+	private readonly _onStageComplete: () => void
 	private readonly _onInterval: (remainingSeconds: number) => void
 	private readonly _countdownTimer: CountdownTimer
 
 	constructor(
 		{
-			onComplete,
+			onStateChange,
+			onStageComplete,
 			onInterval,
 			assignedTask = null,
 			focusSessionCount = 0,
@@ -43,13 +46,14 @@ export default class PomodoroManager {
 		this._onInterval = onInterval
 		this._currentStage = startingPomodoroStage
 		this._currentState = startingPomodoroState
-		this._onComplete = () => {
+		this._onStateChange = onStateChange
+		this._onStageComplete = () => {
 			this._focusSessionCount++
-			onComplete()
+			onStageComplete()
 		}
 		this._countdownTimer = new CountdownTimer(
 			this._currentStage.getDurationSeconds(),
-			this._onComplete,
+			this._onStageComplete,
 			this._onInterval
 		)
 	}
@@ -140,6 +144,11 @@ export default class PomodoroManager {
 		this._currentState = this.getNextState(
 			this._currentState, this._currentStage, this._countdownTimer
 		)
+		this._onStateChange({
+			currentStage: this._currentStage,
+			currentState: this._currentState,
+			timerStatus: timerStatus
+		})
 		return {
 			currentState: this._currentState,
 			currentStage: this._currentStage,
@@ -152,6 +161,11 @@ export default class PomodoroManager {
 		this._currentState = this.getNextState(
 			this._currentState, this._currentStage, this._countdownTimer
 		)
+		this._onStateChange({
+			currentStage: this._currentStage,
+			currentState: this._currentState,
+			timerStatus: timerStatus
+		})
 		return {
 			currentState: this._currentState,
 			currentStage: this._currentStage,
@@ -167,6 +181,11 @@ export default class PomodoroManager {
 		this._currentState = this.getNextState(
 			this._currentState, this._currentStage, this._countdownTimer
 		)
+		this._onStateChange({
+			currentStage: this._currentStage,
+			currentState: this._currentState,
+			timerStatus: timerInfo.timerStatus
+		})
 		return {
 			currentState: this._currentState,
 			currentStage: this._currentStage,
@@ -182,11 +201,15 @@ export default class PomodoroManager {
 		this._currentStage = this.getNextStage(
 			this._currentStage, this._focusSessionCount
 		)
-
 		// Reset the timer using the next stage duration
 		const timerInfo = this._countdownTimer.resetCountdown(
 			this._currentStage.getDurationSeconds()
 		)
+		this._onStateChange({
+			currentStage: this._currentStage,
+			currentState: this._currentState,
+			timerStatus: timerInfo.timerStatus
+		})
 
 		// Start the timer
 		this._countdownTimer.startCountdown()
