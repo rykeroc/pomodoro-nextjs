@@ -12,6 +12,7 @@ interface PomodoroStatus {
 
 interface PomodoroManagerConstructorArgs {
 	onStateChange: (pomodoroStatus: PomodoroStatus) => void,
+	onStageStart: () => void,
 	onStageComplete: () => void,
 	onInterval: (remainingSeconds: number) => void
 	assignedTask?: FocusTask | null
@@ -26,6 +27,7 @@ export default class PomodoroManager {
 	private _currentStage: PomodoroStage
 	private _currentState: PomodoroState
 	private readonly _onStateChange: (pomodoroStatus: PomodoroStatus) => void
+	private readonly _onStageStart: () => void
 	private readonly _onStageComplete: () => void
 	private readonly _onInterval: (remainingSeconds: number) => void
 	private readonly _countdownTimer: CountdownTimer
@@ -33,6 +35,7 @@ export default class PomodoroManager {
 	constructor(
 		{
 			onStateChange,
+			onStageStart,
 			onStageComplete,
 			onInterval,
 			assignedTask = null,
@@ -47,9 +50,9 @@ export default class PomodoroManager {
 		this._currentStage = startingPomodoroStage
 		this._currentState = startingPomodoroState
 		this._onStateChange = onStateChange
+		this._onStageStart = onStageStart
 		this._onStageComplete = () => {
-			this._focusSessionCount++
-			onStageComplete()
+			console.log(`Stage ${this.currentStage} complete`)
 		}
 		this._countdownTimer = new CountdownTimer(
 			this._currentStage.getDurationSeconds(),
@@ -70,6 +73,9 @@ export default class PomodoroManager {
 		return this._currentState;
 	}
 
+	getTimerStatus(): PomodoroCountdownTimerStatus {
+		return this._countdownTimer.timerStatus
+	}
 
 	getNextState(currentState: PomodoroState, currentStage: PomodoroStage, timer: CountdownTimer): PomodoroState {
 		/*
@@ -140,6 +146,8 @@ export default class PomodoroManager {
 	}
 
 	startStage(): PomodoroStatus {
+		if (this._countdownTimer.isNotStarted())
+			this._onStageStart()
 		const timerStatus = this._countdownTimer.startCountdown()
 		this._currentState = this.getNextState(
 			this._currentState, this._currentStage, this._countdownTimer
@@ -217,6 +225,8 @@ export default class PomodoroManager {
 		this._currentState = this.getNextState(
 			this._currentState, this._currentStage, this._countdownTimer
 		)
+
+		this._onStageStart()
 
 		return {
 			currentState: this._currentState,
