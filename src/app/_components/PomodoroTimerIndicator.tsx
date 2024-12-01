@@ -6,6 +6,7 @@ import PomodoroStage from "@/app/_lib/PomodoroStage";
 
 interface PomodoroTimerIndicatorProps {
 	seconds: number
+	totalSeconds: number
 	taskName?: string
 	stage: PomodoroStage
 	className?: string
@@ -13,7 +14,8 @@ interface PomodoroTimerIndicatorProps {
 
 const PomodoroTimerIndicator = (
 	{
-		seconds,
+		seconds = 0,
+		totalSeconds = 0,
 		taskName = "",
 		stage = PomodoroStage.focusSession,
 		...props
@@ -23,7 +25,7 @@ const PomodoroTimerIndicator = (
 	const viewBox = `0 0 ${size} ${size}`
 	const radius = (size - strokeWidth) / 2
 	const dashArray = radius * Math.PI * 2
-	const percentage = Math.min(100, (seconds / stage.getDurationSeconds()) * 100)
+	const percentage = Math.min(100, (seconds / totalSeconds) * 100)
 	const dashOffset = dashArray - (dashArray * percentage) / 100
 	const minutesString = secondsToMinutes(seconds)
 	return (
@@ -59,7 +61,7 @@ const PomodoroTimerIndicator = (
 				strokeLinecap={"butt"}
 				strokeWidth={`${strokeWidth}px`}
 				strokeDasharray={dashArray}
-				strokeDashoffset={dashOffset}
+				strokeDashoffset={isNaN(dashOffset) ? 0 : dashOffset}
 				transform={`rotate(-90 ${size / 2} ${size / 2})`}
 			/>
 
