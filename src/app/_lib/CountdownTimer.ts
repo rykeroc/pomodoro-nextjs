@@ -1,6 +1,11 @@
 import PomodoroCountdownTimerStatus from "@/app/_lib/PomodoroCountdownTimerStatus";
 import {clearInterval} from "node:timers";
 
+export type TimerInfo = {
+	remainingSeconds: number,
+	timerStatus: PomodoroCountdownTimerStatus
+}
+
 export default class CountdownTimer {
 	private _totalSeconds: number
 	private _remainingSeconds: number
@@ -15,17 +20,13 @@ export default class CountdownTimer {
 		this._onInterval(this._remainingSeconds)
 		// Check if timer is complete
 		if (this._remainingSeconds <= 0) {
-			this.stopCountdown();
+			this.pauseCountdown();
 			// Call on complete callback
 			this._onComplete()
 		}
 	}
 	// Decrement timer every second
 	private readonly _intervalSpacingMs: number = 1000
-
-	private _isStarted = () => this._timerStatus === PomodoroCountdownTimerStatus.Started
-	private _isStopped = () => this._timerStatus === PomodoroCountdownTimerStatus.Stopped
-	private _isComplete = () => this._timerStatus === PomodoroCountdownTimerStatus.Complete
 
 	private _clearInterval() {
 		// Clear any running interval
@@ -43,7 +44,7 @@ export default class CountdownTimer {
 		this._totalSeconds = this._remainingSeconds = totalSeconds;
 		this._onComplete = onComplete
 		this._onInterval = onInterval
-		this._timerStatus = PomodoroCountdownTimerStatus.Stopped
+		this._timerStatus = PomodoroCountdownTimerStatus.NotStarted
 		this._intervalId = null
 	}
 
@@ -59,49 +60,44 @@ export default class CountdownTimer {
 		return this._timerStatus;
 	}
 
+	isNotStarted = () => this._timerStatus === PomodoroCountdownTimerStatus.NotStarted
+	isRunning = () => this._timerStatus === PomodoroCountdownTimerStatus.Running
+	isPaused = () => this._timerStatus === PomodoroCountdownTimerStatus.Paused
+	isComplete = () => this._timerStatus === PomodoroCountdownTimerStatus.Complete
+
 	startCountdown(): PomodoroCountdownTimerStatus {
 		// If already started or completed, do nothing
-		if (this._isStarted() || this._isComplete()) {
+		if (this.isRunning() || this.isComplete()) {
 			return this._timerStatus;
 		}
 
-		// If paused, continue timer
-		if (this._isStopped()) {
-			this._timerStatus = PomodoroCountdownTimerStatus.Started;
-			return this._timerStatus;
-		}
-
-		// Start new countdown
+		// If paused or stopped, start countdown
 		this._intervalId = setInterval(
 			this._intervalFunction,
 			this._intervalSpacingMs
 		);
-		this._timerStatus = PomodoroCountdownTimerStatus.Started;
+		this._timerStatus = PomodoroCountdownTimerStatus.Running;
 
 		return this._timerStatus
 	}
 
-	stopCountdown(): PomodoroCountdownTimerStatus {
+	pauseCountdown(): PomodoroCountdownTimerStatus {
 		// If already stopped or complete, do nothing
-		if (this._isStopped() || this._isComplete()) {
+		if (this.isPaused() || this.isNotStarted() || this.isComplete()) {
 			return this._timerStatus;
 		}
 
 		// Clear the interval
 		this._clearInterval()
 
-		this._timerStatus = PomodoroCountdownTimerStatus.Stopped
+		// Update timer status
+		this._timerStatus = PomodoroCountdownTimerStatus.Paused
 		return this._timerStatus
 	}
 
-	resetCountdown(newTotalSeconds?: number): [number, PomodoroCountdownTimerStatus] {
-		// Stop timer if started
-		this.stopCountdown()
-
-		// Clear the interval
-		this._clearInterval()
-
-		this._timerStatus = PomodoroCountdownTimerStatus.Stopped
+	resetCountdown(newTotalSeconds?: number): TimerInfo {
+		// Pause timer if started
+		this.pauseCountdown()
 
 		// Set new total seconds if supplied
 		if (newTotalSeconds)
@@ -109,7 +105,13 @@ export default class CountdownTimer {
 		// Reset seconds
 		this._remainingSeconds = this._totalSeconds
 
-		return [this._remainingSeconds, this._timerStatus]
+		// Update timer status
+		this._timerStatus = PomodoroCountdownTimerStatus.NotStarted
+
+		return {
+			remainingSeconds: this._remainingSeconds,
+			timerStatus: this._timerStatus
+		}
 	}
 }
 

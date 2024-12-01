@@ -2,27 +2,51 @@ import FocusTask from "@/app/_lib/FocusTask";
 import PomodoroStage from "@/app/_lib/PomodoroStage";
 import CountdownTimer from "@/app/_lib/CountdownTimer";
 import PomodoroCountdownTimerStatus from "@/app/_lib/PomodoroCountdownTimerStatus";
+import PomodoroState from "@/app/_lib/PomodoroState";
+
+interface PomodoroStatus {
+	currentState: PomodoroState,
+	currentStage: PomodoroStage,
+	timerStatus: PomodoroCountdownTimerStatus
+}
+
+interface PomodoroManagerConstructorArgs {
+	onComplete: () => void
+	onInterval: (remainingSeconds: number) => void
+	assignedTask?: FocusTask | null
+	focusSessionCount?: number
+	startingPomodoroStage?: PomodoroStage
+	startingPomodoroState?: PomodoroState
+}
 
 export default class PomodoroManager {
 	private _assignedTask: FocusTask | null
 	private _focusSessionCount: number
 	private _currentStage: PomodoroStage
+	private _currentState: PomodoroState
 	private readonly _onComplete: () => void
 	private readonly _onInterval: (remainingSeconds: number) => void
 	private readonly _countdownTimer: CountdownTimer
 
 	constructor(
-		assignedTask: FocusTask | null = null,
-		focusSessionCount: number = 0,
-		onComplete: () => void,
-		onInterval: (remainingSeconds: number) => void,
-		startingPomodoroStage: PomodoroStage = PomodoroStage.focusSession
+		{
+			onComplete,
+			onInterval,
+			assignedTask = null,
+			focusSessionCount = 0,
+			startingPomodoroStage = PomodoroStage.focusSession,
+			startingPomodoroState = PomodoroState.FocusPending
+		}: PomodoroManagerConstructorArgs
 	) {
 		this._assignedTask = assignedTask
 		this._focusSessionCount = focusSessionCount
-		this._onComplete = onComplete
 		this._onInterval = onInterval
 		this._currentStage = startingPomodoroStage
+		this._currentState = startingPomodoroState
+		this._onComplete = () => {
+			this._focusSessionCount++
+			onComplete()
+		}
 		this._countdownTimer = new CountdownTimer(
 			this._currentStage.getDurationSeconds(),
 			this._onComplete,
@@ -38,16 +62,67 @@ export default class PomodoroManager {
 		return this._currentStage;
 	}
 
-	startCountdown(): PomodoroCountdownTimerStatus {
-		return this._countdownTimer.startCountdown()
+	get currentState(): PomodoroState {
+		return this._currentState;
 	}
 
-	stopCountdown(): PomodoroCountdownTimerStatus {
-		return this._countdownTimer.stopCountdown()
-	}
 
-	resetCountdown(newTotalSeconds?: number): [number, PomodoroCountdownTimerStatus] {
-		return this._countdownTimer.resetCountdown(newTotalSeconds)
+	getNextState(currentState: PomodoroState, currentStage: PomodoroStage, timer: CountdownTimer): PomodoroState {
+		/*
+		Focus Running if current state is focus pending or paused AND
+		timer is running
+		 */
+		if (
+			currentState === PomodoroState.FocusPending ||
+			currentState === PomodoroState.FocusPaused &&
+			timer.isRunning()
+		) return PomodoroState.FocusRunning
+
+		/*
+		Focus Paused if current state is focus running AND
+		timer is paused
+		 */
+		else if (
+			currentState === PomodoroState.FocusRunning &&
+			timer.isPaused()
+		) return PomodoroState.FocusPaused
+
+		/*
+		Focus Complete if current state is focus running AND
+		timer is complete
+		 */
+		else if (
+			currentState === PomodoroState.FocusRunning &&
+			timer.isComplete()
+		) return PomodoroState.FocusComplete
+
+		/*
+		Short break running if current state is focus complete AND
+		current stage is short break AND
+		timer is running
+		 */
+		else if (
+			currentState === PomodoroState.FocusComplete &&
+			currentStage === PomodoroStage.shortBreak &&
+			timer.isRunning()
+		) return PomodoroState.ShortBreakRunning
+
+		/*
+		Long break running if current state is focus complete AND
+		current stage is long break AND
+		timer is running
+		 */
+		else if (
+			currentState === PomodoroState.FocusComplete &&
+			currentStage === PomodoroStage.longBreak &&
+			timer.isRunning()
+		) return PomodoroState.LongBreakRunning
+
+		/*
+		Focus Pending (Not started) if current state is focus paused AND
+		timer is not started
+		 */
+		return PomodoroState.FocusPending
 	}
 
 	// TODO unit test this function
@@ -60,9 +135,48 @@ export default class PomodoroManager {
 			return PomodoroStage.focusSession
 	}
 
-	startNextStage(): [number, PomodoroCountdownTimerStatus] {
+	startStage(): PomodoroStatus {
+		const timerStatus = this._countdownTimer.startCountdown()
+		this._currentState = this.getNextState(
+			this._currentState, this._currentStage, this._countdownTimer
+		)
+		return {
+			currentState: this._currentState,
+			currentStage: this._currentStage,
+			timerStatus: timerStatus
+		}
+	}
+
+	pauseStage(): PomodoroStatus {
+		const timerStatus =  this._countdownTimer.pauseCountdown()
+		this._currentState = this.getNextState(
+			this._currentState, this._currentStage, this._countdownTimer
+		)
+		return {
+			currentState: this._currentState,
+			currentStage: this._currentStage,
+			timerStatus: timerStatus
+		}
+	}
+
+	finishStage(): PomodoroStatus {
+		this._currentStage = PomodoroStage.focusSession
+		const timerInfo =  this._countdownTimer.resetCountdown(
+			this._currentStage.getDurationSeconds()
+		)
+		this._currentState = this.getNextState(
+			this._currentState, this._currentStage, this._countdownTimer
+		)
+		return {
+			currentState: this._currentState,
+			currentStage: this._currentStage,
+			timerStatus: timerInfo.timerStatus
+		}
+	}
+
+	startNextStage(): PomodoroStatus {
 		// Stop the timer
-		this._countdownTimer.stopCountdown()
+		this._countdownTimer.pauseCountdown()
 
 		// Assign the next stage
 		this._currentStage = this.getNextStage(
@@ -77,19 +191,14 @@ export default class PomodoroManager {
 		// Start the timer
 		this._countdownTimer.startCountdown()
 
-		return timerInfo
-	}
-
-	resetPomodoroLoop(): [PomodoroStage, PomodoroCountdownTimerStatus] {
-		// Stop the timer
-		this._countdownTimer.stopCountdown()
-		// Reset the stage to default
-		this._currentStage = PomodoroStage.focusSession
-		// Reset the timer using the default stage duration
-		const [_, timerStatus] = this._countdownTimer.resetCountdown(
-			this._currentStage.getDurationSeconds()
+		this._currentState = this.getNextState(
+			this._currentState, this._currentStage, this._countdownTimer
 		)
 
-		return [this._currentStage, timerStatus]
+		return {
+			currentState: this._currentState,
+			currentStage: this._currentStage,
+			timerStatus: timerInfo.timerStatus
+		}
 	}
 }

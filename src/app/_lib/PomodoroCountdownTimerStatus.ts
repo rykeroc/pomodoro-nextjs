@@ -1,6 +1,7 @@
 enum PomodoroCountdownTimerStatus {
-	Started,
-	Stopped,
+	NotStarted,
+	Running,
+	Paused,
 	Complete
 }
 

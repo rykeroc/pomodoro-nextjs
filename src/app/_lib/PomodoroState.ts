@@ -1,5 +1,5 @@
 enum PomodoroState {
-	FocusStarted,
+	FocusPending,
 	FocusRunning,
 	FocusPaused,
 	FocusComplete,
