@@ -1,10 +1,22 @@
-import {useCallback, useRef, useState} from "react";
+import {Dispatch, SetStateAction, useCallback, useRef, useState} from "react";
 
-export default function useCountdown(seconds: number) {
+interface Countdown {
+	remainingSeconds: number
+	setRemainingSeconds: Dispatch<SetStateAction<number>>
+	totalSeconds: number
+	setTotalSeconds: Dispatch<SetStateAction<number>>
+	setOnIntervalAction: Dispatch<SetStateAction<(n: number) => void>>
+	setOnCompleteAction: Dispatch<SetStateAction<() => void>>
+	startCountdown: () => void
+	pauseCountdown: () => void
+	resetCountdown: () => void
+}
+
+export default function useCountdown(seconds: number): Countdown {
 	const [totalSeconds, setTotalSeconds] = useState(seconds)
 	const [remainingSeconds, setRemainingSeconds] = useState(seconds)
-	const [onComplete, setOnComplete] = useState<() => void>(() => {})
-	const [onInterval, setOnInterval] = useState<(remainingSeconds: number) => void>((_) => {})
+	const [onCompleteAction, setOnCompleteAction] = useState<() => void>(() => {})
+	const [onIntervalAction, setOnIntervalAction] = useState<(remainingSeconds: number) => void>((_) => {})
 	const intervalId = useRef<NodeJS.Timeout | null>(null)
 
 	const intervalSpacingMs: number = 1000
@@ -25,26 +37,28 @@ export default function useCountdown(seconds: number) {
 			// Check if timer is complete
 			if (nextSeconds <= 0 && intervalId.current) {
 				clearCurrentInterval()
-				if (onComplete) onComplete()
+				if (onCompleteAction) onCompleteAction()
 				return 0
 			}
 
-			if (onInterval) onInterval(nextSeconds)
+			if (onIntervalAction) onIntervalAction(nextSeconds)
 			return nextSeconds
 		})
-	}, [clearCurrentInterval, onComplete, onInterval])
+	}, [clearCurrentInterval, onCompleteAction, onIntervalAction])
 
 	// Countdown start
 	const start = useCallback(() => {
 		// If already started or completed, do nothing
-		if (intervalId.current !== null) {
-			console.log("Countdown already running.")
-			return
-		}
+		{
+			if (intervalId.current !== null) {
+				console.log("Countdown already running.")
+				return
+			}
 
-		if (remainingSeconds <= 0) {
-			console.log("Countdown has been completed.")
-			return
+			if (remainingSeconds <= 0) {
+				console.log("Countdown has been completed.")
+				return
+			}
 		}
 
 		console.log("Starting countdown")
@@ -53,22 +67,26 @@ export default function useCountdown(seconds: number) {
 			intervalFunction,
 			intervalSpacingMs
 		)
-
-	}, [intervalId, remainingSeconds, clearCurrentInterval, intervalFunction])
+	}, [
+		intervalId, remainingSeconds,
+		clearCurrentInterval, intervalFunction,
+	])
 
 	// Countdown pause
 	const pause = useCallback(() => {
 		// If not started, paused, or complete, do nothing
-		if (!intervalId.current) {
-			if (remainingSeconds === totalSeconds) {
-				console.log("Countdown has not started.")
-				return
-			} else if (remainingSeconds < totalSeconds) {
-				console.log("Countdown is already paused.")
-				return
-			} else if (remainingSeconds <= 0) {
-				console.log("Countdown has been completed.")
-				return
+		{
+			if (!intervalId.current) {
+				if (remainingSeconds === totalSeconds) {
+					console.log("Countdown has not started.")
+					return
+				} else if (remainingSeconds < totalSeconds) {
+					console.log("Countdown is already paused.")
+					return
+				} else if (remainingSeconds <= 0) {
+					console.log("Countdown has been completed.")
+					return
+				}
 			}
 		}
 
@@ -76,7 +94,8 @@ export default function useCountdown(seconds: number) {
 
 		clearCurrentInterval()
 	}, [
-		intervalId, remainingSeconds, totalSeconds, clearCurrentInterval
+		intervalId, remainingSeconds, totalSeconds,
+		clearCurrentInterval,
 	])
 
 	// Countdown reset
@@ -93,7 +112,8 @@ export default function useCountdown(seconds: number) {
 		// Reset seconds
 		setRemainingSeconds(totalSeconds)
 	}, [
-		intervalId, remainingSeconds, totalSeconds, clearCurrentInterval
+		intervalId, remainingSeconds, totalSeconds,
+		clearCurrentInterval,
 	])
 
 	return {
@@ -101,10 +121,10 @@ export default function useCountdown(seconds: number) {
 		setRemainingSeconds,
 		totalSeconds,
 		setTotalSeconds,
-		setOnInterval,
-		setOnComplete,
-		start,
-		pause,
-		reset
+		setOnIntervalAction,
+		setOnCompleteAction,
+		startCountdown: start,
+		pauseCountdown: pause,
+		resetCountdown: reset
 	}
 }
