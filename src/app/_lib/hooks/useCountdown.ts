@@ -1,15 +1,15 @@
 import {Dispatch, SetStateAction, useCallback, useRef, useState} from "react";
+import CountdownStatus from "@/app/_lib/enums/CountdownStatus";
 
 interface Countdown {
+	getStatus: () => CountdownStatus,
 	remainingSeconds: number
-	setRemainingSeconds: Dispatch<SetStateAction<number>>
 	totalSeconds: number
-	setTotalSeconds: Dispatch<SetStateAction<number>>
 	setOnIntervalAction: Dispatch<SetStateAction<(n: number) => void>>
 	setOnCompleteAction: Dispatch<SetStateAction<() => void>>
 	startCountdown: () => void
 	pauseCountdown: () => void
-	resetCountdown: () => void
+	resetCountdown: (newTotalSeconds: number) => void
 }
 
 export default function useCountdown(seconds: number): Countdown {
@@ -20,6 +20,21 @@ export default function useCountdown(seconds: number): Countdown {
 	const intervalId = useRef<NodeJS.Timeout | null>(null)
 
 	const intervalSpacingMs: number = 1000
+
+	const getStatus = useCallback(() => {
+		if (intervalId.current === null) {
+			if (remainingSeconds === 0)
+				return CountdownStatus.Complete
+			else if (remainingSeconds === totalSeconds)
+				return CountdownStatus.NotStarted
+			else if (remainingSeconds < totalSeconds)
+				return CountdownStatus.Paused
+		}
+
+		return CountdownStatus.Running
+	}, [
+		intervalId, remainingSeconds, totalSeconds
+	])
 
 	const clearCurrentInterval = useCallback(() => {
 		// Clear any running interval
@@ -99,7 +114,7 @@ export default function useCountdown(seconds: number): Countdown {
 	])
 
 	// Countdown reset
-	const reset = useCallback(() => {
+	const reset = useCallback((newTotalSeconds: number) => {
 		if (intervalId.current === null && remainingSeconds === totalSeconds) {
 			console.log("Countdown has not started.")
 			return
@@ -110,17 +125,18 @@ export default function useCountdown(seconds: number): Countdown {
 		clearCurrentInterval()
 
 		// Reset seconds
-		setRemainingSeconds(totalSeconds)
+		setTotalSeconds(newTotalSeconds)
+		setRemainingSeconds(newTotalSeconds)
 	}, [
 		intervalId, remainingSeconds, totalSeconds,
 		clearCurrentInterval,
+		setTotalSeconds, setRemainingSeconds
 	])
 
 	return {
+		getStatus,
 		remainingSeconds,
-		setRemainingSeconds,
 		totalSeconds,
-		setTotalSeconds,
 		setOnIntervalAction,
 		setOnCompleteAction,
 		startCountdown: start,
