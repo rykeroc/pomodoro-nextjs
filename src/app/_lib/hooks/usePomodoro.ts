@@ -16,13 +16,12 @@ export default function usePomodoro() {
 	const [focusCount, setFocusCount] = useState(0)
 
 	const {
+		remainingSeconds,
+		totalSeconds,
+		getStatus,
 		startCountdown,
 		pauseCountdown,
 		resetCountdown,
-		remainingSeconds,
-		setRemainingSeconds,
-		totalSeconds,
-		setTotalSeconds,
 		setOnIntervalAction,
 		setOnCompleteAction
 	} = useCountdown(5)		// TODO: update default to pomodoroStage.getSeconds
@@ -30,31 +29,32 @@ export default function usePomodoro() {
 	// Set completion callback
 	useEffect(() => {
 		const completeCallback = () => {
-			console.log("Countdown complete")
+			console.log(getStatus())
 		}
 
 		setOnCompleteAction(() => completeCallback)
-	}, [setOnCompleteAction]);
+	}, [setOnCompleteAction, getStatus]);
 
 	const start = useCallback(() => {
 		// TODO
 		startCountdown()
+		console.log(getStatus())
 	}, [startCountdown])
 
 	const pause = useCallback(() => {
 		// TODO
 		pauseCountdown()
+		console.log(getStatus())
 	}, [pauseCountdown])
 
 	const finish = useCallback(() => {
 		// TODO
-		// Todo: get next duration
-		resetCountdown()
 		setPomodoroStage(PomodoroStage.focusSession)
-		setTotalSeconds(pomodoroStage.getSeconds())
+		resetCountdown(pomodoroStage.getSeconds())
+		console.log(getStatus())
 	}, [
-		resetCountdown,
-		setPomodoroStage, setTotalSeconds
+		pomodoroStage,
+		setPomodoroStage, resetCountdown, getStatus,
 	])
 
 	return {
