@@ -11,7 +11,7 @@ class PomodoroStage {
 		this.durationMinutes = durationMinutes;
 	}
 
-	getDurationSeconds = () => this.durationMinutes * 60
+	getSeconds = () => this.durationMinutes * 60
 }
 
 export default PomodoroStage
