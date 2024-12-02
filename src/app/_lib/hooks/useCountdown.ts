@@ -23,7 +23,7 @@ export default function useCountdown(seconds: number) {
 			const nextSeconds = prev - 1
 
 			// Check if timer is complete
-			if (nextSeconds <= 0) {
+			if (nextSeconds <= 0 && intervalId.current) {
 				clearCurrentInterval()
 				if (onComplete) onComplete()
 				return 0

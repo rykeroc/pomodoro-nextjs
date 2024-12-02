@@ -18,13 +18,13 @@ export default function usePomodoro() {
 	} = useCountdown(5)		// TODO: update default to pomodoroStage.getSeconds
 
 	// Set completion callback
-	// useEffect(() => {
-	// 	setOnComplete(() => {
-	// 		// TODO
-	// 		console.log("Countdown complete")
-	// 		setTimeout(() => reset(), 0)
-	// 	})
-	// }, [reset, setOnComplete]);
+	useEffect(() => {
+		const completeCallback = () => {
+			console.log("Countdown complete")
+		}
+
+		setOnComplete(() => completeCallback)
+	}, [setOnComplete]);
 
 	const startPomodoro = useCallback(() => {
 		// TODO
