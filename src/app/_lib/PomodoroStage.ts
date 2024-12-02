@@ -1,17 +1,15 @@
 class PomodoroStage {
-	static readonly focusSession = new PomodoroStage('Focus', 25)
-	static readonly shortBreak = new PomodoroStage('Short Break', 5)
-	static readonly longBreak = new PomodoroStage('Long Break', 15)
+	static readonly focusSession = new PomodoroStage('Focus', 25 * 60)
+	static readonly shortBreak = new PomodoroStage('Short Break', 5 * 60)
+	static readonly longBreak = new PomodoroStage('Long Break', 15 * 60)
 
 	readonly name: string
-	readonly durationMinutes: number
+	readonly seconds: number
 
-	private constructor(name: string, durationMinutes: number) {
+	private constructor(name: string, seconds: number) {
 		this.name = name;
-		this.durationMinutes = durationMinutes;
+		this.seconds = seconds;
 	}
-
-	getSeconds = () => this.durationMinutes * 60
 }
 
 export default PomodoroStage
