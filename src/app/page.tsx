@@ -2,33 +2,30 @@
 
 import PomodoroTimerIndicator from "@/app/_components/PomodoroTimerIndicator";
 import {HTMLAttributes, ReactNode, useState} from "react";
-import PomodoroStage from "@/app/_lib/PomodoroStage";
 import {cx} from "class-variance-authority";
 import Button from "@/app/_components/Button";
-import PomodoroCountdownTimerStatus from "@/app/_lib/PomodoroCountdownTimerStatus";
 import {Bars3Icon} from "@heroicons/react/16/solid";
+import usePomodoro from "@/app/_lib/hooks/usePomodoro";
+import PomodoroState from "@/app/_lib/enums/PomodoroState";
 
-function getTimerButtons(pomodoroStage: PomodoroStage, pomodoroTimerStatus: PomodoroCountdownTimerStatus): ReactNode {
-	return (
-		<div className={cx(
-			['flex', 'flex-col', 'gap-3']
-		)}>
-			<Button variant={"primary"}>Start</Button>
-		</div>
-	)
-}
 
 export default function Home() {
-	const [seconds, setSeconds] = useState(0)
-	const [maxSeconds, setMaxSeconds] = useState(15000)
-	const [taskName, setTaskName] = useState("Focus")
+	const {
+		remainingSeconds,
+		totalSeconds,
+		pomodoroStage,
+		pomodoroState,
+		startPomodoro,
+		pausePomodoro,
+		finishPomodoro,
+		startNext
+	} = usePomodoro()
 
-	const [pomodoroStage, setPomodoroStage] = useState(PomodoroStage.shortBreak)
-	const [pomodoroTimerStatus, setPomodoroTimerStatus] = useState(PomodoroCountdownTimerStatus.Stopped)
+	const [taskName, setTaskName] = useState("Focus")
 
 	const [quote, setQuote] = useState("Focus")
 
-	const timerButtons = getTimerButtons(pomodoroStage, pomodoroTimerStatus)
+	const pomodoroButtons = <PomodoroButtons state={pomodoroState}/>
 
 	return (
 		<div className={cx(
@@ -44,13 +41,14 @@ export default function Home() {
 			<div className={'flex flex-col justify-center items-center gap-6'}>
 				{/* Timer indicator */}
 				<PomodoroTimerIndicator
-					seconds={seconds} maxSeconds={maxSeconds}
+					seconds={remainingSeconds}
+					totalSeconds={totalSeconds}
 					taskName={taskName}
 					stage={pomodoroStage}
 				/>
 
 				{/* Timer buttons */}
-				{timerButtons}
+				{pomodoroButtons}
 			</div>
 
 			<FocusQuote>
@@ -70,6 +68,42 @@ const NavMenu = () =>
 			<Bars3Icon className={'size-5'}/>
 		</Button>
 	</nav>
+
+const PomodoroButtons = ({state}: { state: PomodoroState }) => {
+	const buttons = {
+		start: <Button variant={"primary"}>Start</Button>,
+		resume: <Button variant={"primary"}>Resume</Button>,
+		pause: <Button variant={"secondary"}>Pause</Button>,
+		finish: <Button variant={"secondary"}>Finish</Button>,
+		relax: <Button variant={"primary"}>Relax</Button>,
+		skip: <Button variant={"secondary"}>Skip</Button>
+	}
+
+	let selectedButtons: ReactNode[] = []
+	switch (state) {
+		case PomodoroState.FocusPending:
+			selectedButtons.push(buttons.start)
+			break
+		case PomodoroState.FocusRunning:
+			selectedButtons.push(buttons.pause)
+			break
+		case PomodoroState.FocusPaused:
+			selectedButtons.push(buttons.resume, buttons.finish)
+			break
+		case PomodoroState.FocusComplete:
+			selectedButtons.push(buttons.relax, buttons.skip)
+			break
+		default:
+			selectedButtons.push(buttons.finish)
+	}
+	return (
+		<div className={cx(
+			["flex", "flex-row", "gap-3"]
+		)}>
+			{selectedButtons.map((b, index) => <div key={index}>{b}</div> )}
+		</div>
+	)
+}
 
 const FocusQuote = ({children}: HTMLAttributes<HTMLHeadingElement>) =>
 	<h6 className={"text-secondary-text p-5"}>"{children}"</h6>
