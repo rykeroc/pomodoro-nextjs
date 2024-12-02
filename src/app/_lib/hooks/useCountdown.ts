@@ -25,6 +25,7 @@ export default function useCountdown(seconds: number) {
 		setRemainingSeconds((prev) => {
 			const nextSeconds = prev - 1
 
+			// Call user defined onInterval callback
 			if (onInterval)
 				onInterval(nextSeconds)
 
@@ -33,8 +34,9 @@ export default function useCountdown(seconds: number) {
 				clearCurrentInterval()
 
 				setStatus(CountdownStatus.Complete)
+
+				// Call on user defined onComplete callback
 				if (onComplete)
-					// Call on complete callback
 					onComplete()
 
 				return 0
@@ -44,6 +46,7 @@ export default function useCountdown(seconds: number) {
 		})
 	}, [])
 
+	// Countdown start
 	const start = useCallback(() => {
 		// If already started or completed, do nothing
 		if (status === CountdownStatus.Running) {
@@ -66,6 +69,7 @@ export default function useCountdown(seconds: number) {
 		setStatus(CountdownStatus.Running)
 	}, [status, clearCurrentInterval, intervalFunction])
 
+	// Countdown pause
 	const pause = useCallback(() => {
 		// If not started, paused, or complete, do nothing
 		if (status === CountdownStatus.NotStarted) {
@@ -90,6 +94,7 @@ export default function useCountdown(seconds: number) {
 		setStatus(CountdownStatus.Paused)
 	}, [status, clearCurrentInterval])
 
+	// Countdown reset
 	const reset = useCallback(() => {
 		if (status === CountdownStatus.NotStarted) {
 			console.log("Countdown has not started.")
