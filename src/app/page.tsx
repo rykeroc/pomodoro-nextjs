@@ -11,7 +11,8 @@ import {cn} from "@/app/_lib/cn";
 
 export default function Home() {
 	const {
-		seconds,
+		remaining,
+		total,
 		pomodoroStage,
 		pomodoroState,
 		start,
@@ -72,8 +73,8 @@ export default function Home() {
 			<div className={'flex flex-col justify-center items-center gap-6'}>
 				{/* Timer indicator */}
 				<PomodoroTimerIndicator
-					seconds={seconds.remaining}
-					totalSeconds={seconds.total}
+					remainingSeconds={remaining}
+					totalSeconds={total}
 					taskName={taskName}
 					stage={pomodoroStage}
 				/>
