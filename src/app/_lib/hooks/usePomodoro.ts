@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from "react";
 import useCountdown from "@/app/_lib/hooks/useCountdown";
 import PomodoroState from "@/app/_lib/constants/PomodoroState";
-import {PomodoroStageInfo, PomodoroStages} from "@/app/_lib/constants/PomodoroStage";
+import PomodoroStages, {PomodoroStageInfo} from "@/app/_lib/constants/PomodoroStages";
 
 interface Pomodoro {
 	remaining: number

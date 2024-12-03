@@ -8,15 +8,15 @@ interface PomodoroStageInfo {
 const PomodoroStages: { [key in PomodoroStage]: PomodoroStageInfo } = {
 	focusSession: {
 		name: 'Focus',
-		seconds: 25
+		seconds: 25 * 60
 	},
 	shortBreak: {
 		name: 'Short Break',
-		seconds: 5
+		seconds: 5 * 60
 	},
 	longBreak: {
 		name: 'Long Break',
-		seconds: 15
+		seconds: 15 * 60
 	},
 }
 
@@ -24,6 +24,4 @@ export type {
 	PomodoroStageInfo
 }
 
-export {
-	PomodoroStages,
-}
+export default PomodoroStages
