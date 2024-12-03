@@ -21,8 +21,10 @@ export default function Home() {
 		relax
 	} = usePomodoro()
 
+	// TODO
 	const [taskName, setTaskName] = useState("Focus")
 
+	// TODO
 	const [quote, setQuote] = useState("Focus")
 
 	const PomodoroButtons = ({state}: { state: PomodoroState }) => {
@@ -35,7 +37,7 @@ export default function Home() {
 			skip: <Button variant={"secondary"} onClick={finish}>Skip</Button>
 		}
 
-		let selectedButtons: ReactNode[] = []
+		const selectedButtons: ReactNode[] = []
 		switch (state) {
 			case PomodoroState.FocusPending:
 				selectedButtons.push(buttons.start)
@@ -102,4 +104,4 @@ const NavMenu = () =>
 	</nav>
 
 const FocusQuote = ({children}: HTMLAttributes<HTMLHeadingElement>) =>
-	<h6 className={"text-secondary-text p-5"}>"{children}"</h6>
+	<h6 className={"text-secondary-text p-5"}>&quot;{children}&quot;</h6>
