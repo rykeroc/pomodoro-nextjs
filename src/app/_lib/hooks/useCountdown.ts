@@ -66,7 +66,7 @@ export default function useCountdown(startingSeconds: number): Countdown {
 				status: CountdownStatus.Running
 			}
 		))
-	}, [intervalId.current, info.remaining,  onInterval])
+	}, [info.remaining,  onInterval])
 
 	const pause = useCallback(() => {
 		// If not started, paused, or complete, do nothing
@@ -99,7 +99,7 @@ export default function useCountdown(startingSeconds: number): Countdown {
 				status: CountdownStatus.Paused
 			}
 		))
-	}, [intervalId, intervalId.current, info.remaining, info.total,])
+	}, [intervalId, info.remaining, info.total,])
 
 	const reset = useCallback((newTotalSeconds: number) => {
 		if (intervalId.current === null && info.remaining === info.total) {
@@ -116,7 +116,7 @@ export default function useCountdown(startingSeconds: number): Countdown {
 			remaining: newTotalSeconds,
 			status: CountdownStatus.NotStarted,
 		})
-	}, [intervalId.current, info.remaining, info.total, pause, setInfo])
+	}, [info.remaining, info.total, pause, setInfo])
 
 	const restart = useCallback((newTotalSeconds: number) => {
 		console.log("Restarting countdown")
@@ -139,7 +139,7 @@ export default function useCountdown(startingSeconds: number): Countdown {
 			intervalSpacingMs
 		)
 	}, [
-		intervalId.current, start, onInterval,
+		onInterval,
 		setInfo,
 	])
 
@@ -156,7 +156,7 @@ export default function useCountdown(startingSeconds: number): Countdown {
 			))
 			if (onCompleteAction) onCompleteAction()
 		}
-	}, [info.remaining]);
+	}, [info.remaining, pause, onCompleteAction, setOnCompleteAction]);
 
 	return {
 		setOnCompleteAction,
