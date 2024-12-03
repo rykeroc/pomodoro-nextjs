@@ -1,3 +1,6 @@
+import {PomodoroStage, PomodoroStages} from "@/app/_lib/PomodoroStage";
+import CountdownStatus from "@/app/_lib/enums/CountdownStatus";
+
 enum PomodoroState {
 	FocusPending,
 	FocusRunning,
@@ -7,4 +10,88 @@ enum PomodoroState {
 	LongBreakRunning,
 }
 
+function getNextState(state: PomodoroState, stage: PomodoroStage, status: CountdownStatus): PomodoroState {
+	const states = {
+		isFocusPending: state === PomodoroState.FocusPending,
+		isFocusRunning: state === PomodoroState.FocusRunning,
+		isFocusComplete: state === PomodoroState.FocusComplete,
+		isFocusPaused: state === PomodoroState.FocusPaused,
+		isShortBreakRunning: state === PomodoroState.ShortBreakRunning,
+		isLongBreakRunning: state === PomodoroState.LongBreakRunning
+	}
+
+	const stages = {
+		isFocusSession: stage === PomodoroStages.focusSession,
+		isShortBreak: stage === PomodoroStages.shortBreak,
+		isLongBreak: stage === PomodoroStages.longBreak
+	}
+
+	const statuses = {
+		isNotStarted: status === CountdownStatus.NotStarted,
+		isRunning: status === CountdownStatus.Running,
+		isPaused: status === CountdownStatus.Paused,
+		isComplete: status === CountdownStatus.Complete
+	}
+
+	/*
+	Focus Running if current state is focus pending or paused AND
+	status is running
+	 */
+	if (
+		states.isFocusPending || states.isFocusPaused &&
+		statuses.isRunning
+	) return PomodoroState.FocusRunning
+
+	/*
+	Focus Paused if current state is focus running AND
+	status is paused
+	 */
+	else if (
+		states.isFocusRunning &&
+		statuses.isPaused
+	) return PomodoroState.FocusPaused
+
+	/*
+	Focus Complete if current state is focus running AND
+	status is complete
+	 */
+	else if (
+		states.isFocusRunning &&
+		statuses.isComplete
+	) return PomodoroState.FocusComplete
+
+	/*
+	Short break running if current state is focus complete AND
+	current stage is short break AND
+	status is running
+	 */
+	else if (
+		states.isFocusComplete &&
+		stages.isShortBreak &&
+		statuses.isRunning
+	) return PomodoroState.ShortBreakRunning
+
+	/*
+	Long break running if current state is focus complete AND
+	current stage is long break AND
+	status is running
+	 */
+	else if (
+		states.isFocusComplete &&
+		stages.isLongBreak &&
+		statuses.isRunning
+	) return PomodoroState.LongBreakRunning
+
+	/*
+	Focus Pending (Not started) if current state is focus paused AND
+	status is not started
+	 */
+	return PomodoroState.FocusPending
+}
+
+
 export default PomodoroState
+
+export {
+	getNextState
+}

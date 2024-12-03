@@ -1,7 +1,7 @@
 "use client"
 
 import PomodoroTimerIndicator from "@/app/_components/PomodoroTimerIndicator";
-import {HTMLAttributes, ReactNode, useState} from "react";
+import {HTMLAttributes, ReactNode, useEffect, useState} from "react";
 import {cx} from "class-variance-authority";
 import Button from "@/app/_components/Button";
 import {Bars3Icon} from "@heroicons/react/16/solid";
@@ -25,7 +25,41 @@ export default function Home() {
 
 	const [quote, setQuote] = useState("Focus")
 
-	const pomodoroButtons = <PomodoroButtons state={pomodoroState}/>
+	const PomodoroButtons = ({state}: { state: PomodoroState }) => {
+		const buttons = {
+			start: <Button variant={"primary"} onClick={startPomodoro}>Start</Button>,
+			resume: <Button variant={"primary"} onClick={startPomodoro}>Resume</Button>,
+			pause: <Button variant={"secondary"} onClick={pausePomodoro}>Pause</Button>,
+			finish: <Button variant={"secondary"} onClick={finishPomodoro}>Finish</Button>,
+			relax: <Button variant={"primary"}>Relax</Button>,
+			skip: <Button variant={"secondary"}>Skip</Button>
+		}
+
+		let selectedButtons: ReactNode[] = []
+		switch (state) {
+			case PomodoroState.FocusPending:
+				selectedButtons.push(buttons.start)
+				break
+			case PomodoroState.FocusRunning:
+				selectedButtons.push(buttons.pause)
+				break
+			case PomodoroState.FocusPaused:
+				selectedButtons.push(buttons.resume, buttons.finish)
+				break
+			case PomodoroState.FocusComplete:
+				selectedButtons.push(buttons.relax, buttons.skip)
+				break
+			default:
+				selectedButtons.push(buttons.finish)
+		}
+		return (
+			<div className={"flex flex-row gap-3"}>
+				{selectedButtons.map((b, index) => <div key={index}>{b}</div> )}
+			</div>
+		)
+	}
+
+	useEffect(() => console.log(pomodoroState), [pomodoroState])
 
 	return (
 		<div className={cx(
@@ -48,7 +82,7 @@ export default function Home() {
 				/>
 
 				{/* Timer buttons */}
-				{pomodoroButtons}
+				<PomodoroButtons state={pomodoroState}/>
 			</div>
 
 			<FocusQuote>
@@ -68,42 +102,6 @@ const NavMenu = () =>
 			<Bars3Icon className={'size-5'}/>
 		</Button>
 	</nav>
-
-const PomodoroButtons = ({state}: { state: PomodoroState }) => {
-	const buttons = {
-		start: <Button variant={"primary"}>Start</Button>,
-		resume: <Button variant={"primary"}>Resume</Button>,
-		pause: <Button variant={"secondary"}>Pause</Button>,
-		finish: <Button variant={"secondary"}>Finish</Button>,
-		relax: <Button variant={"primary"}>Relax</Button>,
-		skip: <Button variant={"secondary"}>Skip</Button>
-	}
-
-	let selectedButtons: ReactNode[] = []
-	switch (state) {
-		case PomodoroState.FocusPending:
-			selectedButtons.push(buttons.start)
-			break
-		case PomodoroState.FocusRunning:
-			selectedButtons.push(buttons.pause)
-			break
-		case PomodoroState.FocusPaused:
-			selectedButtons.push(buttons.resume, buttons.finish)
-			break
-		case PomodoroState.FocusComplete:
-			selectedButtons.push(buttons.relax, buttons.skip)
-			break
-		default:
-			selectedButtons.push(buttons.finish)
-	}
-	return (
-		<div className={cx(
-			["flex", "flex-row", "gap-3"]
-		)}>
-			{selectedButtons.map((b, index) => <div key={index}>{b}</div> )}
-		</div>
-	)
-}
 
 const FocusQuote = ({children}: HTMLAttributes<HTMLHeadingElement>) =>
 	<h6 className={"text-secondary-text p-5"}>"{children}"</h6>
