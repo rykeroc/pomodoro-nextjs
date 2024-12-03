@@ -5,7 +5,6 @@ interface Countdown {
 	getStatus: () => CountdownStatus,
 	remainingSeconds: number
 	totalSeconds: number
-	setOnIntervalAction: Dispatch<SetStateAction<(n: number) => void>>
 	setOnCompleteAction: Dispatch<SetStateAction<() => void>>
 	startCountdown: () => void
 	pauseCountdown: () => void
@@ -16,7 +15,6 @@ export default function useCountdown(seconds: number): Countdown {
 	const [totalSeconds, setTotalSeconds] = useState(seconds)
 	const [remainingSeconds, setRemainingSeconds] = useState(seconds)
 	const [onCompleteAction, setOnCompleteAction] = useState<() => void>(() => {})
-	const [onIntervalAction, setOnIntervalAction] = useState<(remainingSeconds: number) => void>((_) => {})
 	const intervalId = useRef<NodeJS.Timeout | null>(null)
 
 	const intervalSpacingMs: number = 1000
@@ -56,10 +54,9 @@ export default function useCountdown(seconds: number): Countdown {
 				return 0
 			}
 
-			if (onIntervalAction) onIntervalAction(nextSeconds)
 			return nextSeconds
 		})
-	}, [clearCurrentInterval, onCompleteAction, onIntervalAction])
+	}, [clearCurrentInterval, onCompleteAction])
 
 	// Countdown start
 	const start = useCallback(() => {
@@ -137,7 +134,6 @@ export default function useCountdown(seconds: number): Countdown {
 		getStatus,
 		remainingSeconds,
 		totalSeconds,
-		setOnIntervalAction,
 		setOnCompleteAction,
 		startCountdown: start,
 		pauseCountdown: pause,
