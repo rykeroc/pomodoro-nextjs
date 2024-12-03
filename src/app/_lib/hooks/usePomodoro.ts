@@ -24,7 +24,7 @@ export default function usePomodoro(): Pomodoro {
 	const [info, setInfo] = useState<PomodoroInfo>({
 		state: PomodoroState.FocusPending,
 		stage: PomodoroStages.focusSession,
-		focusCount: 2
+		focusCount: 0
 	})
 
 	const {
@@ -33,43 +33,41 @@ export default function usePomodoro(): Pomodoro {
 		setOnCompleteAction
 	} = useCountdown(info.stage.seconds)
 
+	// Debugging logs
+	useEffect(() => {
+		console.log(`Focus Count updated: ${info.focusCount}`)
+	}, [info.focusCount]);
+
 	const onCompleteAction = useCallback(() => {
-		setInfo(prev => (
-				{
-					...prev,
-					stage: PomodoroStages.focusSession,
-					state: (prev.state === PomodoroState.FocusRunning) ?
-						PomodoroState.FocusComplete : PomodoroState.FocusPending
-				}
-			)
-		)
+		setInfo(prev => {
+			// Update focus count if focus session was completed
+			let newFocusCount = prev.focusCount
+			if (prev.state === PomodoroState.FocusRunning) {
+				newFocusCount++
+			}
+
+			/*
+			If previous state was running Focus session, set state to Focus complete
+			Else previous state was short or long break, so set state to Focus Pending
+			 */
+			const newState = prev.state === PomodoroState.FocusRunning ?
+				PomodoroState.FocusComplete : PomodoroState.FocusPending
+
+			// Next stage will always be focus session
+			const newStage = PomodoroStages.focusSession
+
+			// Reset countdown if break was completed
+			if (newState === PomodoroState.FocusPending)
+				resetCountdown(newStage.seconds)
+
+			return {focusCount: newFocusCount, state: newState, stage: newStage}
+		})
 	}, [setInfo])
 
 	// Set completion callback
 	useEffect(() => {
 		setOnCompleteAction(() => onCompleteAction)
-	}, []);
-
-
-	useEffect(() => {
-		// Update focus count if focus has been completed
-		if (info.state === PomodoroState.FocusComplete) {
-			setInfo(prev => {
-					const newFocusCount = prev.focusCount + 1
-					console.log(`Focus count updated to: ${newFocusCount}`)
-					return ({
-						...prev,
-						focusCount:	prev.focusCount + 1
-					})
-				}
-			)
-		}
-
-		// Reset countdown if break was completed
-		else if (info.state === PomodoroState.FocusPending) {
-			resetCountdown(PomodoroStages.focusSession.seconds)
-		}
-	}, [info.state, setInfo]);
+	});
 
 	const start = useCallback(() => {
 		startCountdown()
