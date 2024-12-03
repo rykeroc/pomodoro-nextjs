@@ -1,4 +1,4 @@
-import {randomUUID, UUID} from "node:crypto";
+import {randomUUID} from "node:crypto";
 
 export default class FocusTask {
 	private readonly _id: string
