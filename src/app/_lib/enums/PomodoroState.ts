@@ -10,7 +10,7 @@ enum PomodoroState {
 	LongBreakRunning,
 }
 
-function getNextState(state: PomodoroState, stage: PomodoroStage, status: CountdownStatus): PomodoroState {
+function getNextState(state: PomodoroState, status: CountdownStatus, focusCount: number): PomodoroState {
 	const states = {
 		isFocusPending: state === PomodoroState.FocusPending,
 		isFocusRunning: state === PomodoroState.FocusRunning,
@@ -18,12 +18,6 @@ function getNextState(state: PomodoroState, stage: PomodoroStage, status: Countd
 		isFocusPaused: state === PomodoroState.FocusPaused,
 		isShortBreakRunning: state === PomodoroState.ShortBreakRunning,
 		isLongBreakRunning: state === PomodoroState.LongBreakRunning
-	}
-
-	const stages = {
-		isFocusSession: stage === PomodoroStages.focusSession,
-		isShortBreak: stage === PomodoroStages.shortBreak,
-		isLongBreak: stage === PomodoroStages.longBreak
 	}
 
 	const statuses = {
@@ -67,7 +61,7 @@ function getNextState(state: PomodoroState, stage: PomodoroStage, status: Countd
 	 */
 	else if (
 		states.isFocusComplete &&
-		stages.isShortBreak &&
+		focusCount % 4 > 0 &&
 		statuses.isRunning
 	) return PomodoroState.ShortBreakRunning
 
@@ -78,7 +72,7 @@ function getNextState(state: PomodoroState, stage: PomodoroStage, status: Countd
 	 */
 	else if (
 		states.isFocusComplete &&
-		stages.isLongBreak &&
+		focusCount % 4 === 0 &&
 		statuses.isRunning
 	) return PomodoroState.LongBreakRunning
 
