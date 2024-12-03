@@ -59,8 +59,6 @@ export default function Home() {
 		)
 	}
 
-	useEffect(() => console.log(pomodoroState), [pomodoroState])
-
 	return (
 		<div className={cx(
 			[

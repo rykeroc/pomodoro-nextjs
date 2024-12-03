@@ -86,10 +86,6 @@ export default function useCountdown(seconds: number): Countdown {
 		setStatus(CountdownStatus.NotStarted)
 	}, [intervalId.current, remainingSeconds, totalSeconds, pause])
 
-	useEffect(() => {
-		console.log(`Status: ${status}`)
-	}, [status]);
-
 	// Check if countdown is complete
 	useEffect(() => {
 		if (remainingSeconds <= 0) {
