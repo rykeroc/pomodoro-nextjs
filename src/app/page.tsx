@@ -7,6 +7,7 @@ import {Bars3Icon} from "@heroicons/react/16/solid";
 import usePomodoro from "@/app/_lib/hooks/usePomodoro";
 import PomodoroState from "@/app/_lib/constants/PomodoroState";
 import {cn} from "@/app/_lib/cn";
+import useQuoteQuery from "@/app/_lib/hooks/useQuoteQuery";
 
 
 export default function Home() {
@@ -24,8 +25,7 @@ export default function Home() {
 	// TODO
 	const [taskName, setTaskName] = useState("Focus")
 
-	// TODO
-	const [quote, setQuote] = useState("Focus")
+	const quote = useQuoteQuery()
 
 	const PomodoroButtons = ({state}: { state: PomodoroState }) => {
 		const buttons = {
@@ -86,7 +86,7 @@ export default function Home() {
 			</div>
 
 			<FocusQuote>
-				{quote}
+				{quote.data?.quote ?? ''}
 			</FocusQuote>
 		</div>
 	);
