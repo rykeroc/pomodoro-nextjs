@@ -13,8 +13,8 @@ export default function Home() {
 	const {
 		remaining,
 		total,
-		pomodoroStage,
-		pomodoroState,
+		stage,
+		state,
 		start,
 		pause,
 		finish,
@@ -76,11 +76,11 @@ export default function Home() {
 					remainingSeconds={remaining}
 					totalSeconds={total}
 					taskName={taskName}
-					stage={pomodoroStage}
+					stage={stage}
 				/>
 
 				{/* Timer buttons */}
-				<PomodoroButtons state={pomodoroState}/>
+				<PomodoroButtons state={state}/>
 			</div>
 
 			<FocusQuote>

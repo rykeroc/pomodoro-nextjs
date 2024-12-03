@@ -1,32 +1,59 @@
 import {useCallback, useEffect, useState} from "react";
 import useCountdown from "@/app/_lib/hooks/useCountdown";
 import PomodoroState from "@/app/_lib/constants/PomodoroState";
-import {getStageFromState, PomodoroStages} from "@/app/_lib/constants/PomodoroStage";
+import {getStageFromState, PomodoroStageInfo, PomodoroStages} from "@/app/_lib/constants/PomodoroStage";
 
-export const elapsedSeconds = (remaining: number, total: number): number => total - remaining
+interface Pomodoro {
+	remaining: number
+	total: number
+	stage: PomodoroStageInfo,
+	state: PomodoroState,
+	relax: () => void
+	start: () => void
+	pause: () => void
+	finish: () => void
+}
 
-export default function usePomodoro() {
-	const [pomodoroState, setPomodoroState] = useState(PomodoroState.FocusPending)
-	const [pomodoroStage, setPomodoroStage] = useState(PomodoroStages.focusSession)
-	const [focusCount, setFocusCount] = useState(0)
+interface PomodoroInfo {
+	state: PomodoroState
+	stage: PomodoroStageInfo
+	focusCount: number
+}
+
+export default function usePomodoro(): Pomodoro {
+	const [info, setInfo] = useState<PomodoroInfo>({
+		state: PomodoroState.FocusPending,
+		stage: PomodoroStages.focusSession,
+		focusCount: 0
+	})
 
 	// Keep pomodoro stage up to date
 	useEffect(() => {
-		const stage = getStageFromState(pomodoroState)
-		setPomodoroStage(stage)
-	}, [pomodoroState]);
+		const stage = getStageFromState(info.state)
+		setInfo(prevState => (
+			{
+				...prevState,
+				stage
+			}
+		))
+	}, [info.state]);
 
 	const {
-		remaining, total, status,
+		remaining, total,
 		startCountdown, pauseCountdown, resetCountdown, restartCountdown,
 		setOnCompleteAction
-	} = useCountdown(pomodoroStage.seconds)
+	} = useCountdown(info.stage.seconds)
 
 	const onCompleteAction = useCallback(() => {
-		setPomodoroState(prevState => (prevState === PomodoroState.FocusRunning) ?
-				 PomodoroState.FocusComplete : PomodoroState.FocusPending
+		setInfo(prev => (
+				{
+					...prev,
+					state: (prev.state === PomodoroState.FocusRunning) ?
+						PomodoroState.FocusComplete : PomodoroState.FocusPending
+				}
+			)
 		)
-	}, [setPomodoroState])
+	}, [setInfo])
 
 	// Set completion callback
 	useEffect(() => {
@@ -35,56 +62,75 @@ export default function usePomodoro() {
 
 
 	useEffect(() => {
-		// Update focus count
-		if (pomodoroState === PomodoroState.FocusComplete) {
-			setFocusCount(prev => prev + 1)
+		// Update focus count if focus has been completed
+		if (info.state === PomodoroState.FocusComplete) {
+			setInfo(prev => (
+				{
+					...prev,
+					focusCount: prev.focusCount + 1
+				}
+			))
 		}
 
-		// Reset countdown
-		else if (pomodoroState === PomodoroState.FocusPending){
+		// Reset countdown if break was completed
+		else if (info.state === PomodoroState.FocusPending) {
 			resetCountdown(PomodoroStages.focusSession.seconds)
 		}
-	}, [pomodoroState]);
+	}, [info.state, setInfo]);
 
 	const start = useCallback(() => {
 		startCountdown()
-		setPomodoroState(PomodoroState.FocusRunning)
-	}, [startCountdown, setPomodoroState])
+		// Update pomodoro state to running
+		setInfo(prev => (
+			{
+				...prev,
+				state: PomodoroState.FocusRunning
+			}
+		))
+	}, [startCountdown, setInfo])
 
 	const pause = useCallback(() => {
 		pauseCountdown()
-		setPomodoroState(PomodoroState.FocusPaused)
-	}, [pauseCountdown])
+		// Update pomodoro state to paused
+		setInfo(prev => (
+			{
+				...prev,
+				state: PomodoroState.FocusPaused
+			}
+		))
+	}, [pauseCountdown, setInfo])
 
 	const finish = useCallback(() => {
 		resetCountdown(PomodoroStages.focusSession.seconds)
-		setPomodoroState(PomodoroState.FocusPending)
+		setInfo(prev => (
+			{
+				...prev,
+				state: PomodoroState.FocusPending
+			}
+		))
 	}, [
-		pomodoroStage,
-		setPomodoroState, resetCountdown, setFocusCount
+		resetCountdown, setInfo
 	])
 
 	const relax = useCallback(() => {
-		console.log(`Focus count: ${focusCount}`)
-		restartCountdown(
-			(focusCount % 4 === 0) ? PomodoroStages.longBreak.seconds : PomodoroStages.shortBreak.seconds
-		)
-		setPomodoroState(() => (focusCount % 4 === 0) ?
-				PomodoroState.LongBreakRunning : PomodoroState.ShortBreakRunning
-		)
-	}, [focusCount, setPomodoroState, restartCountdown])
-
-	// TODO: Debugging state and status
-	useEffect(() => {
-		console.log(`Pomodoro state: ${pomodoroState}, Countdown Status: ${status}`)
-	}, [status, pomodoroState]);
+		console.log(`Focus count: ${info.focusCount}`)
+		const isLongBreak = (info.focusCount % 4) === 0
+		const seconds = isLongBreak ? PomodoroStages.longBreak.seconds : PomodoroStages.shortBreak.seconds
+		restartCountdown(seconds)
+		setInfo(prev => (
+			{
+				...prev,
+				state: isLongBreak ? PomodoroState.LongBreakRunning : PomodoroState.ShortBreakRunning
+			}
+		))
+	}, [info.focusCount, restartCountdown, setInfo])
 
 
 	return {
 		remaining,
 		total,
-		pomodoroStage,
-		pomodoroState,
+		stage: info.stage,
+		state: info.state,
 		relax,
 		start,
 		pause,
