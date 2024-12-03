@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from "react";
 import useCountdown from "@/app/_lib/hooks/useCountdown";
 import PomodoroState from "@/app/_lib/constants/PomodoroState";
-import {getStageFromState, PomodoroStageInfo, PomodoroStages} from "@/app/_lib/constants/PomodoroStage";
+import {PomodoroStageInfo, PomodoroStages} from "@/app/_lib/constants/PomodoroStage";
 
 interface Pomodoro {
 	remaining: number
@@ -24,19 +24,8 @@ export default function usePomodoro(): Pomodoro {
 	const [info, setInfo] = useState<PomodoroInfo>({
 		state: PomodoroState.FocusPending,
 		stage: PomodoroStages.focusSession,
-		focusCount: 0
+		focusCount: 2
 	})
-
-	// Keep pomodoro stage up to date
-	useEffect(() => {
-		const stage = getStageFromState(info.state)
-		setInfo(prevState => (
-			{
-				...prevState,
-				stage
-			}
-		))
-	}, [info.state]);
 
 	const {
 		remaining, total,
@@ -48,6 +37,7 @@ export default function usePomodoro(): Pomodoro {
 		setInfo(prev => (
 				{
 					...prev,
+					stage: PomodoroStages.focusSession,
 					state: (prev.state === PomodoroState.FocusRunning) ?
 						PomodoroState.FocusComplete : PomodoroState.FocusPending
 				}
@@ -64,12 +54,15 @@ export default function usePomodoro(): Pomodoro {
 	useEffect(() => {
 		// Update focus count if focus has been completed
 		if (info.state === PomodoroState.FocusComplete) {
-			setInfo(prev => (
-				{
-					...prev,
-					focusCount: prev.focusCount + 1
+			setInfo(prev => {
+					const newFocusCount = prev.focusCount + 1
+					console.log(`Focus count updated to: ${newFocusCount}`)
+					return ({
+						...prev,
+						focusCount:	prev.focusCount + 1
+					})
 				}
-			))
+			)
 		}
 
 		// Reset countdown if break was completed
@@ -84,6 +77,7 @@ export default function usePomodoro(): Pomodoro {
 		setInfo(prev => (
 			{
 				...prev,
+				stage: PomodoroStages.focusSession,
 				state: PomodoroState.FocusRunning
 			}
 		))
@@ -105,6 +99,7 @@ export default function usePomodoro(): Pomodoro {
 		setInfo(prev => (
 			{
 				...prev,
+				stage: PomodoroStages.focusSession,
 				state: PomodoroState.FocusPending
 			}
 		))
@@ -113,13 +108,13 @@ export default function usePomodoro(): Pomodoro {
 	])
 
 	const relax = useCallback(() => {
-		console.log(`Focus count: ${info.focusCount}`)
 		const isLongBreak = (info.focusCount % 4) === 0
 		const seconds = isLongBreak ? PomodoroStages.longBreak.seconds : PomodoroStages.shortBreak.seconds
 		restartCountdown(seconds)
 		setInfo(prev => (
 			{
 				...prev,
+				stage: isLongBreak ? PomodoroStages.longBreak : PomodoroStages.shortBreak,
 				state: isLongBreak ? PomodoroState.LongBreakRunning : PomodoroState.ShortBreakRunning
 			}
 		))

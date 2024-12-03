@@ -1,5 +1,3 @@
-import PomodoroState from "@/app/_lib/constants/PomodoroState";
-
 type PomodoroStage = "focusSession" | "shortBreak" | "longBreak"
 
 interface PomodoroStageInfo {
@@ -22,25 +20,10 @@ const PomodoroStages: { [key in PomodoroStage]: PomodoroStageInfo } = {
 	},
 }
 
-function getStageFromState(state: PomodoroState): PomodoroStageInfo {
-	switch (state) {
-		case PomodoroState.FocusPending:
-		case PomodoroState.FocusRunning:
-		case PomodoroState.FocusPaused:
-		case PomodoroState.FocusComplete:
-			return PomodoroStages.focusSession
-		case PomodoroState.ShortBreakRunning:
-			return PomodoroStages.shortBreak
-		case PomodoroState.LongBreakRunning:
-			return PomodoroStages.longBreak
-	}
-}
-
 export type {
 	PomodoroStageInfo
 }
 
 export {
 	PomodoroStages,
-	getStageFromState,
 }
