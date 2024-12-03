@@ -1,8 +1,8 @@
-import {Dispatch, SetStateAction, useCallback, useRef, useState} from "react";
+import {Dispatch, SetStateAction, useCallback, useEffect, useRef, useState} from "react";
 import CountdownStatus from "@/app/_lib/enums/CountdownStatus";
 
 interface Countdown {
-	getStatus: () => CountdownStatus,
+	status: CountdownStatus,
 	remainingSeconds: number
 	totalSeconds: number
 	setOnCompleteAction: Dispatch<SetStateAction<() => void>>
@@ -14,25 +14,27 @@ interface Countdown {
 export default function useCountdown(seconds: number): Countdown {
 	const [totalSeconds, setTotalSeconds] = useState(seconds)
 	const [remainingSeconds, setRemainingSeconds] = useState(seconds)
+	const [status, setStatus] = useState(CountdownStatus.NotStarted)
 	const [onCompleteAction, setOnCompleteAction] = useState<() => void>(() => {})
 	const intervalId = useRef<NodeJS.Timeout | null>(null)
 
 	const intervalSpacingMs: number = 1000
 
-	const getStatus = useCallback(() => {
+	// Update countdown status
+	useEffect(() => {
+		let updatedStatus: CountdownStatus = CountdownStatus.Running
+
 		if (intervalId.current === null) {
 			if (remainingSeconds === 0)
-				return CountdownStatus.Complete
+				updatedStatus = CountdownStatus.Complete
 			else if (remainingSeconds === totalSeconds)
-				return CountdownStatus.NotStarted
+				updatedStatus = CountdownStatus.NotStarted
 			else if (remainingSeconds < totalSeconds)
-				return CountdownStatus.Paused
+				updatedStatus = CountdownStatus.Paused
 		}
 
-		return CountdownStatus.Running
-	}, [
-		intervalId, remainingSeconds, totalSeconds
-	])
+		setStatus(updatedStatus)
+	}, [intervalId.current, remainingSeconds]);
 
 	const clearCurrentInterval = useCallback(() => {
 		// Clear any running interval
@@ -74,7 +76,7 @@ export default function useCountdown(seconds: number): Countdown {
 		}
 
 		console.log("Starting countdown")
-
+		// Start countdown by setting interval
 		intervalId.current = setInterval(
 			intervalFunction,
 			intervalSpacingMs
@@ -104,6 +106,7 @@ export default function useCountdown(seconds: number): Countdown {
 
 		console.log("Pausing countdown")
 
+		// Pause timer by clearing interval
 		clearCurrentInterval()
 	}, [
 		intervalId, remainingSeconds, totalSeconds,
@@ -118,7 +121,6 @@ export default function useCountdown(seconds: number): Countdown {
 		}
 
 		console.log("Resetting countdown")
-
 		clearCurrentInterval()
 
 		// Reset seconds
@@ -131,7 +133,7 @@ export default function useCountdown(seconds: number): Countdown {
 	])
 
 	return {
-		getStatus,
+		status,
 		remainingSeconds,
 		totalSeconds,
 		setOnCompleteAction,
