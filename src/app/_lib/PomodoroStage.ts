@@ -1,11 +1,13 @@
 import PomodoroState from "@/app/_lib/enums/PomodoroState";
 
-interface PomodoroStage {
+type PomodoroStage = "focusSession" | "shortBreak" | "longBreak"
+
+interface PomodoroStageInfo {
 	name: string
 	seconds: number
 }
 
-const PomodoroStages: { [key: string]: PomodoroStage } = {
+const PomodoroStages: { [key in PomodoroStage]: PomodoroStageInfo } = {
 	focusSession: {
 		name: 'Focus',
 		seconds: 25
@@ -20,7 +22,7 @@ const PomodoroStages: { [key: string]: PomodoroStage } = {
 	},
 }
 
-function getStageFromState(state: PomodoroState): PomodoroStage {
+function getStageFromState(state: PomodoroState): PomodoroStageInfo {
 	switch (state) {
 		case PomodoroState.FocusPending:
 		case PomodoroState.FocusRunning:
@@ -34,7 +36,7 @@ function getStageFromState(state: PomodoroState): PomodoroStage {
 	}
 }
 
-function getNextStage(currentStage: PomodoroStage, focusCount: number): PomodoroStage {
+function getNextStage(currentStage: PomodoroStageInfo, focusCount: number): PomodoroStageInfo {
 	if (currentStage === PomodoroStages.focusSession && focusCount % 4 > 0)
 		return PomodoroStages.shortBreak
 
