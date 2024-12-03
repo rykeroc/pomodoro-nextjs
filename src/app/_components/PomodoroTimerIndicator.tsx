@@ -44,6 +44,7 @@ const PomodoroTimerIndicator = (
 				cy={size / 2}
 				r={radius}
 			/>
+
 			{/* Background circle */}
 			<circle
 				className={"fill-none stroke-secondary-text"}
@@ -52,9 +53,10 @@ const PomodoroTimerIndicator = (
 				strokeWidth={`${strokeWidth - 1}px`}
 				r={radius}
 			/>
+
 			{/* Progress circle*/}
 			<circle
-				className={"fill-none stroke-primary transition delay-200 ease-in"}
+				className={"fill-none stroke-primary transition-all ease-linear"}
 				cx={size / 2}
 				cy={size / 2}
 				r={radius}
