@@ -59,7 +59,6 @@ export default function usePomodoro() {
 	const finish = useCallback(() => {
 		resetCountdown(PomodoroStages.focusSession.seconds)
 		setPomodoroState(PomodoroState.FocusPending)
-		setFocusCount(0)
 	}, [
 		pomodoroStage,
 		setPomodoroState, resetCountdown, setFocusCount
