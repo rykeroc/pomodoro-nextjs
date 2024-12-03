@@ -38,6 +38,14 @@ export default function usePomodoro(): Pomodoro {
 		console.log(`Focus Count updated: ${info.focusCount}`)
 	}, [info.focusCount]);
 
+	/*
+	 Called when the countdown completes.
+
+	 The countdown completes when in the following states:
+	 - Focus running
+	 - Short break running
+	 - Long break running
+	 */
 	const onCompleteAction = useCallback(() => {
 		setInfo(prev => {
 			// Update focus count if focus session was completed
@@ -56,10 +64,6 @@ export default function usePomodoro(): Pomodoro {
 			// Next stage will always be focus session
 			const newStage = PomodoroStages.focusSession
 
-			// Reset countdown if break was completed
-			if (newState === PomodoroState.FocusPending)
-				resetCountdown(newStage.seconds)
-
 			return {focusCount: newFocusCount, state: newState, stage: newStage}
 		})
 	}, [setInfo])
@@ -68,6 +72,12 @@ export default function usePomodoro(): Pomodoro {
 	useEffect(() => {
 		setOnCompleteAction(() => onCompleteAction)
 	});
+
+	// Auto reset countdown if break was completed
+	useEffect(() => {
+		if (info.state === PomodoroState.FocusPending)
+			resetCountdown(info.stage.seconds)
+	}, [info.state, info.stage.seconds, resetCountdown]);
 
 	const start = useCallback(() => {
 		startCountdown()
