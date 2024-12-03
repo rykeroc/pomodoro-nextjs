@@ -2,6 +2,7 @@ import {Button as HeadlessUiButton} from "@headlessui/react";
 import {ButtonHTMLAttributes,} from "react";
 import {fadeTransitionClasses, glassEffectClasses} from "@/app/_components/common";
 import {cva, VariantProps} from "class-variance-authority";
+import {cn} from "@/app/_lib/cn";
 
 const buttonClasses = cva(
 	[
@@ -41,7 +42,10 @@ interface ButtonProps
 
 const Button = ({className, variant = "none", ...props}: ButtonProps) =>
 	<HeadlessUiButton
-		className={buttonClasses({variant, className,})}
+		className={cn(
+			buttonClasses({variant,}),
+			className
+		)}
 		{...props}
 	/>
 

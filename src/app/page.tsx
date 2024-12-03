@@ -1,12 +1,12 @@
 "use client"
 
 import PomodoroTimerIndicator from "@/app/_components/PomodoroTimerIndicator";
-import {HTMLAttributes, ReactNode, useEffect, useState} from "react";
-import {cx} from "class-variance-authority";
+import {HTMLAttributes, ReactNode, useState} from "react";
 import Button from "@/app/_components/Button";
 import {Bars3Icon} from "@heroicons/react/16/solid";
 import usePomodoro from "@/app/_lib/hooks/usePomodoro";
 import PomodoroState from "@/app/_lib/enums/PomodoroState";
+import {cn} from "@/app/_lib/cn";
 
 
 export default function Home() {
@@ -60,7 +60,7 @@ export default function Home() {
 	}
 
 	return (
-		<div className={cx(
+		<div className={cn(
 			[
 				'h-screen', 'w-screen',
 				'flex', 'flex-col', 'justify-between', 'items-center'
@@ -91,7 +91,7 @@ export default function Home() {
 }
 
 const NavMenu = () =>
-	<nav className={cx(
+	<nav className={cn(
 		[
 			'w-full', 'p-5',
 			'flex', 'flex-row', 'justify-end'

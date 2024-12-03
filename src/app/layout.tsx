@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import {Montserrat} from 'next/font/google'
-import {cx} from "class-variance-authority";
+import {cn} from "@/app/_lib/cn";
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cx(montserrat.className, 'antialiased')}>
+      <body className={cn(montserrat.className, 'antialiased')}>
         {children}
       </body>
     </html>
