@@ -17,7 +17,7 @@ export default function usePomodoro() {
 	}, [pomodoroState]);
 
 	const {
-		remainingSeconds, totalSeconds, status,
+		seconds, status,
 		startCountdown, pauseCountdown, resetCountdown, restartCountdown,
 		setOnCompleteAction
 	} = useCountdown(pomodoroStage.seconds)
@@ -81,8 +81,7 @@ export default function usePomodoro() {
 
 
 	return {
-		remainingSeconds,
-		totalSeconds,
+		seconds,
 		pomodoroStage,
 		pomodoroState,
 		relax,
