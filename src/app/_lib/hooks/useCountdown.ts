@@ -11,56 +11,16 @@ interface Countdown {
 	resetCountdown: (newTotalSeconds: number) => void
 }
 
+const intervalSpacingMs: number = 1000
+
 export default function useCountdown(seconds: number): Countdown {
 	const [totalSeconds, setTotalSeconds] = useState(seconds)
 	const [remainingSeconds, setRemainingSeconds] = useState(seconds)
 	const [status, setStatus] = useState(CountdownStatus.NotStarted)
 	const [onCompleteAction, setOnCompleteAction] = useState<() => void>(() => {})
+
 	const intervalId = useRef<NodeJS.Timeout | null>(null)
 
-	const intervalSpacingMs: number = 1000
-
-	// Update countdown status
-	useEffect(() => {
-		let updatedStatus: CountdownStatus = CountdownStatus.Running
-
-		if (intervalId.current === null) {
-			if (remainingSeconds === 0)
-				updatedStatus = CountdownStatus.Complete
-			else if (remainingSeconds === totalSeconds)
-				updatedStatus = CountdownStatus.NotStarted
-			else if (remainingSeconds < totalSeconds)
-				updatedStatus = CountdownStatus.Paused
-		}
-
-		setStatus(updatedStatus)
-	}, [intervalId.current, remainingSeconds]);
-
-	const clearCurrentInterval = useCallback(() => {
-		// Clear any running interval
-		if (intervalId.current) {
-			clearInterval(intervalId.current);
-			intervalId.current = null;
-		}
-	}, [intervalId])
-
-	const intervalFunction = useCallback(() => {
-		// Update remaining seconds
-		setRemainingSeconds((prev) => {
-			const nextSeconds = prev - 1
-
-			// Check if timer is complete
-			if (nextSeconds <= 0 && intervalId.current) {
-				clearCurrentInterval()
-				if (onCompleteAction) onCompleteAction()
-				return 0
-			}
-
-			return nextSeconds
-		})
-	}, [clearCurrentInterval, onCompleteAction])
-
-	// Countdown start
 	const start = useCallback(() => {
 		// If already started or completed, do nothing
 		{
@@ -78,15 +38,12 @@ export default function useCountdown(seconds: number): Countdown {
 		console.log("Starting countdown")
 		// Start countdown by setting interval
 		intervalId.current = setInterval(
-			intervalFunction,
+			() => setRemainingSeconds(prev => prev - 1),
 			intervalSpacingMs
 		)
-	}, [
-		intervalId, remainingSeconds,
-		clearCurrentInterval, intervalFunction,
-	])
+		setStatus(CountdownStatus.Running)
+	}, [intervalId.current, remainingSeconds])
 
-	// Countdown pause
 	const pause = useCallback(() => {
 		// If not started, paused, or complete, do nothing
 		{
@@ -107,13 +64,13 @@ export default function useCountdown(seconds: number): Countdown {
 		console.log("Pausing countdown")
 
 		// Pause timer by clearing interval
-		clearCurrentInterval()
-	}, [
-		intervalId, remainingSeconds, totalSeconds,
-		clearCurrentInterval,
-	])
+		if (intervalId.current) {
+			clearInterval(intervalId.current);
+			intervalId.current = null;
+		}
+		setStatus(CountdownStatus.Paused)
+	}, [intervalId, intervalId.current, remainingSeconds, totalSeconds,])
 
-	// Countdown reset
 	const reset = useCallback((newTotalSeconds: number) => {
 		if (intervalId.current === null && remainingSeconds === totalSeconds) {
 			console.log("Countdown has not started.")
@@ -121,16 +78,26 @@ export default function useCountdown(seconds: number): Countdown {
 		}
 
 		console.log("Resetting countdown")
-		clearCurrentInterval()
+		pause()
 
 		// Reset seconds
 		setTotalSeconds(newTotalSeconds)
 		setRemainingSeconds(newTotalSeconds)
-	}, [
-		intervalId, remainingSeconds, totalSeconds,
-		clearCurrentInterval,
-		setTotalSeconds, setRemainingSeconds
-	])
+		setStatus(CountdownStatus.NotStarted)
+	}, [intervalId.current, remainingSeconds, totalSeconds, pause])
+
+	useEffect(() => {
+		console.log(`Status: ${status}`)
+	}, [status]);
+
+	// Check if countdown is complete
+	useEffect(() => {
+		if (remainingSeconds <= 0) {
+			pause()
+			setStatus(CountdownStatus.Complete)
+			if (onCompleteAction) onCompleteAction()
+		}
+	}, [remainingSeconds]);
 
 	return {
 		status,
