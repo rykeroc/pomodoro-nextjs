@@ -1,26 +1,22 @@
 "use server"
 
 import axios from "axios";
-import {QuoteCategory} from "@/app/_lib/actions/types";
 import {QuoteResponseData} from "@/app/_lib/actions/responseModels";
+import * as https from "node:https";
 
-async function getQuote(category: QuoteCategory = "inspirational"): Promise<QuoteResponseData> {
-	const apiKey = process.env.NEXT_API_NINJAS_KEY
-	if (!apiKey)
-		throw new Error("Invalid API Ninjas API key")
+async function getQuote(): Promise<QuoteResponseData> {
 
-	const baseUrl = "https://api.api-ninjas.com/v1/quotes"
-	const params = new URLSearchParams()
-	params.append("category", category)
-	const finalUrl = `${baseUrl}?${params.toString()}`
+	const url = "https://api.quotable.io/quotes/random"
 
-	const headers = {
-		"X-Api-Key": apiKey
-	}
+	const httpsAgent = new https.Agent({
+		rejectUnauthorized: process.env.NODE_ENV !== "development"
+	})
 
 	const response = await axios.get(
-		finalUrl,
-		{headers}
+		url,
+		{
+			httpsAgent
+		}
 	)
 
 	try {

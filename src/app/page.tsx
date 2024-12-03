@@ -86,7 +86,7 @@ export default function Home() {
 			</div>
 
 			<FocusQuote>
-				{quote.data?.quote ?? ''}
+				{quote.data?.content ?? ''}
 			</FocusQuote>
 		</div>
 	);
@@ -104,4 +104,8 @@ const NavMenu = () =>
 	</nav>
 
 const FocusQuote = ({children}: HTMLAttributes<HTMLHeadingElement>) =>
-	<h6 className={"text-secondary-text p-5"}>&quot;{children}&quot;</h6>
+	<h6 className={"text-secondary-text py-6 px-12 text-center"}>
+		{
+			children ? `"${children}"` : ''
+		}
+	</h6>

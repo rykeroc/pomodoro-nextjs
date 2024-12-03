@@ -1,7 +1,6 @@
 interface QuoteResponseData {
-	quote: string,
 	author: string,
-	category: string
+	content: string,
 }
 
 export type {

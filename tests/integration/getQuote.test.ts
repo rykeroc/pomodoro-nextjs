@@ -8,8 +8,7 @@ describe("getQuote action", () => {
 
 		expect(responseData).toBeTruthy()
 		expect(responseData.author.length).toBeGreaterThan(0)
-		expect(responseData.quote.length).toBeGreaterThan(0)
-		expect(responseData.category.length).toBeGreaterThan(0)
+		expect(responseData.content.length).toBeGreaterThan(0)
 	})
 
 })
