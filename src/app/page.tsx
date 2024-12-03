@@ -5,7 +5,7 @@ import {HTMLAttributes, ReactNode, useState} from "react";
 import Button from "@/app/_components/Button";
 import {Bars3Icon} from "@heroicons/react/16/solid";
 import usePomodoro from "@/app/_lib/hooks/usePomodoro";
-import PomodoroState from "@/app/_lib/enums/PomodoroState";
+import PomodoroState from "@/app/_lib/constants/PomodoroState";
 import {cn} from "@/app/_lib/cn";
 
 

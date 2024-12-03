@@ -1,5 +1,5 @@
 import {Dispatch, SetStateAction, useCallback, useEffect, useRef, useState} from "react";
-import CountdownStatus from "@/app/_lib/enums/CountdownStatus";
+import CountdownStatus from "@/app/_lib/constants/CountdownStatus";
 
 interface CounterSeconds {
 	total: number

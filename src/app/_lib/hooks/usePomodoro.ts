@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from "react";
 import useCountdown from "@/app/_lib/hooks/useCountdown";
-import PomodoroState from "@/app/_lib/enums/PomodoroState";
-import {getStageFromState, PomodoroStages} from "@/app/_lib/PomodoroStage";
+import PomodoroState from "@/app/_lib/constants/PomodoroState";
+import {getStageFromState, PomodoroStages} from "@/app/_lib/constants/PomodoroStage";
 
 export const elapsedSeconds = (remaining: number, total: number): number => total - remaining
 

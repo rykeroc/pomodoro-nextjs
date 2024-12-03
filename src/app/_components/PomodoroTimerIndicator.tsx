@@ -1,7 +1,7 @@
 import Button from "@/app/_components/Button";
 import {ChevronRightIcon} from "@heroicons/react/16/solid";
 import {secondsToMinutes} from "@/app/_lib/dateTimeUtils";
-import {PomodoroStageInfo, PomodoroStages} from "@/app/_lib/PomodoroStage";
+import {PomodoroStageInfo, PomodoroStages} from "@/app/_lib/constants/PomodoroStage";
 import {cn} from "@/app/_lib/cn";
 
 interface PomodoroTimerIndicatorProps {

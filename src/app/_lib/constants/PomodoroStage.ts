@@ -1,4 +1,4 @@
-import PomodoroState from "@/app/_lib/enums/PomodoroState";
+import PomodoroState from "@/app/_lib/constants/PomodoroState";
 
 type PomodoroStage = "focusSession" | "shortBreak" | "longBreak"
 
@@ -36,16 +36,6 @@ function getStageFromState(state: PomodoroState): PomodoroStageInfo {
 	}
 }
 
-function getNextStage(currentStage: PomodoroStageInfo, focusCount: number): PomodoroStageInfo {
-	if (currentStage === PomodoroStages.focusSession && focusCount % 4 > 0)
-		return PomodoroStages.shortBreak
-
-	if (currentStage === PomodoroStages.focusSession && focusCount % 4 === 0)
-		return PomodoroStages.longBreak
-
-	return PomodoroStages.focusSession
-}
-
 export type {
 	PomodoroStageInfo
 }
@@ -53,5 +43,4 @@ export type {
 export {
 	PomodoroStages,
 	getStageFromState,
-	getNextStage
 }
