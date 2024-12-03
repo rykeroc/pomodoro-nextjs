@@ -9,6 +9,7 @@ interface Countdown {
 	startCountdown: () => void
 	pauseCountdown: () => void
 	resetCountdown: (newTotalSeconds: number) => void
+	restartCountdown: (newTotalSeconds: number) => void
 }
 
 const intervalSpacingMs: number = 1000
@@ -86,6 +87,29 @@ export default function useCountdown(seconds: number): Countdown {
 		setStatus(CountdownStatus.NotStarted)
 	}, [intervalId.current, remainingSeconds, totalSeconds, pause])
 
+	const restart = useCallback((newTotalSeconds: number) => {
+		console.log("Restarting countdown")
+
+		// Reset seconds
+		setTotalSeconds(newTotalSeconds)
+		setRemainingSeconds(newTotalSeconds)
+		setStatus(CountdownStatus.Running)
+
+		// Explicitly clear any existing interval
+		if (intervalId.current) {
+			clearInterval(intervalId.current);
+			intervalId.current = null;
+		}
+
+		intervalId.current = setInterval(
+			() => setRemainingSeconds(prev => prev - 1),
+			intervalSpacingMs
+		)
+	}, [
+		intervalId.current, start,
+		setTotalSeconds, setRemainingSeconds,setStatus
+	])
+
 	// Check if countdown is complete
 	useEffect(() => {
 		if (remainingSeconds <= 0) {
@@ -102,6 +126,7 @@ export default function useCountdown(seconds: number): Countdown {
 		setOnCompleteAction,
 		startCountdown: start,
 		pauseCountdown: pause,
-		resetCountdown: reset
+		resetCountdown: reset,
+		restartCountdown: restart
 	}
 }
