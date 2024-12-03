@@ -1,15 +1,8 @@
 "use server"
 
-
 import axios from "axios";
-
-type QuoteCategory = "inspirational"
-
-interface QuoteResponseData {
-	quote: string,
-	author: string,
-	category: string
-}
+import {QuoteCategory} from "@/app/_lib/actions/types";
+import {QuoteResponseData} from "@/app/_lib/actions/responseModels";
 
 async function getQuote(category: QuoteCategory = "inspirational"): Promise<QuoteResponseData> {
 	const apiKey = process.env.NEXT_API_NINJAS_KEY
