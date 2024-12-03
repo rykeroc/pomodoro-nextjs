@@ -47,7 +47,7 @@ function getNextStage(currentStage: PomodoroStageInfo, focusCount: number): Pomo
 }
 
 export type {
-	PomodoroStage
+	PomodoroStageInfo
 }
 
 export {
