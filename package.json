@@ -14,7 +14,8 @@
     "class-variance-authority": "^0.7.1",
     "next": "15.0.3",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.5.5"
   },
   "devDependencies": {
     "@types/node": "^20",
