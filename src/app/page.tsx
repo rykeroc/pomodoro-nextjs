@@ -15,10 +15,10 @@ export default function Home() {
 		totalSeconds,
 		pomodoroStage,
 		pomodoroState,
-		startPomodoro,
-		pausePomodoro,
-		finishPomodoro,
-		startNext
+		start,
+		pause,
+		finish,
+		relax
 	} = usePomodoro()
 
 	const [taskName, setTaskName] = useState("Focus")
@@ -27,12 +27,12 @@ export default function Home() {
 
 	const PomodoroButtons = ({state}: { state: PomodoroState }) => {
 		const buttons = {
-			start: <Button variant={"primary"} onClick={startPomodoro}>Start</Button>,
-			resume: <Button variant={"primary"} onClick={startPomodoro}>Resume</Button>,
-			pause: <Button variant={"secondary"} onClick={pausePomodoro}>Pause</Button>,
-			finish: <Button variant={"secondary"} onClick={finishPomodoro}>Finish</Button>,
-			relax: <Button variant={"primary"}>Relax</Button>,
-			skip: <Button variant={"secondary"}>Skip</Button>
+			start: <Button variant={"primary"} onClick={start}>Start</Button>,
+			resume: <Button variant={"primary"} onClick={start}>Resume</Button>,
+			pause: <Button variant={"secondary"} onClick={pause}>Pause</Button>,
+			finish: <Button variant={"secondary"} onClick={finish}>Finish</Button>,
+			relax: <Button variant={"primary"} onClick={relax}>Relax</Button>,
+			skip: <Button variant={"secondary"} onClick={finish}>Skip</Button>
 		}
 
 		let selectedButtons: ReactNode[] = []

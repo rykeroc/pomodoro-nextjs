@@ -33,9 +33,17 @@ export default function usePomodoro() {
 		setOnCompleteAction(() => onCompleteAction)
 	}, []);
 
+
 	useEffect(() => {
-		if (pomodoroState === PomodoroState.FocusComplete)
+		// Update focus count
+		if (pomodoroState === PomodoroState.FocusComplete) {
 			setFocusCount(prev => prev + 1)
+		}
+
+		// Reset countdown
+		else if (pomodoroState === PomodoroState.FocusPending){
+			resetCountdown(PomodoroStages.focusSession.seconds)
+		}
 	}, [pomodoroState]);
 
 	const start = useCallback(() => {
@@ -51,7 +59,11 @@ export default function usePomodoro() {
 	const finish = useCallback(() => {
 		resetCountdown(PomodoroStages.focusSession.seconds)
 		setPomodoroState(PomodoroState.FocusPending)
-	}, [setPomodoroState, resetCountdown, pomodoroStage])
+		setFocusCount(0)
+	}, [
+		pomodoroStage,
+		setPomodoroState, resetCountdown, setFocusCount
+	])
 
 	const relax = useCallback(() => {
 		console.log(`Focus count: ${focusCount}`)
