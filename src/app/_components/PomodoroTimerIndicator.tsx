@@ -2,13 +2,13 @@ import Button from "@/app/_components/Button";
 import {ChevronRightIcon} from "@heroicons/react/16/solid";
 import {cx} from "class-variance-authority";
 import {secondsToMinutes} from "@/app/_lib/dateTimeUtils";
-import {PomodoroStage, PomodoroStages} from "@/app/_lib/PomodoroStage";
+import {PomodoroStageInfo, PomodoroStages} from "@/app/_lib/PomodoroStage";
 
 interface PomodoroTimerIndicatorProps {
 	seconds: number
 	totalSeconds: number
 	taskName?: string
-	stage: PomodoroStage
+	stage: PomodoroStageInfo
 	className?: string
 }
 
