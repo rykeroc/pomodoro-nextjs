@@ -8,6 +8,7 @@ import usePomodoro from "@/app/_lib/hooks/usePomodoro";
 import PomodoroState from "@/app/_lib/constants/PomodoroState";
 import {cn} from "@/app/_lib/cn";
 import useQuoteQuery from "@/app/_lib/hooks/useQuoteQuery";
+import Image from "next/image";
 
 
 export default function Home() {
@@ -31,10 +32,10 @@ export default function Home() {
 		const buttonsMap: { [key: string]: ButtonProps } = {
 			start: {children: "Start", onClick: start, variant: "primary"},
 			resume: {children: "Resume", onClick: start, variant: "primary"},
-			pause: {children: "Pause", onClick: pause, variant: "secondary"},
-			finish: {children: "Finish", onClick: finish, variant: "secondary"},
+			pause: {children: "Pause", onClick: pause, variant: "glass"},
+			finish: {children: "Finish", onClick: finish, variant: "glass"},
 			relax: {children: "Relax", onClick: relax, variant: "primary"},
-			skip: {children: "Skip", onClick: finish, variant: "secondary"},
+			skip: {children: "Skip", onClick: finish, variant: "glass"},
 		}
 
 		const selectedButtons = []
@@ -64,18 +65,6 @@ export default function Home() {
 
 	return (
 		<>
-			<div className={cn(
-				'h-screen', 'w-screen',
-				'flex', 'flex-col', 'justify-between', 'items-center'
-			)}>
-				{/* Menu button */}
-				<NavMenu/>
-
-				<FocusQuote>
-					{quote.data?.content ?? ''}
-				</FocusQuote>
-			</div>
-
 			{/* Timer elements */}
 			<div className={cn(
 				'fixed', 'top-1/2', 'left-1/2', '-translate-x-1/2', '-translate-y-1/2',
@@ -95,23 +84,53 @@ export default function Home() {
 					<PomodoroButtons state={state}/>
 				</div>
 			</div>
+
+			<div className={cn(
+				'h-screen', 'w-screen',
+				'flex', 'flex-col', 'justify-between', 'items-center'
+			)}>
+				{/* Menu button */}
+				<NavMenu className={'z-40'}/>
+
+				<FocusQuote className={'z-40'}>
+					{quote.data?.content ?? ''}
+				</FocusQuote>
+			</div>
+
+			{/* Wallpaper background */}
+			<Image
+				className={cn(
+					"z-0", 'h-screen', 'w-screen',
+					'object-cover',
+					'fixed', 'top-1/2', 'left-1/2', '-translate-x-1/2', '-translate-y-1/2',
+					'brightness-75'
+				)}
+				src={"/wallpapers/anime-wallpaper-1.jpg"}
+				alt={"Lofi coffee shop wallpaper"}
+				width={3840}
+				height={2160}
+			/>
 		</>
 	);
 }
 
-const NavMenu = () =>
+const NavMenu = ({className, ...props} : HTMLAttributes<HTMLBaseElement>) =>
 	<nav className={cn(
 		[
+			className,
 			'w-full', 'p-5',
-			'flex', 'flex-row', 'justify-end'
-		])}>
+			'flex', 'flex-row', 'justify-end',
+		])} {...props}>
 		<Button variant={'glass'} className={'px-3'}>
 			<Bars3Icon className={'size-5'}/>
 		</Button>
 	</nav>
 
-const FocusQuote = ({children}: HTMLAttributes<HTMLHeadingElement>) =>
-	<h6 className={"text-secondary-text py-6 px-12 text-center"}>
+const FocusQuote = ({children, className}: HTMLAttributes<HTMLHeadingElement>) =>
+	<h6 className={cn(
+		className,
+		"text-secondary-text", "py-6", "px-12", "text-center"
+	)}>
 		{
 			children ? `"${children}"` : ''
 		}
