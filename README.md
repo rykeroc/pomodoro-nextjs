@@ -31,4 +31,13 @@ pnpm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Features
 
+### Pomodoro timer
+
+This application features a pomodoro timer which allows users cycles to go through each pomodoro state.
+
+### Inspirational quotes
+
+Inspirational quotes are randomly fetched from the [Quotable API](https://github.com/lukePeavey/quotable), and then
+displayed below the Pomodoro timer.
