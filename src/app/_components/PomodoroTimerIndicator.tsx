@@ -52,17 +52,10 @@ const PomodoroTimerIndicator = (
 					'h-full', 'w-full'
 				)}/>
 			</foreignObject>
-			<circle
-				className={"backdrop-blur-sm"}
-				fill={"url(#timerGradient)"}
-				cx={size / 2}
-				cy={size / 2}
-				r={radius}
-			/>
 
-			{/* Background circle */}
+			{/* Outline circle */}
 			<circle
-				className={"fill-none stroke-secondary-text"}
+				className={"fill-none stroke-primary-container opacity-75"}
 				cx={size / 2}
 				cy={size / 2}
 				strokeWidth={`${strokeWidth - 1}px`}
@@ -71,7 +64,9 @@ const PomodoroTimerIndicator = (
 
 			{/* Progress circle*/}
 			<circle
-				className={"fill-none stroke-primary transition-all ease-linear"}
+				className={cn(
+					"fill-none", "stroke-primary-text", "transition-all", "ease-linear",
+				)}
 				cx={size / 2}
 				cy={size / 2}
 				r={radius}
