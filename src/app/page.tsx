@@ -1,8 +1,8 @@
 "use client"
 
 import PomodoroTimerIndicator from "@/app/_components/PomodoroTimerIndicator";
-import {HTMLAttributes, ReactNode, useState} from "react";
-import Button from "@/app/_components/Button";
+import {HTMLAttributes, useState} from "react";
+import Button, {ButtonProps} from "@/app/_components/Button";
 import {Bars3Icon} from "@heroicons/react/16/solid";
 import usePomodoro from "@/app/_lib/hooks/usePomodoro";
 import PomodoroState from "@/app/_lib/constants/PomodoroState";
@@ -28,36 +28,37 @@ export default function Home() {
 	const quote = useQuoteQuery()
 
 	const PomodoroButtons = ({state}: { state: PomodoroState }) => {
-		const buttons = {
-			start: <Button variant={"primary"} onClick={start}>Start</Button>,
-			resume: <Button variant={"primary"} onClick={start}>Resume</Button>,
-			pause: <Button variant={"secondary"} onClick={pause}>Pause</Button>,
-			finish: <Button variant={"secondary"} onClick={finish}>Finish</Button>,
-			relax: <Button variant={"primary"} onClick={relax}>Relax</Button>,
-			skip: <Button variant={"secondary"} onClick={finish}>Skip</Button>
+		const buttonsMap: { [key: string]: ButtonProps } = {
+			start: {children: "Start", onClick: start, variant: "primary"},
+			resume: {children: "Resume", onClick: start, variant: "primary"},
+			pause: {children: "Pause", onClick: pause, variant: "secondary"},
+			finish: {children: "Finish", onClick: finish, variant: "secondary"},
+			relax: {children: "Relax", onClick: relax, variant: "primary"},
+			skip: {children: "Skip", onClick: finish, variant: "secondary"},
 		}
 
-		const selectedButtons: ReactNode[] = []
+		const selectedButtons = []
 		switch (state) {
 			case PomodoroState.FocusPending:
-				selectedButtons.push(buttons.start)
+				selectedButtons.push(buttonsMap.start)
 				break
 			case PomodoroState.FocusRunning:
-				selectedButtons.push(buttons.pause)
+				selectedButtons.push(buttonsMap.pause)
 				break
 			case PomodoroState.FocusPaused:
-				selectedButtons.push(buttons.resume, buttons.finish)
+				selectedButtons.push(buttonsMap.resume, buttonsMap.finish)
 				break
 			case PomodoroState.FocusComplete:
-				selectedButtons.push(buttons.relax, buttons.skip)
+				selectedButtons.push(buttonsMap.relax, buttonsMap.skip)
 				break
 			default:
-				selectedButtons.push(buttons.finish)
+				selectedButtons.push(buttonsMap.finish)
 		}
-		return (
-			<div className={"flex flex-row gap-3"}>
-				{selectedButtons.map((b, index) => <div key={index}>{b}</div>)}
-			</div>
+
+		return selectedButtons.map((b, index) =>
+			<Button key={index} variant={b.variant} onClick={b.onClick}>
+				{b.children}
+			</Button>
 		)
 	}
 
@@ -76,6 +77,7 @@ export default function Home() {
 					{quote.data?.content ?? ''}
 				</FocusQuote>
 			</div>
+
 			{/* Timer elements */}
 			<div className={cn(
 				'fixed', 'top-1/2', 'left-1/2', '-translate-x-1/2', '-translate-y-1/2',
@@ -90,8 +92,10 @@ export default function Home() {
 					stage={stage}
 				/>
 
-				{/* Timer buttons */}
-				<PomodoroButtons state={state}/>
+				<div className={"flex flex-row gap-3"}>
+					{/* Timer buttons */}
+					<PomodoroButtons state={state}/>
+				</div>
 			</div>
 		</>
 	);

@@ -50,3 +50,7 @@ const Button = ({className, variant = "none", ...props}: ButtonProps) =>
 	/>
 
 export default Button
+
+export type {
+	ButtonProps,
+}
