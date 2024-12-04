@@ -1,15 +1,23 @@
 import {MutableRefObject} from "react";
 
-interface Rbg {
+class Rgb {
 	r: number
 	g: number
 	b: number
+
+	constructor(r: number, g: number, b: number) {
+		this.r = r;
+		this.g = g;
+		this.b = b;
+	}
+
+	toString = () => `rgb(${this.r}, ${this.g}, ${this.b})`
 }
 
 function getAverageRbg(
 	imgRef: MutableRefObject<HTMLImageElement | null>,
 	scale: number = 0.1
-): Rbg | null {
+): Rgb | null {
 	if (imgRef.current === null)
 		return null
 
@@ -57,4 +65,8 @@ function getAverageRbg(
 
 export {
 	getAverageRbg
+}
+
+export type {
+	Rgb
 }
