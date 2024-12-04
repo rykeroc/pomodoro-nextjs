@@ -4,6 +4,8 @@ import {secondsToMinutes} from "@/app/_lib/dateTimeUtils";
 import PomodoroStages, {PomodoroStageInfo} from "@/app/_lib/constants/PomodoroStages";
 import {cn} from "@/app/_lib/cn";
 
+const getElapsedSeconds = (remaining: number, total: number) => total - remaining
+
 interface PomodoroTimerIndicatorProps {
 	remainingSeconds: number
 	totalSeconds: number
@@ -25,9 +27,15 @@ const PomodoroTimerIndicator = (
 	const viewBox = `0 0 ${size} ${size}`
 	const radius = (size - strokeWidth) / 2
 	const dashArray = radius * Math.PI * 2
-	const percentage = Math.min(100, (remainingSeconds / totalSeconds) * 100)
+
+	const remaining = stage === PomodoroStages.focusSession ?
+		remainingSeconds : getElapsedSeconds(remainingSeconds, totalSeconds)
+	const percentage = Math.min(100, (remaining / totalSeconds) * 100)
+
 	const dashOffset = dashArray - (dashArray * percentage) / 100
 	const minutesString = secondsToMinutes(remainingSeconds)
+
+
 	return (
 		<svg
 			width={size} height={size} viewBox={viewBox} {...props}>
