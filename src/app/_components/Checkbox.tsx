@@ -2,7 +2,7 @@ import {ReactNode} from "react";
 import {Checkbox as HeadlessUiCheckbox} from "@headlessui/react";
 import {CheckIcon} from "@heroicons/react/16/solid";
 import {fadeTransitionClasses} from "@/app/_components/common";
-import {cn} from "@/app/_lib/cn";
+import {cn} from "@/app/_lib/utils/cn";
 
 interface CheckboxProps {
 	children?: ReactNode

@@ -1,7 +1,7 @@
 import type {Metadata} from "next";
 import "./globals.css";
 import {Montserrat} from 'next/font/google'
-import {cn} from "@/app/_lib/cn";
+import {cn} from "@/app/_lib/utils/cn";
 import Providers from "@/app/providers";
 
 const montserrat = Montserrat({

@@ -1,8 +1,8 @@
 import Button from "@/app/_components/Button";
 import {ChevronRightIcon} from "@heroicons/react/16/solid";
-import {secondsToMinutes} from "@/app/_lib/dateTimeUtils";
+import {secondsToMinutes} from "@/app/_lib/utils/dateTimeUtils";
 import PomodoroStages, {PomodoroStageInfo} from "@/app/_lib/constants/PomodoroStages";
-import {cn} from "@/app/_lib/cn";
+import {cn} from "@/app/_lib/utils/cn";
 import {glassEffectClasses} from "@/app/_components/common";
 
 const getElapsedSeconds = (remaining: number, total: number) => total - remaining

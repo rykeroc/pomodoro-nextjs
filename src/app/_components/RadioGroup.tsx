@@ -1,6 +1,6 @@
 import {RadioGroup as HeadlessUiRadioGroup, Radio as HeadlessUiRadio, Field} from "@headlessui/react";
 import {fadeTransitionClasses} from "@/app/_components/common";
-import {cn} from "@/app/_lib/cn";
+import {cn} from "@/app/_lib/utils/cn";
 
 interface RadioProps {
 	value: string
