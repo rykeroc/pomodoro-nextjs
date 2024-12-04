@@ -65,10 +65,8 @@ export default function Home() {
 	return (
 		<>
 			<div className={cn(
-				[
-					'h-screen', 'w-screen',
-					'flex', 'flex-col', 'justify-between', 'items-center'
-				]
+				'h-screen', 'w-screen',
+				'flex', 'flex-col', 'justify-between', 'items-center'
 			)}>
 				{/* Menu button */}
 				<NavMenu/>
