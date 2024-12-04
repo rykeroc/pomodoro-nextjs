@@ -3,6 +3,7 @@ import {ChevronRightIcon} from "@heroicons/react/16/solid";
 import {secondsToMinutes} from "@/app/_lib/dateTimeUtils";
 import PomodoroStages, {PomodoroStageInfo} from "@/app/_lib/constants/PomodoroStages";
 import {cn} from "@/app/_lib/cn";
+import {glassEffectClasses} from "@/app/_components/common";
 
 const getElapsedSeconds = (remaining: number, total: number) => total - remaining
 
@@ -40,13 +41,19 @@ const PomodoroTimerIndicator = (
 		<svg
 			width={size} height={size} viewBox={viewBox} {...props}>
 			{/* Background */}
-			<defs>
-				<linearGradient id={"timerGradient"} x1="0%" y1="0%" x2="100%" y2="100%" className={"backdrop-blur-sm"}>
-					<stop offset="0%" stopColor="#73767E"/>
-					<stop offset="100%" stopColor="transparent"/>
-				</linearGradient>
-			</defs>
+			<foreignObject
+				x={"0%"}
+				y={"0%"}
+				width={size}
+				height={size}>
+				<div className={cn(
+					...glassEffectClasses,
+					'rounded-full', 'absolute',
+					'h-full', 'w-full'
+				)}/>
+			</foreignObject>
 			<circle
+				className={"backdrop-blur-sm"}
 				fill={"url(#timerGradient)"}
 				cx={size / 2}
 				cy={size / 2}
