@@ -56,23 +56,32 @@ export default function Home() {
 		}
 		return (
 			<div className={"flex flex-row gap-3"}>
-				{selectedButtons.map((b, index) => <div key={index}>{b}</div> )}
+				{selectedButtons.map((b, index) => <div key={index}>{b}</div>)}
 			</div>
 		)
 	}
 
 	return (
-		<div className={cn(
-			[
-				'h-screen', 'w-screen',
-				'flex', 'flex-col', 'justify-between', 'items-center'
-			]
-		)}>
-			{/* Menu button */}
-			<NavMenu/>
+		<>
+			<div className={cn(
+				[
+					'h-screen', 'w-screen',
+					'flex', 'flex-col', 'justify-between', 'items-center'
+				]
+			)}>
+				{/* Menu button */}
+				<NavMenu/>
 
+				<FocusQuote>
+					{quote.data?.content ?? ''}
+				</FocusQuote>
+			</div>
 			{/* Timer elements */}
-			<div className={'flex flex-col justify-center items-center gap-6'}>
+			<div className={cn(
+				'fixed', 'top-1/2', 'left-1/2', '-translate-x-1/2', '-translate-y-1/2',
+				'z-50',  // High z-index to ensure it's on top of other elements
+				'flex', 'flex-col', 'justify-center', 'items-center', 'gap-6'
+			)}>
 				{/* Timer indicator */}
 				<PomodoroTimerIndicator
 					remainingSeconds={remaining}
@@ -84,11 +93,7 @@ export default function Home() {
 				{/* Timer buttons */}
 				<PomodoroButtons state={state}/>
 			</div>
-
-			<FocusQuote>
-				{quote.data?.content ?? ''}
-			</FocusQuote>
-		</div>
+		</>
 	);
 }
 
