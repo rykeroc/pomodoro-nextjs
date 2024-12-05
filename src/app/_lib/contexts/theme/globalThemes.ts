@@ -9,6 +9,15 @@ const globalThemes: ITheme[] = [
 			stroke: "stroke-violet-900",
 			border: "border-violet-900"
 		}
+	},
+	{
+		wallpaperFilename: "sunset-wallpaper.jpg",
+		colorClasses: {
+			text: "text-amber-600",
+			background: "bg-amber-600",
+			stroke: "stroke-amber-600",
+			border: "border-amber-600"
+		}
 	}
 ]
 
