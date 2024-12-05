@@ -1,8 +1,10 @@
 import {Button as HeadlessUiButton} from "@headlessui/react";
-import {ButtonHTMLAttributes,} from "react";
+import {ButtonHTMLAttributes, useContext,} from "react";
 import {fadeTransitionClasses, glassEffectClasses} from "@/app/_components/common";
 import {cva, VariantProps} from "class-variance-authority";
 import {cn} from "@/app/_lib/utils/cn";
+import {IThemeContext} from "@/app/_lib/contexts/theme/IThemeContext";
+import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";
 
 const buttonClasses = cva(
 	[
@@ -40,14 +42,21 @@ interface ButtonProps
 }
 
 
-const Button = ({className, variant = "none", ...props}: ButtonProps) =>
-	<HeadlessUiButton
+const Button = ({className, variant = "none", ...props}: ButtonProps) => {
+	const theme = useContext<IThemeContext | null>(ThemeContext)
+	// Apply color theme to button if primary variant
+	const themeClasses: string[] | null = variant === "primary" && theme?.selectedTheme ?
+		[theme.selectedTheme.colorClasses.background, theme.selectedTheme.colorClasses.border] : null
+
+	return <HeadlessUiButton
 		className={cn(
 			buttonClasses({variant,}),
-			className
+			className,
+			themeClasses
 		)}
 		{...props}
 	/>
+}
 
 export default Button
 

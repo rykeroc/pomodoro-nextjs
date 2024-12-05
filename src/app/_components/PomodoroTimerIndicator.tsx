@@ -4,6 +4,9 @@ import {secondsToMinutes} from "@/app/_lib/utils/dateTimeUtils";
 import PomodoroStages, {PomodoroStageInfo} from "@/app/_lib/constants/PomodoroStages";
 import {cn} from "@/app/_lib/utils/cn";
 import {glassEffectClasses} from "@/app/_components/common";
+import {useContext} from "react";
+import {IThemeContext} from "@/app/_lib/contexts/theme/IThemeContext";
+import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";
 
 const getElapsedSeconds = (remaining: number, total: number) => total - remaining
 
@@ -23,6 +26,8 @@ const PomodoroTimerIndicator = (
 		stage = PomodoroStages.focusSession,
 		...props
 	}: PomodoroTimerIndicatorProps) => {
+	const theme = useContext<IThemeContext | null>(ThemeContext)
+
 	const size = 450
 	const strokeWidth = 8
 	const viewBox = `0 0 ${size} ${size}`
@@ -65,7 +70,9 @@ const PomodoroTimerIndicator = (
 			{/* Progress circle*/}
 			<circle
 				className={cn(
-					"fill-none", "stroke-primary-text", "transition-all", "ease-linear",
+					theme?.selectedTheme.colorClasses.stroke ? theme.selectedTheme.colorClasses.stroke : "stroke-primary-text",
+					"fill-none",
+					"transition-all", "ease-linear",
 				)}
 				cx={size / 2}
 				cy={size / 2}

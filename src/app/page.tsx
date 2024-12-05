@@ -1,7 +1,7 @@
 "use client"
 
 import PomodoroTimerIndicator from "@/app/_components/PomodoroTimerIndicator";
-import {HTMLAttributes, useState} from "react";
+import {HTMLAttributes, useContext, useState} from "react";
 import Button, {ButtonProps} from "@/app/_components/Button";
 import {Bars3Icon} from "@heroicons/react/16/solid";
 import usePomodoro from "@/app/_lib/hooks/usePomodoro";
@@ -9,6 +9,8 @@ import PomodoroState from "@/app/_lib/constants/PomodoroState";
 import {cn} from "@/app/_lib/utils/cn";
 import useQuoteQuery from "@/app/_lib/hooks/useQuoteQuery";
 import Image from "next/image";
+import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";
+import {IThemeContext} from "@/app/_lib/contexts/theme/IThemeContext";
 
 
 export default function Home() {
@@ -98,18 +100,7 @@ export default function Home() {
 			</div>
 
 			{/* Wallpaper background */}
-			<Image
-				className={cn(
-					"z-0", 'h-screen', 'w-screen',
-					'object-cover',
-					'fixed', 'top-1/2', 'left-1/2', '-translate-x-1/2', '-translate-y-1/2',
-					'brightness-75'
-				)}
-				src={"/wallpapers/anime-wallpaper-1.jpg"}
-				alt={"Lofi coffee shop wallpaper"}
-				width={3840}
-				height={2160}
-			/>
+			<ThemeImage/>
 		</>
 	);
 }
@@ -134,3 +125,20 @@ const FocusQuote = ({children, className}: HTMLAttributes<HTMLHeadingElement>) =
 			children ? `"${children}"` : ''
 		}
 	</h6>
+
+const ThemeImage = () => {
+	const theme = useContext<IThemeContext | null>(ThemeContext)
+
+	return <Image
+		className={cn(
+			"z-0", 'h-screen', 'w-screen',
+			'object-cover',
+			'fixed', 'top-1/2', 'left-1/2', '-translate-x-1/2', '-translate-y-1/2',
+			'brightness-75'
+		)}
+		src={`/wallpapers/${theme?.selectedTheme.wallpaperFilename}`}
+		alt={"Lofi coffee shop wallpaper"}
+		width={3840}
+		height={2160}
+	/>
+}
