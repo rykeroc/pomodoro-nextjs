@@ -6,7 +6,7 @@ import Button, {ButtonProps} from "@/app/_components/Button";
 import {Bars3Icon} from "@heroicons/react/16/solid";
 import usePomodoro from "@/app/_lib/hooks/usePomodoro";
 import PomodoroState from "@/app/_lib/constants/PomodoroState";
-import {cn} from "@/app/_lib/cn";
+import {cn} from "@/app/_lib/utils/cn";
 import useQuoteQuery from "@/app/_lib/hooks/useQuoteQuery";
 import Image from "next/image";
 
@@ -116,11 +116,10 @@ export default function Home() {
 
 const NavMenu = ({className, ...props} : HTMLAttributes<HTMLBaseElement>) =>
 	<nav className={cn(
-		[
 			className,
 			'w-full', 'p-5',
 			'flex', 'flex-row', 'justify-end',
-		])} {...props}>
+		)} {...props}>
 		<Button variant={'glass'} className={'px-3'}>
 			<Bars3Icon className={'size-5'}/>
 		</Button>
