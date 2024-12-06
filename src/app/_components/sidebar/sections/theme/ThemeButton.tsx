@@ -1,14 +1,34 @@
 import {ITheme} from "@/app/_lib/contexts/theme/IThemeContext";
 import {HTMLProps} from "react";
+import Button from "@/app/_components/inputs/Button";
+import Image from "next/image";
+import {cn} from "@/app/_lib/utils/cn";
 
 interface IThemeButtonProps extends HTMLProps<HTMLButtonElement>{
 	theme: ITheme
 }
 
 const ThemeButton = ({theme, onClick}: IThemeButtonProps) => (
-	<button onClick={onClick}>
-		<p>{theme.wallpaperName}</p>
-	</button>
+	<Button onClick={onClick}>
+		<div className={cn('flex', 'flex-col', 'gap-1', 'items-start')}>
+			{/* Image frame */}
+			<div className={cn(
+				'h-44', 'aspect-video',
+			)}>
+				<Image
+					className={cn(
+						'h-full', 'w-full', 'object-cover', 'rounded-xl',
+						'border-2', 'border-primary-container'
+					)}
+					src={`/wallpapers/${theme.wallpaperFilename}`}
+					alt={`${theme.wallpaperFilename}`}
+					width={500}
+					height={500}
+				/>
+			</div>
+			<p>{theme.wallpaperName}</p>
+		</div>
+	</Button>
 )
 
 export default ThemeButton
