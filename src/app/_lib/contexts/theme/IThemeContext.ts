@@ -6,6 +6,7 @@ interface IColorClasses {
 }
 
 interface ITheme {
+	wallpaperName: string
 	wallpaperFilename: string
 	colorClasses: IColorClasses
 }

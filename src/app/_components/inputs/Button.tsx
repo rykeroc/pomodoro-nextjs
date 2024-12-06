@@ -9,7 +9,7 @@ import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";
 const buttonClasses = cva(
 	[
 		"w-fit", "h-fit", "rounded-full", "text-lg", "font-semibold",
-		"flex", "flex-row", "items-center", "gap-1",
+		"flex", "flex-row", "items-center", "gap-2",
 		'cursor-pointer',
 		"hover:brightness-110",
 		...fadeTransitionClasses
@@ -30,7 +30,7 @@ const buttonClasses = cva(
 					...glassEffectClasses
 				],
 				none: [
-					"bg-transparent", "hover:brightness-125"
+				 	"text-secondary-text", "bg-transparent", "hover:brightness-125"
 				]
 			}
 		}

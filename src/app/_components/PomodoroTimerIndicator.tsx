@@ -1,4 +1,4 @@
-import Button from "@/app/_components/Button";
+import Button from "@/app/_components/inputs/Button";
 import {ChevronRightIcon} from "@heroicons/react/16/solid";
 import {secondsToMinutes} from "@/app/_lib/utils/dateTimeUtils";
 import PomodoroStages, {PomodoroStageInfo} from "@/app/_lib/constants/PomodoroStages";

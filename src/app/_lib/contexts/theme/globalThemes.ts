@@ -2,6 +2,7 @@ import {ITheme} from "@/app/_lib/contexts/theme/IThemeContext";
 
 const globalThemes: ITheme[] = [
 	{
+		wallpaperName: "City Sunset View",
 		wallpaperFilename: "anime-wallpaper-1.jpg",
 		colorClasses: {
 			text: "text-violet-900",
@@ -11,6 +12,7 @@ const globalThemes: ITheme[] = [
 		}
 	},
 	{
+		wallpaperName: "Ocean Sunset View",
 		wallpaperFilename: "sunset-wallpaper.jpg",
 		colorClasses: {
 			text: "text-amber-600",

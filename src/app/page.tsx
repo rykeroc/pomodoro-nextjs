@@ -2,7 +2,7 @@
 
 import PomodoroTimerIndicator from "@/app/_components/PomodoroTimerIndicator";
 import {HTMLAttributes, useContext, useState} from "react";
-import Button, {ButtonProps} from "@/app/_components/Button";
+import Button, {ButtonProps} from "@/app/_components/inputs/Button";
 import {Bars3Icon} from "@heroicons/react/16/solid";
 import usePomodoro from "@/app/_lib/hooks/usePomodoro";
 import PomodoroState from "@/app/_lib/constants/PomodoroState";
@@ -11,9 +11,16 @@ import useQuoteQuery from "@/app/_lib/hooks/useQuoteQuery";
 import Image from "next/image";
 import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";
 import {IThemeContext} from "@/app/_lib/contexts/theme/IThemeContext";
+import Sidebar from "@/app/_components/sidebar/Sidebar";
 
 
 export default function Home() {
+	// TODO
+	const [taskName, setTaskName] = useState("Focus")
+	const [showSidebar, setShowSidebar] = useState(false)
+	const handleShowSidebar = () => setShowSidebar(true)
+	const handleHideSidebar = () => setShowSidebar(false)
+
 	const {
 		remaining,
 		total,
@@ -24,9 +31,6 @@ export default function Home() {
 		finish,
 		relax
 	} = usePomodoro()
-
-	// TODO
-	const [taskName, setTaskName] = useState("Focus")
 
 	const quote = useQuoteQuery()
 
@@ -67,10 +71,28 @@ export default function Home() {
 
 	return (
 		<>
+			<div className={cn(
+				'fixed', 'z-40', 'h-screen', 'w-screen',
+				'flex', 'flex-col', 'justify-between', 'items-center'
+			)}>
+				<div className={cn('w-full', 'p-5', 'flex', 'flex-row', 'justify-end')}>
+					{/* Menu button */}
+					<Button variant={'glass'} className={'px-3'} onClick={handleShowSidebar}>
+						<Bars3Icon className={'size-5'}/>
+					</Button>
+				</div>
+
+				<FocusQuote>
+					{quote.data?.content ?? ''}
+				</FocusQuote>
+			</div>
+
+			<Sidebar show={showSidebar} handleHide={handleHideSidebar}/>
+
 			{/* Timer elements */}
 			<div className={cn(
 				'fixed', 'top-1/2', 'left-1/2', '-translate-x-1/2', '-translate-y-1/2',
-				'z-50',  // High z-index to ensure it's on top of other elements
+				'z-40',  // High z-index to ensure it's on top of other elements
 				'flex', 'flex-col', 'justify-center', 'items-center', 'gap-6'
 			)}>
 				{/* Timer indicator */}
@@ -87,34 +109,12 @@ export default function Home() {
 				</div>
 			</div>
 
-			<div className={cn(
-				'h-screen', 'w-screen',
-				'flex', 'flex-col', 'justify-between', 'items-center'
-			)}>
-				{/* Menu button */}
-				<NavMenu className={'z-40'}/>
-
-				<FocusQuote className={'z-40'}>
-					{quote.data?.content ?? ''}
-				</FocusQuote>
-			</div>
-
 			{/* Wallpaper background */}
 			<ThemeImage/>
 		</>
 	);
 }
 
-const NavMenu = ({className, ...props} : HTMLAttributes<HTMLBaseElement>) =>
-	<nav className={cn(
-			className,
-			'w-full', 'p-5',
-			'flex', 'flex-row', 'justify-end',
-		)} {...props}>
-		<Button variant={'glass'} className={'px-3'}>
-			<Bars3Icon className={'size-5'}/>
-		</Button>
-	</nav>
 
 const FocusQuote = ({children, className}: HTMLAttributes<HTMLHeadingElement>) =>
 	<h6 className={cn(
@@ -132,9 +132,8 @@ const ThemeImage = () => {
 	return <Image
 		className={cn(
 			"z-0", 'h-screen', 'w-screen',
-			'object-cover',
+			'object-cover', 'brightness-75',
 			'fixed', 'top-1/2', 'left-1/2', '-translate-x-1/2', '-translate-y-1/2',
-			'brightness-75'
 		)}
 		src={`/wallpapers/${theme?.selectedTheme.wallpaperFilename}`}
 		alt={"Lofi coffee shop wallpaper"}
