@@ -16,7 +16,10 @@ const ThemeSelectorContent = () => {
 	)
 
 	return (
-		<div className={cn('flex', 'flex-wrap', 'gap-4')}>
+		<div className={cn(
+			'grid', 'flex-wrap', 'gap-4',
+			'grid-cols-1', 'lg:grid-cols-2', '2xl:grid-cols-3'
+			)}>
 			{availableThemes}
 		</div>
 	)

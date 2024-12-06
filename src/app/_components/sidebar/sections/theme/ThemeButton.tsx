@@ -13,7 +13,7 @@ const ThemeButton = ({theme, onClick}: IThemeButtonProps) => (
 		<div className={cn('flex', 'flex-col', 'gap-1', 'items-start')}>
 			{/* Image frame */}
 			<div className={cn(
-				'h-44', 'aspect-video',
+				'h-full', 'aspect-video', "flex-grow"
 			)}>
 				<Image
 					className={cn(

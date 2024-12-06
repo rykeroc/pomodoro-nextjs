@@ -5,6 +5,7 @@ import sidebarSections from "@/app/_components/sidebar/sidebarSections";
 import Button from "@/app/_components/inputs/Button";
 import VerticalLine from "@/app/_components/VerticalLine";
 import {ChevronRightIcon} from "@heroicons/react/16/solid";
+import {Transition} from "@headlessui/react";
 
 interface ISidebarProps {
 	show: boolean,
@@ -23,47 +24,51 @@ const Sidebar = ({show, handleHide}: ISidebarProps) => {
 
 
 	return (
-		<div className={cn(
-			"w-full", "h-full",
-			"flex", "flex-row", "justify-end"
-		)}>
-			{/* Container */}
-			<aside className={cn(
-				'fixed', "z-50",
-				"h-full", ...glassEffectClasses, "p-4", "rounded-l-2xl", "w-3/4",
-				show ? 'fixed' : 'hidden'
-			)}>
-				<div className={cn("flex", "flex-row", "gap-6", "h-full")}>
+		<Transition show={show}>
+			<div
+				className={cn(
+					"w-full", "h-full",
+					"flex", "flex-row", "justify-end"
+				)}
+			>
+				{/* Container */}
+				<aside
+					className={cn(
+						'fixed', "z-50",
+						"h-full", ...glassEffectClasses, "p-4", "rounded-l-2xl", "w-3/4"
+					)}
+				>
+					<div className={cn("flex", "flex-row", "gap-6", "h-full")}>
+						{/* Hide button */}
+						<div className={cn(
+							'h-full', 'flex', 'flex-col', 'justify-center'
+						)}>
+							<Button onClick={handleHide}>
+								<ChevronRightIcon className={'size-6'} />
+							</Button>
+						</div>
 
-					{/* Hide button */}
-					<div className={cn(
-						'h-full', 'flex', 'flex-col', 'justify-center'
-					)}>
-						<Button onClick={handleHide}>
-							<ChevronRightIcon className={'size-6'}/>
-						</Button>
+						{/* Section buttons */}
+						<div className={cn("flex", "flex-col")}>
+							{sectionButtons}
+						</div>
+
+						<VerticalLine />
+
+						{/* Section content */}
+						<div className={cn(
+							"flex", "flex-col", "gap-5", 'w-full'
+						)}>
+							<h3>
+								{section.title}
+							</h3>
+
+							{section.content}
+						</div>
 					</div>
-
-					{/* Section buttons */}
-					<div className={cn("flex", "flex-col")}>
-						{sectionButtons}
-					</div>
-
-					<VerticalLine/>
-
-					{/* Section content */}
-					<div className={cn(
-						"flex", "flex-col", "gap-5", 'w-full'
-					)}>
-						<h3>
-							{section.title}
-						</h3>
-
-						{section.content}
-					</div>
-				</div>
-			</aside>
-		</div>
+				</aside>
+			</div>
+		</Transition>
 	)
 }
 
