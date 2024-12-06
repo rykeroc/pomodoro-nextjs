@@ -4,12 +4,17 @@ import axios from "axios";
 import {QuoteResponseData} from "@/app/_lib/actions/responseModels";
 import * as https from "node:https";
 
+/*
+ TODO:
+  The current websites certificates have expired
+  Use quotes from own database
+ */
 async function getQuote(): Promise<QuoteResponseData> {
 
 	const url = "https://api.quotable.io/quotes/random"
 
 	const httpsAgent = new https.Agent({
-		rejectUnauthorized: process.env.NODE_ENV !== "development"
+		rejectUnauthorized: process.env.NODE_ENV === "production"
 	})
 
 	const response = await axios.get(

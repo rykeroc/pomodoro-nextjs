@@ -16,7 +16,6 @@ import Sidebar from "@/app/_components/sidebar/Sidebar";
 
 export default function Home() {
 	// TODO
-	const [taskName, setTaskName] = useState("Focus")
 	const [showSidebar, setShowSidebar] = useState(false)
 	const handleShowSidebar = () => setShowSidebar(true)
 	const handleHideSidebar = () => setShowSidebar(false)
@@ -99,7 +98,7 @@ export default function Home() {
 				<PomodoroTimerIndicator
 					remainingSeconds={remaining}
 					totalSeconds={total}
-					taskName={taskName}
+					taskName={'Focus'} // TODO
 					stage={stage}
 				/>
 

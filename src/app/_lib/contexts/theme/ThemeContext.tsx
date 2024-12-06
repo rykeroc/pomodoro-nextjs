@@ -1,4 +1,4 @@
-import {createContext, ReactNode, useEffect, useMemo, useState} from "react";
+import {createContext, ReactNode, useMemo, useState} from "react";
 import {ITheme, IThemeContext} from "@/app/_lib/contexts/theme/IThemeContext";
 import globalThemes from "@/app/_lib/contexts/theme/globalThemes";
 import LocalUserPreferences from "@/app/_lib/data/UserPreferences/LocalUserPreferences";
@@ -15,7 +15,7 @@ const ThemeProvider = (
 		const savedThemePreference = (userPreferences.getPreference(LocalUserPreferences.theme) ?? 0).toString()
 		const savedThemeIndex = parseInt(savedThemePreference, 10);
 		return globalThemes[savedThemeIndex]
-	}, [])
+	}, [userPreferences])
 
 	const [selectedTheme, _setSelectedTheme] = useState(savedTheme);
 
