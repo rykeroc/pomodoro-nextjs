@@ -11,18 +11,9 @@ import * as https from "node:https";
  */
 async function getQuote(): Promise<QuoteResponseData> {
 
-	const url = "https://api.quotable.io/quotes/random"
+	const url = "https://zenquotes.io/api/quotes"
 
-	const httpsAgent = new https.Agent({
-		rejectUnauthorized: process.env.NODE_ENV === "production"
-	})
-
-	const response = await axios.get(
-		url,
-		{
-			httpsAgent
-		}
-	)
+	const response = await axios.get(url)
 
 	try {
 		return response.data[0] as QuoteResponseData
