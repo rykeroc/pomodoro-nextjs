@@ -82,7 +82,7 @@ export default function Home() {
 				</div>
 
 				<FocusQuote>
-					{quote.data?.content ?? ''}
+					{quote.data?.q ?? ''}
 				</FocusQuote>
 			</div>
 
