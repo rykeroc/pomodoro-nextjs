@@ -6,6 +6,7 @@ import Button from "@/app/_components/inputs/Button";
 import VerticalLine from "@/app/_components/VerticalLine";
 import {ChevronRightIcon} from "@heroicons/react/16/solid";
 import {Transition} from "@headlessui/react";
+import {sortAscending} from "@/app/_lib/utils/sorting";
 
 interface ISidebarProps {
 	show: boolean,
@@ -49,7 +50,7 @@ const Sidebar = ({show, handleHide}: ISidebarProps) => {
 						</div>
 
 						{/* Section buttons */}
-						<div className={cn("flex", "flex-col")}>
+						<div className={cn("flex", "flex-col", "gap-3")}>
 							{sectionButtons}
 						</div>
 
