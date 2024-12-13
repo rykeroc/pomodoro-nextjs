@@ -5,14 +5,15 @@ import sidebarSections from "@/app/_components/sidebar/sidebarSections";
 import Button from "@/app/_components/inputs/Button";
 import VerticalLine from "@/app/_components/VerticalLine";
 import {ChevronRightIcon} from "@heroicons/react/16/solid";
-import {Transition} from "@headlessui/react";
+import {Dialog, DialogPanel, DialogTitle} from "@headlessui/react";
+import {DialogHeader} from "next/dist/client/components/react-dev-overlay/internal/components/Dialog";
 
 interface ISidebarProps {
-	show: boolean,
-	handleHide: () => void
+	isOpen: boolean,
+	handleClose: () => void
 }
 
-const Sidebar = ({show, handleHide}: ISidebarProps) => {
+const Sidebar = ({isOpen, handleClose}: ISidebarProps) => {
 	const [section, setSection] = useState(sidebarSections[0])
 
 	const sectionButtons = sidebarSections.map((s, index) => (
@@ -24,26 +25,22 @@ const Sidebar = ({show, handleHide}: ISidebarProps) => {
 
 
 	return (
-		<Transition show={show}>
-			<div
-				className={cn(
-					"w-full", "h-full",
-					"flex", "flex-row", "justify-end"
-				)}
-			>
+		<Dialog open={isOpen} onClose={handleClose}>
+			<div className={cn("w-full", "h-full", "flex", "flex-row", "justify-end")}>
 				{/* Container */}
-				<aside
+				<DialogPanel
+					transition
 					className={cn(
 						'fixed', "z-50",
-						"h-full", ...glassEffectClasses, "p-4", "rounded-l-2xl", "w-3/4"
+						"h-full", ...glassEffectClasses, "p-4", "rounded-l-2xl", "w-3/4",
+						"duration-300", "ease-in-out",
+						"data-[closed]:translate-x-full", "data-[closed]:opacity-0"
 					)}
 				>
 					<div className={cn("flex", "flex-row", "gap-6", "h-full")}>
 						{/* Hide button */}
-						<div className={cn(
-							'h-full', 'flex', 'flex-col', 'justify-center'
-						)}>
-							<Button onClick={handleHide}>
+						<div className={cn('h-full', 'flex', 'flex-col', 'justify-center')}>
+							<Button onClick={handleClose}>
 								<ChevronRightIcon className={'size-6'} />
 							</Button>
 						</div>
@@ -59,16 +56,16 @@ const Sidebar = ({show, handleHide}: ISidebarProps) => {
 						<div className={cn(
 							"flex", "flex-col", "gap-5", 'w-full'
 						)}>
-							<h3>
+							<DialogTitle>
 								{section.title}
-							</h3>
+							</DialogTitle>
 
 							{section.content}
 						</div>
 					</div>
-				</aside>
+				</DialogPanel>
 			</div>
-		</Transition>
+		</Dialog>
 	)
 }
 

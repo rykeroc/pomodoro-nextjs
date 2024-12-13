@@ -15,9 +15,9 @@ import Sidebar from "@/app/_components/sidebar/Sidebar";
 
 
 export default function Home() {
-	const [showSidebar, setShowSidebar] = useState(false)
-	const handleShowSidebar = () => setShowSidebar(true)
-	const handleHideSidebar = () => setShowSidebar(false)
+	const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+	const handleOpenSidebar = () => setIsSidebarOpen(true)
+	const handleCloseSidebar = () => setIsSidebarOpen(false)
 
 	const {
 		remaining,
@@ -68,7 +68,7 @@ export default function Home() {
 	}
 
 	return (
-		<>
+		<div className={cn('overflow-x-visible')}>
 			<div className={cn(
 				'fixed', 'z-40', 'h-screen', 'w-screen',
 				'flex', 'flex-col', 'justify-between', 'items-center'
@@ -77,8 +77,8 @@ export default function Home() {
 					{/* Menu button */}
 					<Button variant={'glass'} className={cn(
 						'px-3',
-						showSidebar ? "hidden" : "block"
-					)} onClick={handleShowSidebar}>
+						isSidebarOpen ? "hidden" : "block"
+					)} onClick={handleOpenSidebar}>
 						<Bars3Icon className={'size-5'}/>
 					</Button>
 				</div>
@@ -88,7 +88,7 @@ export default function Home() {
 				</FocusQuote>
 			</div>
 
-			<Sidebar show={showSidebar} handleHide={handleHideSidebar}/>
+			<Sidebar isOpen={isSidebarOpen} handleClose={handleCloseSidebar}/>
 
 			{/* Timer elements */}
 			<div className={cn(
@@ -112,7 +112,7 @@ export default function Home() {
 
 			{/* Wallpaper background */}
 			<ThemeImage/>
-		</>
+		</div>
 	);
 }
 
