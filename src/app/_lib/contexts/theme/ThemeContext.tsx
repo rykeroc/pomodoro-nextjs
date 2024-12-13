@@ -2,7 +2,7 @@ import {createContext, ReactNode, useEffect, useMemo, useRef, useState} from "re
 import {ITheme, IThemeContext} from "@/app/_lib/contexts/theme/IThemeContext";
 import globalThemes from "@/app/_lib/contexts/theme/globalThemes";
 import {UserPreference} from "@prisma/client";
-import {upsertUserPreferences} from "@/app/_lib/data/UserPreference";
+import {upsertUserPreferences} from "@/app/_lib/actions/data/UserPreference";
 import {useSession} from "next-auth/react";
 
 const ThemeContext = createContext<IThemeContext | null>(null)
