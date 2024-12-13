@@ -6,7 +6,7 @@ import Providers from "@/app/providers";
 import {auth} from "@/auth";
 import {Session} from "next-auth";
 import {UserPreference} from "@prisma/client";
-import {fetchUserPreferences} from "@/app/_lib/data/UserPreference";
+import {fetchUserPreferences} from "@/app/_lib/actions/data/UserPreference";
 
 const montserrat = Montserrat({
 	subsets: ['latin'],
