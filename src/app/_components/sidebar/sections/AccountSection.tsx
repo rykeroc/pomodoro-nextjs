@@ -1,5 +1,5 @@
 import {ISidebarSection} from "@/app/_components/sidebar/ISidebarSection";
-import {UserIcon} from "@heroicons/react/24/solid";
+import {ArrowRightStartOnRectangleIcon, UserIcon} from "@heroicons/react/24/solid";
 import Button from "@/app/_components/inputs/Button";
 import Image from "next/image";
 import {signIn, signOut, useSession} from "next-auth/react";
@@ -42,7 +42,12 @@ const AccountSectionContent = () => {
 
 	return (
 		<div className={"flex flex-col gap-4"}>
-			<Button onClick={() => signOut()}>Sign out</Button>
+			<h5>Welcome back {session.user.name}</h5>
+
+			<Button onClick={() => signOut()} variant={"secondary"}>
+				<ArrowRightStartOnRectangleIcon className={'size-6'}/>
+				Sign out
+			</Button>
 		</div>
 	)
 }
