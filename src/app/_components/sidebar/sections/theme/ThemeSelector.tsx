@@ -9,7 +9,7 @@ import ThemeButton from "@/app/_components/sidebar/sections/theme/ThemeButton";
 const ThemeSelectorContent = () => {
 	const themeContext = useContext<IThemeContext | null>(ThemeContext)
 
-	const handleClick = (theme: ITheme) => themeContext?.setSelectedTheme(theme)
+	const handleClick = (theme: ITheme) => themeContext?.setTheme(theme)
 
 	const availableThemes = themeContext?.globalThemes.map((theme, index) =>
 		<ThemeButton key={index} theme={theme} onClick={() => handleClick(theme)}/>

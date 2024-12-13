@@ -44,16 +44,27 @@ model Session {
 }
 
 model User {
-  id            String      @id @default(cuid())
-  name          String?
-  email         String?     @unique
-  emailVerified DateTime?   @map("email_verified")
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  focusTasks    FocusTask[]
+  id             String          @id @default(cuid())
+  name           String?
+  email          String?         @unique
+  emailVerified  DateTime?       @map("email_verified")
+  image          String?
+  accounts       Account[]
+  sessions       Session[]
+  focusTasks     FocusTask[]
+  UserPreference UserPreference?
 
   @@map("users")
+}
+
+model UserPreference {
+  id      String @id @default(cuid())
+  userId  String @unique @map("user_id")
+  themeId Int    @default(1)
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("user_preferences")
 }
 
 model VerificationToken {

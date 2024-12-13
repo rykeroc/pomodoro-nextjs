@@ -26,7 +26,7 @@ const PomodoroTimerIndicator = (
 		stage = PomodoroStages.focusSession,
 		...props
 	}: PomodoroTimerIndicatorProps) => {
-	const theme = useContext<IThemeContext | null>(ThemeContext)
+	const themeContext = useContext<IThemeContext | null>(ThemeContext)
 
 	const size = 450
 	const strokeWidth = 8
@@ -70,7 +70,7 @@ const PomodoroTimerIndicator = (
 			{/* Progress circle*/}
 			<circle
 				className={cn(
-					theme?.selectedTheme.colorClasses.stroke ? theme.selectedTheme.colorClasses.stroke : "stroke-primary-text",
+					themeContext?.theme.colorClasses.stroke ? themeContext.theme.colorClasses.stroke : "stroke-primary-text",
 					"fill-none",
 					"transition-all", "ease-linear",
 				)}

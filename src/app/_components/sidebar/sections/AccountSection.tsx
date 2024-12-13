@@ -42,9 +42,7 @@ const AccountSectionContent = () => {
 
 	return (
 		<div className={"flex flex-col gap-4"}>
-			<Button onClick={() => signOut()}>
-				Sign out
-			</Button>
+			<Button onClick={() => signOut()}>Sign out</Button>
 		</div>
 	)
 }

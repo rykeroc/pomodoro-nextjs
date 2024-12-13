@@ -126,7 +126,7 @@ const FocusQuote = ({children, className}: HTMLAttributes<HTMLHeadingElement>) =
 	</h6>
 
 const ThemeImage = () => {
-	const theme = useContext<IThemeContext | null>(ThemeContext)
+	const themeContext = useContext<IThemeContext | null>(ThemeContext)
 
 	return <Image
 		className={cn(
@@ -134,7 +134,7 @@ const ThemeImage = () => {
 			'object-cover', 'brightness-75',
 			'fixed', 'top-1/2', 'left-1/2', '-translate-x-1/2', '-translate-y-1/2',
 		)}
-		src={`/wallpapers/${theme?.selectedTheme.wallpaperFilename}`}
+		src={`/wallpapers/${themeContext?.theme.wallpaperFilename}`}
 		alt={"Lofi coffee shop wallpaper"}
 		width={3840}
 		height={2160}
