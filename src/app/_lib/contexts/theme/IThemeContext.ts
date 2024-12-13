@@ -6,15 +6,17 @@ interface IColorClasses {
 }
 
 interface ITheme {
+	id: number
 	wallpaperName: string
 	wallpaperFilename: string
 	colorClasses: IColorClasses
 }
 
 interface IThemeContext {
+	theme: ITheme
+	setTheme: (theme: ITheme) => void
+	error: string | null
 	globalThemes: ITheme[]
-	selectedTheme: ITheme
-	setSelectedTheme: (theme: ITheme) => void
 }
 
 export type {

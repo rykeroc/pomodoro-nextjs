@@ -1,38 +1,50 @@
-import {createContext, ReactNode, useMemo, useState} from "react";
+import {createContext, ReactNode, useEffect, useMemo, useRef, useState} from "react";
 import {ITheme, IThemeContext} from "@/app/_lib/contexts/theme/IThemeContext";
 import globalThemes from "@/app/_lib/contexts/theme/globalThemes";
-import LocalUserPreferences from "@/app/_lib/data/UserPreferences/LocalUserPreferences";
+import {UserPreference} from "@prisma/client";
+import {upsertUserPreferences} from "@/app/_lib/data/UserPreference";
+import {useSession} from "next-auth/react";
 
 const ThemeContext = createContext<IThemeContext | null>(null)
 
+interface ThemeProviderProps {
+	children: ReactNode
+	initialUserPreference: UserPreference | null
+}
+
 const ThemeProvider = (
-	{children}: { children: ReactNode }
+	{children, initialUserPreference}: ThemeProviderProps
 ) => {
-	const userPreferences = useMemo(() => new LocalUserPreferences(), [])
+	const {data: session} = useSession()
+	const [error, setError] = useState<string | null>(null)
+	const [theme, _setTheme] = useState(globalThemes.find(t => t.id == initialUserPreference?.themeId) ?? globalThemes[0]);
 
-	const savedTheme = useMemo(() => {
-		// Get preference string if exists, or 0 for first global theme index
-		const savedThemePreference = (userPreferences.getPreference(LocalUserPreferences.theme) ?? 0).toString()
-		const savedThemeIndex = parseInt(savedThemePreference, 10);
-		return globalThemes[savedThemeIndex]
-	}, [userPreferences])
+	// Save id of selected theme
+	const setTheme = async (theme: ITheme) => {
+		// Set theme for user
+		_setTheme(theme)
 
-	const [selectedTheme, _setSelectedTheme] = useState(savedTheme);
+		if (!session || !session?.user || !session?.user?.id)
+			return
 
-	// Save index of selected theme
-	const setSelectedTheme = (theme: ITheme) => {
-		userPreferences.savePreference(
-			LocalUserPreferences.theme,
-			globalThemes.indexOf(theme).toString()
-		)
-		_setSelectedTheme(theme)
+		// Set theme in user preferences for signed-in user
+		try{
+			await upsertUserPreferences({
+				userId: session.user.id,
+				themeId: theme.id
+			})
+		} catch (e) {
+			console.log(e)
+			setError("An error occurred while saving theme preferences.")
+		}
 	}
 
 	return (
 		<ThemeContext.Provider value={{
+			theme,
+			setTheme,
+			error,
 			globalThemes,
-			selectedTheme,
-			setSelectedTheme
 		}}>
 			{children}
 		</ThemeContext.Provider>
