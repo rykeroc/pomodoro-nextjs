@@ -5,17 +5,6 @@ import {UserPreference} from "@prisma/client";
 
 type CreateUserPreference = Omit<UserPreference, "id">
 
-type UpdateUserPreference = Omit<UserPreference, "id" | "userId">
-
-async function createUserPreference(args: CreateUserPreference): Promise<UserPreference> {
-	return prisma.userPreference.create({
-		data: {
-			themeId: args.themeId,
-			userId: args.userId
-		}
-	})
-}
-
 async function fetchUserPreferences(userId: string): Promise<UserPreference | null> {
 	return prisma.userPreference.findUnique({
 		where: {
@@ -40,7 +29,6 @@ async function upsertUserPreferences(args: CreateUserPreference): Promise<UserPr
 }
 
 export {
-	createUserPreference,
 	fetchUserPreferences,
 	upsertUserPreferences
 }
