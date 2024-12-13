@@ -1,4 +1,4 @@
-import {createContext, ReactNode, useEffect, useMemo, useRef, useState} from "react";
+import {createContext, ReactNode, useState} from "react";
 import {ITheme, IThemeContext} from "@/app/_lib/contexts/theme/IThemeContext";
 import globalThemes from "@/app/_lib/contexts/theme/globalThemes";
 import {UserPreference} from "@prisma/client";
