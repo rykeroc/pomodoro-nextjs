@@ -15,7 +15,6 @@ import Sidebar from "@/app/_components/sidebar/Sidebar";
 
 
 export default function Home() {
-	// TODO
 	const [showSidebar, setShowSidebar] = useState(false)
 	const handleShowSidebar = () => setShowSidebar(true)
 	const handleHideSidebar = () => setShowSidebar(false)
@@ -76,7 +75,10 @@ export default function Home() {
 			)}>
 				<div className={cn('w-full', 'p-5', 'flex', 'flex-row', 'justify-end')}>
 					{/* Menu button */}
-					<Button variant={'glass'} className={'px-3'} onClick={handleShowSidebar}>
+					<Button variant={'glass'} className={cn(
+						'px-3',
+						showSidebar ? "hidden" : "block"
+					)} onClick={handleShowSidebar}>
 						<Bars3Icon className={'size-5'}/>
 					</Button>
 				</div>
