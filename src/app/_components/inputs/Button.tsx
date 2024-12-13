@@ -45,8 +45,8 @@ interface ButtonProps
 const Button = ({className, variant = "none", ...props}: ButtonProps) => {
 	const theme = useContext<IThemeContext | null>(ThemeContext)
 	// Apply color theme to button if primary variant
-	const themeClasses: string[] | null = variant === "primary" && theme?.selectedTheme ?
-		[theme.selectedTheme.colorClasses.background, theme.selectedTheme.colorClasses.border] : null
+	const themeClasses: string[] | null = variant === "primary" && theme?.theme ?
+		[theme.theme.colorClasses.background, theme.theme.colorClasses.border] : null
 
 	return <HeadlessUiButton
 		className={cn(
