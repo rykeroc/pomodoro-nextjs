@@ -79,6 +79,7 @@ model VerificationToken {
 model FocusTask {
   id                String   @id @default(cuid())
   name              String
+  order             Int
   totalFocusSeconds Int      @default(0) @map("total_focus_seconds")
   isComplete        Boolean  @default(false) @map("is_complete")
   createdAt         DateTime @map("create_at")

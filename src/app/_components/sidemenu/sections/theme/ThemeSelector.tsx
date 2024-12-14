@@ -1,10 +1,10 @@
-import {ISidebarSection} from "@/app/_components/sidebar/ISidebarSection";
+import {ISidemenuSection} from "@/app/_components/sidemenu/ISidemenuSection";
 import {PaintBrushIcon} from "@heroicons/react/24/solid";
 import {useContext} from "react";
 import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";
 import {ITheme, IThemeContext} from "@/app/_lib/contexts/theme/IThemeContext";
 import {cn} from "@/app/_lib/utils/cn";
-import ThemeButton from "@/app/_components/sidebar/sections/theme/ThemeButton";
+import ThemeButton from "@/app/_components/sidemenu/sections/theme/ThemeButton";
 
 const ThemeSelectorContent = () => {
 	const themeContext = useContext<IThemeContext | null>(ThemeContext)
@@ -25,7 +25,7 @@ const ThemeSelectorContent = () => {
 	)
 }
 
-const ThemeSelector: ISidebarSection = {
+const ThemeSelector: ISidemenuSection = {
 	title: "Theme",
 	icon: <PaintBrushIcon className={'size-5'}/>,
 	content: <ThemeSelectorContent/>

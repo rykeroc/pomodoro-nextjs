@@ -1,11 +1,11 @@
 import {ReactElement, ReactNode} from "react";
 
-interface ISidebarSection {
+interface ISidemenuSection {
 	title: string
 	icon: ReactNode
 	content: ReactElement
 }
 
 export type {
-	ISidebarSection
+	ISidemenuSection
 }

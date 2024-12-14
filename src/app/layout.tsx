@@ -4,9 +4,9 @@ import {Montserrat} from 'next/font/google'
 import {cn} from "@/app/_lib/utils/cn";
 import Providers from "@/app/providers";
 import {auth} from "@/auth";
-import {Session} from "next-auth";
-import {UserPreference} from "@prisma/client";
 import {fetchUserPreferences} from "@/app/_lib/actions/data/UserPreference";
+import {ReactNode} from "react";
+import globalThemes from "@/app/_lib/contexts/theme/globalThemes";
 
 const montserrat = Montserrat({
 	subsets: ['latin'],
@@ -18,26 +18,15 @@ export const metadata: Metadata = {
 	description: "Pomodoro timer app to manage focus duration.",
 };
 
-async function getPreferences(session: Session | null): Promise<UserPreference | null> {
-	if (!session || !session?.user || !session.user.id) return null
-
-	try {
-		return await fetchUserPreferences(session.user.id)
-	} catch (e) {
-		console.log(`Error while fetching UserPreference for user with ID ${session.user.id}`)
-		console.log(e)
-		return null
-	}
-}
-
-export default async function RootLayout({children,}: Readonly<{ children: React.ReactNode; }>) {
+export default async function RootLayout({children,}: Readonly<{ children: ReactNode; }>) {
 	const session = await auth()
-	const userPreferences = await getPreferences(session)
+	const userPreferences = await fetchUserPreferences(session?.user?.id ?? null)
+	const theme = globalThemes.find(t => t.id === userPreferences?.themeId) ?? globalThemes[0]
 
 	return (
 		<html lang="en">
 		<body className={cn(montserrat.className, 'antialiased')}>
-			<Providers initialUserPreference={userPreferences}>
+			<Providers initialTheme={theme}>
 				{children}
 			</Providers>
 		</body>

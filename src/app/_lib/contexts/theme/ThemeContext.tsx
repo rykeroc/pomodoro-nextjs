@@ -1,23 +1,24 @@
+"use client"
+
 import {createContext, ReactNode, useState} from "react";
 import {ITheme, IThemeContext} from "@/app/_lib/contexts/theme/IThemeContext";
-import globalThemes from "@/app/_lib/contexts/theme/globalThemes";
-import {UserPreference} from "@prisma/client";
 import {upsertUserPreferences} from "@/app/_lib/actions/data/UserPreference";
 import {useSession} from "next-auth/react";
+import globalThemes from "@/app/_lib/contexts/theme/globalThemes";
 
 const ThemeContext = createContext<IThemeContext | null>(null)
 
 interface ThemeProviderProps {
 	children: ReactNode
-	initialUserPreference: UserPreference | null
+	initialData: ITheme
 }
 
 const ThemeProvider = (
-	{children, initialUserPreference}: ThemeProviderProps
+	{children, initialData}: ThemeProviderProps
 ) => {
 	const {data: session} = useSession()
 	const [error, setError] = useState<string | null>(null)
-	const [theme, _setTheme] = useState(globalThemes.find(t => t.id == initialUserPreference?.themeId) ?? globalThemes[0]);
+	const [theme, _setTheme] = useState(initialData);
 
 	// Save id of selected theme
 	const setTheme = async (theme: ITheme) => {

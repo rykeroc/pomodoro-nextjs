@@ -1,23 +1,23 @@
 "use client"
 
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import {ReactNode} from "react";
-import {ThemeProvider} from "@/app/_lib/contexts/theme/ThemeContext";
+import {ReactNode, useState} from "react";
 import {SessionProvider} from "next-auth/react";
-import {UserPreference} from "@prisma/client";
+import {ThemeProvider} from "@/app/_lib/contexts/theme/ThemeContext";
+import {ITheme} from "@/app/_lib/contexts/theme/IThemeContext";
 
 interface ProvidersProps {
+	initialTheme: ITheme,
 	children: ReactNode,
-	initialUserPreference: UserPreference | null
 }
 
-export default function Providers({children, initialUserPreference}: ProvidersProps) {
-	const queryClient = new QueryClient()
+export default function Providers({initialTheme, children}: ProvidersProps) {
+	const [queryClient] = useState(() => new QueryClient())
 
 	return (
 		<QueryClientProvider client={queryClient}>
 			<SessionProvider>
-				<ThemeProvider initialUserPreference={initialUserPreference}>
+				<ThemeProvider initialData={initialTheme}>
 					{children}
 				</ThemeProvider>
 			</SessionProvider>

@@ -1,4 +1,4 @@
-import {ISidebarSection} from "@/app/_components/sidebar/ISidebarSection";
+import {ISidemenuSection} from "@/app/_components/sidemenu/ISidemenuSection";
 import {ArrowRightStartOnRectangleIcon, UserIcon} from "@heroicons/react/24/solid";
 import Button from "@/app/_components/inputs/Button";
 import Image from "next/image";
@@ -52,7 +52,7 @@ const AccountSectionContent = () => {
 	)
 }
 
-const AccountSection: ISidebarSection = {
+const AccountSection: ISidemenuSection = {
 	title: "Account",
 	icon: <UserIcon className={'size-5'}/>,
 	content: <AccountSectionContent/>
