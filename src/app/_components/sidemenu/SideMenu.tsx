@@ -28,8 +28,7 @@ export default function SideMenu() {
 	return (
 		<>
 			<div className={cn(
-				'fixed', 'z-40',
-				'w-full', 'p-5', 'flex', 'flex-row', 'justify-end',
+				'w-full', 'flex', 'flex-row', 'justify-end',
 			)}>
 				{/* Menu button */}
 				<Button variant={'glass'} className={cn('px-3')} onClick={open}>

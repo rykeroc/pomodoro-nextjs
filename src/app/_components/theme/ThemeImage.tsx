@@ -11,9 +11,8 @@ export default function ThemeImage (){
 	const theme = themeContext?.theme ?? globalThemes[0]
 	return <Image
 		className={cn(
-			"z-0", 'h-screen', 'w-screen',
 			'object-cover', 'brightness-75',
-			'fixed', 'top-1/2', 'left-1/2', '-translate-x-1/2', '-translate-y-1/2',
+			'h-screen', 'w-screen',
 		)}
 		src={`/wallpapers/${theme.wallpaperFilename}`}
 		alt={theme.wallpaperName}

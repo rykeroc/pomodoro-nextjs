@@ -7,11 +7,22 @@ import FocusQuote from "@/app/_components/FocusQuote";
 export default async function Page(){
 
 	return (
-		<div className={cn('overflow-x-visible')}>
-			<SideMenu/>
-			<PomodoroTimerIndicator/>
-			<ThemeImage/>
-			<FocusQuote/>
+		<div>
+			<div className={cn(
+				"fixed", 'h-screen', 'w-screen', 'z-10', 'p-5',
+				"flex", 'flex-col', 'justify-between'
+			)}>
+				<SideMenu/>
+				<PomodoroTimerIndicator/>
+				<FocusQuote/>
+			</div>
+
+			<div className={cn(
+				"z-0", 'h-screen', 'w-screen',
+				'fixed', 'top-1/2', 'left-1/2', '-translate-x-1/2', '-translate-y-1/2',
+			)}>
+				<ThemeImage/>
+			</div>
 		</div>
 	)
 }

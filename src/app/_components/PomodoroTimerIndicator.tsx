@@ -83,88 +83,85 @@ function PomodoroTimerIndicator() {
 	const openDialog = () => setIsDialogOpen(true)
 
 	return (
-		<div className={cn(
-			'fixed', 'z-20', 'h-screen', 'w-screen',
-		)}>
+		<>
 			<div className={cn(
-				'z-40', 'fixed', 'top-1/2', 'left-1/2', '-translate-x-1/2', '-translate-y-1/2',
 				'flex', 'flex-col', 'justify-center', 'items-center', 'gap-6'
 			)}>
-				<svg width={size} height={size} viewBox={viewBox}>
-					{/* Background */}
-					<foreignObject
-						x={"0%"}
-						y={"0%"}
-						width={size}
-						height={size}>
-						<div className={cn(
-							...glassEffectClasses,
-							'rounded-full', 'absolute',
-							'h-full', 'w-full'
-						)}/>
-					</foreignObject>
+			<svg width={size} height={size} viewBox={viewBox}>
+				{/* Background */}
+				<foreignObject
+					x={"0%"}
+					y={"0%"}
+					width={size}
+					height={size}>
+					<div className={cn(
+						...glassEffectClasses,
+						'rounded-full', 'absolute',
+						'h-full', 'w-full'
+					)}/>
+				</foreignObject>
 
-					{/* Outline circle */}
-					<circle
-						className={"fill-none stroke-primary-container opacity-75"}
-						cx={size / 2}
-						cy={size / 2}
-						strokeWidth={`${strokeWidth - 1}px`}
-						r={radius}
-					/>
+				{/* Outline circle */}
+				<circle
+					className={"fill-none stroke-primary-container opacity-75"}
+					cx={size / 2}
+					cy={size / 2}
+					strokeWidth={`${strokeWidth - 1}px`}
+					r={radius}
+				/>
 
-					{/* Progress circle*/}
-					<circle
-						className={cn(
-							strokeClass,
-							"fill-none",
-							"transition-all", "ease-linear",
-						)}
-						cx={size / 2}
-						cy={size / 2}
-						r={radius}
-						strokeLinecap={"butt"}
-						strokeWidth={`${strokeWidth}px`}
-						strokeDasharray={dashArray}
-						strokeDashoffset={isNaN(dashOffset) ? 0 : dashOffset}
-						transform={`rotate(-90 ${size / 2} ${size / 2})`}
-					/>
+				{/* Progress circle*/}
+				<circle
+					className={cn(
+						strokeClass,
+						"fill-none",
+						"transition-all", "ease-linear",
+					)}
+					cx={size / 2}
+					cy={size / 2}
+					r={radius}
+					strokeLinecap={"butt"}
+					strokeWidth={`${strokeWidth}px`}
+					strokeDasharray={dashArray}
+					strokeDashoffset={isNaN(dashOffset) ? 0 : dashOffset}
+					transform={`rotate(-90 ${size / 2} ${size / 2})`}
+				/>
 
-					{/* Timer details */}
-					<foreignObject
-						x={"0%"}
-						y={"0%"}
-						width={size}
-						height={size}>
-						<div
-							className={"flex flex-col items-center justify-center w-full h-full gap-5"}>
-							<h5
-								className={cn(
-									["text-primary-text"],
-									{"invisible": stage === PomodoroStages.focusSession}
-								)}>
-								{stage.name}
-							</h5>
-							<h1>
-								{minutesString}
-							</h1>
+				{/* Timer details */}
+				<foreignObject
+					x={"0%"}
+					y={"0%"}
+					width={size}
+					height={size}>
+					<div
+						className={"flex flex-col items-center justify-center w-full h-full gap-5"}>
+						<h5
+							className={cn(
+								["text-primary-text"],
+								{"invisible": stage === PomodoroStages.focusSession}
+							)}>
+							{stage.name}
+						</h5>
+						<h1>
+							{minutesString}
+						</h1>
 
-							<Button onClick={openDialog}>
-								<h4 className={"text-secondary-text"}>
-									Focus {/* TODO	 */}
-								</h4>
-								<ChevronRightIcon className={"size-8 fill-secondary-text"}/>
-							</Button>
-						</div>
-					</foreignObject>
-				</svg>
+						<Button onClick={openDialog}>
+							<h4 className={"text-secondary-text"}>
+								Focus {/* TODO	 */}
+							</h4>
+							<ChevronRightIcon className={"size-8 fill-secondary-text"}/>
+						</Button>
+					</div>
+				</foreignObject>
+			</svg>
 
-				<div className={"flex flex-row gap-3"}>
-					<PomodoroButtons state={state}/>
-				</div>
+			<div className={"flex flex-row gap-3"}>
+				<PomodoroButtons state={state}/>
+			</div>
 			</div>
 			<FocusQueueDialog isOpen={isDialogOpen} handleClose={closeDialog}/>
-		</div>
+		</>
 	)
 }
 
