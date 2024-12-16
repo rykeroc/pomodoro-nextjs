@@ -26,16 +26,13 @@ export default function SideMenu() {
 
 
 	return (
-		<div className={cn(
-			'fixed', 'z-40', 'h-screen', 'w-screen',
-			'flex', 'flex-col', 'justify-between', 'items-center'
-		)}>
-			<div className={cn('w-full', 'p-5', 'flex', 'flex-row', 'justify-end')}>
+		<>
+			<div className={cn(
+				'fixed', 'z-40',
+				'w-full', 'p-5', 'flex', 'flex-row', 'justify-end',
+			)}>
 				{/* Menu button */}
-				<Button variant={'glass'} className={cn(
-					'px-3',
-					isOpen ? "hidden" : "block"
-				)} onClick={open}>
+				<Button variant={'glass'} className={cn('px-3')} onClick={open}>
 					<Bars3Icon className={'size-5'}/>
 				</Button>
 			</div>
@@ -81,7 +78,7 @@ export default function SideMenu() {
 					</DialogPanel>
 				</div>
 			</Dialog>
-		</div>
+		</>
 	)
 }
 

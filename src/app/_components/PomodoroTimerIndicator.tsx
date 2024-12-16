@@ -84,7 +84,7 @@ function PomodoroTimerIndicator() {
 
 	return (
 		<div className={cn(
-			'fixed', 'z-40', 'h-screen', 'w-screen',
+			'fixed', 'z-20', 'h-screen', 'w-screen',
 		)}>
 			<div className={cn(
 				'z-40', 'fixed', 'top-1/2', 'left-1/2', '-translate-x-1/2', '-translate-y-1/2',
