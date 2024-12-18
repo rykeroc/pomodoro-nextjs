@@ -82,7 +82,7 @@ model FocusTask {
   order             Int
   totalFocusSeconds Int      @default(0) @map("total_focus_seconds")
   isComplete        Boolean  @default(false) @map("is_complete")
-  createdAt         DateTime @map("create_at")
+  createdAt         DateTime @default(now()) @map("create_at")
   userId            String   @map("user_id")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
