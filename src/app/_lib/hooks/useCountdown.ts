@@ -7,7 +7,7 @@ interface CounterInfo {
 	status: CountdownStatus,
 }
 
-interface Countdown {
+export interface ICountdown {
 	remaining: number
 	total: number
 	status: CountdownStatus,
@@ -20,7 +20,7 @@ interface Countdown {
 
 const intervalSpacingMs: number = 1000
 
-export default function useCountdown(startingSeconds: number): Countdown {
+export default function useCountdown(startingSeconds: number): ICountdown {
 	const [info, setInfo] = useState<CounterInfo>({
 		total: startingSeconds,
 		remaining: startingSeconds,
