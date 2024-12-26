@@ -1,5 +1,5 @@
 import {QueryClient, useQuery} from "@tanstack/react-query";
-import {fetchUserPreferences} from "@/app/_lib/actions/data/UserPreference";
+import {fetchUserPreferences} from "@/app/_lib/actions/data/userPreferencesActions";
 import {Session} from "next-auth";
 
 async function queryFn(session: Session | null) {

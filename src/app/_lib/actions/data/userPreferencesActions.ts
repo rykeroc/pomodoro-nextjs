@@ -3,7 +3,7 @@
 import {prisma} from "@/prisma";
 import {UserPreference} from "@prisma/client";
 
-type CreateUserPreference = Omit<UserPreference, "id">
+type CreateUserPreferenceType = Omit<UserPreference, "id">
 
 async function fetchUserPreferences(userId: string | null): Promise<UserPreference | null> {
 	if (userId === null) return null
@@ -15,7 +15,7 @@ async function fetchUserPreferences(userId: string | null): Promise<UserPreferen
 	})
 }
 
-async function upsertUserPreferences(args: CreateUserPreference): Promise<UserPreference> {
+async function upsertUserPreferences(args: CreateUserPreferenceType): Promise<UserPreference> {
 	return prisma.userPreference.upsert({
 		update: {
 			themeId: args.themeId
