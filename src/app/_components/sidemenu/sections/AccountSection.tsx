@@ -1,50 +1,22 @@
+"use client"
+
 import {ISidemenuSection} from "@/app/_components/sidemenu/ISidemenuSection";
 import {ArrowRightStartOnRectangleIcon, UserIcon} from "@heroicons/react/24/solid";
 import Button from "@/app/_components/inputs/Button";
 import Image from "next/image";
 import {signIn, signOut, useSession} from "next-auth/react";
-
-interface SocialProvider {
-	name: string
-	logo: string
-	logoAlt: string
-}
-
-const providers: SocialProvider[] = [
-	{
-		name: "GitHub",
-		logo: "github-mark.svg",
-		logoAlt: "GitHub logo"
-	},
-	// {
-	// 	name: "Google",
-	// 	logo: "google-g.svg",
-	// 	logoAlt: "Google logo"
-	// }
-]
+import {redirect} from "next/navigation";
 
 const AccountSectionContent = () => {
 	const { data: session } = useSession()
-	const logoSize = 24
-	const providerButtons = providers.map(p => (
-		<Button key={p.name} onClick={() => signIn(p.name.toLowerCase())}>
-			<Image src={`/logos/${p.logo}`} alt={p.logoAlt} width={logoSize} height={logoSize}/>
-			<p>Sign in with {p.name}</p>
-		</Button>
-	))
 
-	if (!session?.user)
-		return (
-			<div className={"flex flex-col gap-4"}>
-				{providerButtons}
-			</div>
-		)
+	const handleSignOut = () => signOut({redirectTo: "/sign-in"})
 
 	return (
 		<div className={"flex flex-col gap-4"}>
-			<h5>Welcome back {session.user.name}</h5>
+			<h5>Welcome back {session?.user?.name}</h5>
 
-			<Button onClick={() => signOut()} variant={"secondary"}>
+			<Button onClick={handleSignOut} variant={"secondary"}>
 				<ArrowRightStartOnRectangleIcon className={'size-6'}/>
 				Sign out
 			</Button>
