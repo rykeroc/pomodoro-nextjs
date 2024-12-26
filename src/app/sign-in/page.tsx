@@ -11,21 +11,21 @@ export default async function SignIn() {
 	if (session?.user) redirect("/")
 
 	return (
+		<div className={cn(
+			"flex", "flex-col", "p-5", "gap-4",
+			"bg-primary-container",
+			"rounded-xl"
+		)}>
 			<div className={cn(
-				"flex", "flex-col", "p-5", "gap-4",
-				"bg-primary-container",
-				"rounded-xl"
+				"flex", "flex-col", "gap-2"
 			)}>
-				<div className={cn(
-					"flex", "flex-col", "gap-2"
-				)}>
-					<h4>Sign in</h4>
-					<p>
-						Continue with one of the following providers.
-					</p>
-				</div>
-
-				<ProviderButtons/>
+				<h4>Sign in</h4>
+				<p>
+					Continue with one of the following providers.
+				</p>
 			</div>
+
+			<ProviderButtons/>
+		</div>
 	)
 }
