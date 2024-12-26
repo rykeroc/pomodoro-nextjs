@@ -26,7 +26,7 @@ export default async function RootLayout({children,}: Readonly<{ children: React
 	return (
 		<html lang="en">
 		<body className={cn(montserrat.className, 'antialiased')}>
-			<Providers initialTheme={theme}>
+			<Providers initialTheme={theme} initialSession={session}>
 				{children}
 			</Providers>
 		</body>
