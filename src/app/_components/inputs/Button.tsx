@@ -1,3 +1,5 @@
+"use client"
+
 import {Button as HeadlessUiButton} from "@headlessui/react";
 import {ButtonHTMLAttributes, useContext,} from "react";
 import {fadeTransitionClasses, glassEffectClasses} from "@/app/_components/common";
@@ -9,7 +11,7 @@ import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";
 const buttonClasses = cva(
 	[
 		"w-fit", "h-fit", "rounded-full", "text-lg", "font-semibold",
-		"flex", "flex-row", "items-center", "gap-2",
+		"flex", "flex-row", "items-center", "justify-center", "gap-2",
 		'cursor-pointer',
 		"hover:brightness-110",
 		...fadeTransitionClasses

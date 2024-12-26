@@ -1,5 +1,3 @@
-"use client"
-
 import Button, {ButtonProps} from "@/app/_components/inputs/Button";
 import {ChevronRightIcon} from "@heroicons/react/16/solid";
 import {secondsToMinutes} from "@/app/_lib/utils/dateTimeUtils";
@@ -7,33 +5,28 @@ import PomodoroStages from "@/app/_lib/constants/PomodoroStages";
 import {cn} from "@/app/_lib/utils/cn";
 import {glassEffectClasses} from "@/app/_components/common";
 import PomodoroState from "@/app/_lib/constants/PomodoroState";
-import usePomodoro from "@/app/_lib/hooks/usePomodoro";
-import {useContext, useState} from "react";
+import {useContext} from "react";
 import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";
-import FocusQueueDialog from "@/app/_components/FocusQueueDialog";
+import {IPomodoroTimer} from "@/app/_lib/hooks/usePomodoro";
+import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 
-const getElapsedSeconds = (remaining: number, total: number) => total - remaining
+interface IPomodoroTimerIndicatorProps {
+	timerInfo: IPomodoroTimer
+	focusTasksData: IFocusTasksData
+	handleOpen: () => void,
+}
 
-function PomodoroTimerIndicator() {
-	const {
-		remaining,
-		total,
-		stage,
-		state,
-		start,
-		pause,
-		finish,
-		relax
-	} = usePomodoro()
+function PomodoroTimerIndicator({timerInfo, focusTasksData, handleOpen}: IPomodoroTimerIndicatorProps) {
+	const getElapsedSeconds = (remaining: number, total: number) => total - remaining
 
 	const PomodoroButtons = ({state}: { state: PomodoroState }) => {
 		const buttonsMap: { [key: string]: ButtonProps } = {
-			start: {children: "Start", onClick: start, variant: "primary"},
-			resume: {children: "Resume", onClick: start, variant: "primary"},
-			pause: {children: "Pause", onClick: pause, variant: "glass"},
-			finish: {children: "Finish", onClick: finish, variant: "glass"},
-			relax: {children: "Relax", onClick: relax, variant: "primary"},
-			skip: {children: "Skip", onClick: finish, variant: "glass"},
+			start: {children: "Start", onClick: timerInfo.start, variant: "primary"},
+			resume: {children: "Resume", onClick: timerInfo.start, variant: "primary"},
+			pause: {children: "Pause", onClick: timerInfo.pause, variant: "glass"},
+			finish: {children: "Finish", onClick: timerInfo.finish, variant: "glass"},
+			relax: {children: "Relax", onClick: timerInfo.relax, variant: "primary"},
+			skip: {children: "Skip", onClick: timerInfo.finish, variant: "glass"},
 		}
 
 		const selectedButtons = []
@@ -67,9 +60,9 @@ function PomodoroTimerIndicator() {
 	const radius = (size - strokeWidth) / 2
 	const dashArray = radius * Math.PI * 2
 
-	const remainingSeconds = stage === PomodoroStages.focusSession ?
-		remaining : getElapsedSeconds(remaining, total)
-	const percentage = Math.min(100, (remaining / total) * 100)
+	const remainingSeconds = timerInfo.stage === PomodoroStages.focusSession ?
+		timerInfo.remaining : getElapsedSeconds(timerInfo.remaining, timerInfo.total)
+	const percentage = Math.min(100, (timerInfo.remaining / timerInfo.total) * 100)
 
 	const dashOffset = dashArray - (dashArray * percentage) / 100
 	const minutesString = secondsToMinutes(remainingSeconds)
@@ -78,9 +71,7 @@ function PomodoroTimerIndicator() {
 	const strokeClass = themeContext?.theme.colorClasses.stroke
 		? themeContext?.theme.colorClasses.stroke : "stroke-primary-text"
 
-	const [isDialogOpen, setIsDialogOpen] = useState(false)
-	const closeDialog = () => setIsDialogOpen(false)
-	const openDialog = () => setIsDialogOpen(true)
+	const activeTaskName = focusTasksData.activeTask?.name ?? "Focus"
 
 	return (
 		<>
@@ -138,17 +129,17 @@ function PomodoroTimerIndicator() {
 						<h5
 							className={cn(
 								["text-primary-text"],
-								{"invisible": stage === PomodoroStages.focusSession}
+								{"invisible": timerInfo.stage === PomodoroStages.focusSession}
 							)}>
-							{stage.name}
+							{timerInfo.stage.name}
 						</h5>
 						<h1>
 							{minutesString}
 						</h1>
 
-						<Button onClick={openDialog}>
+						<Button onClick={handleOpen}>
 							<h4 className={"text-secondary-text"}>
-								Focus {/* TODO	 */}
+								{ activeTaskName }
 							</h4>
 							<ChevronRightIcon className={"size-8 fill-secondary-text"}/>
 						</Button>
@@ -157,10 +148,9 @@ function PomodoroTimerIndicator() {
 			</svg>
 
 			<div className={"flex flex-row gap-3"}>
-				<PomodoroButtons state={state}/>
+				<PomodoroButtons state={timerInfo.state}/>
 			</div>
 			</div>
-			<FocusQueueDialog isOpen={isDialogOpen} handleClose={closeDialog}/>
 		</>
 	)
 }
