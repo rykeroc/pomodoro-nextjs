@@ -4,10 +4,10 @@
 
 :root {
   --primary: #116CEC;
-  --background: #3C4351;
+  --background: #272727;
   --primary-text: #f9f9f9;
   --secondary-text: #bebebe;
-  --primary-container: rgba(99, 99, 99, 0.46);
+  --primary-container: #63636375;
   --secondary-container: #F4F4F4;
 }
 
