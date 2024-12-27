@@ -24,6 +24,7 @@ const Checkbox = ({children, checked, onChange, onDelete, className}: CheckboxPr
 		<HeadlessUiCheckbox
 			checked={checked} onChange={onChange}
 			className={cn(
+				"cursor-pointer",
 				"group/checkbox", "peer", "size-6", "rounded-md", "bg-transparent", "p-1",
 				"ring-1", "ring-secondary-text", "ring-inset",
 				`data-[checked]:bg-secondary-text`

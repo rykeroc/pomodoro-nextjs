@@ -21,9 +21,18 @@ export default function FocusTaskSection({title, focusTasks, activeTask, focusTa
 		await focusTasksData.query.refetch()
 	}
 
-	async function handleDelete(focusTaskId: string) {
-		await focusTasksData.deleteMutation.mutateAsync(focusTaskId)
+	async function handleDelete(focusTask: FocusTask) {
+		await focusTasksData.deleteMutation.mutateAsync(focusTask.id)
+		focusTasksData.setActiveTask(null)
 		await focusTasksData.query.refetch()
+	}
+
+	function handleSetActiveTask(focusTask: FocusTask){
+		/*
+		Set active task if current task is not the current active task,
+		Else clear the active task.
+		 */
+		focusTasksData.setActiveTask(activeTask?.id !== focusTask.id ? focusTask : null)
 	}
 
 	const checkboxes = focusTasks.map(task => {
@@ -31,7 +40,8 @@ export default function FocusTaskSection({title, focusTasks, activeTask, focusTa
 			<FocusCheckbox
 				key={task.id} focusTask={task} isActive={task.id === activeTask?.id}
 				onChange={(checked) => handleCheckChange(checked, task)}
-				onDelete={() => handleDelete(task.id)}
+				onDelete={() => handleDelete(task)}
+				onSetActiveTask={handleSetActiveTask}
 			/>
 		)
 	})
