@@ -23,11 +23,11 @@ export default function FocusCheckbox({isActive, focusTask, onChange, onDelete, 
 				)}>
 					<small className={cn(
 						cx({
-							"block": isActive ,
-							"hidden": !isActive
+							"block": isActive ,			// Show by default if active
+							"hidden": !isActive,		// Hide by default if not active
+							"group-hover/root:block": !isActive && !focusTask.isComplete	// Show when hovered, if task is not active and not completed
 						}),
 						"cursor-pointer",
-						"group-hover/root:block"
 					)} onClick={() => onSetActiveTask(focusTask)}>
 						{isActive ? "Active" : "Set active"}
 					</small>

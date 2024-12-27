@@ -18,6 +18,7 @@ export default function FocusTaskSection({title, focusTasks, activeTask, focusTa
 			isComplete: checked,
 		}
 		await focusTasksData.upsertMutation.mutateAsync(newTask)
+		if (checked) focusTasksData.setActiveTask(null)
 		await focusTasksData.query.refetch()
 	}
 
