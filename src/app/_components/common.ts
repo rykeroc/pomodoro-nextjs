@@ -1,7 +1,7 @@
 const fadeTransitionClasses: string[] = [
 	'transition',
 	'ease-in-out',
-	'duration-200'
+	'duration-300'
 ]
 
 const glassEffectClasses: string[] = [

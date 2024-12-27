@@ -20,11 +20,11 @@ export default function FocusTasksDialog({isOpen, handleClose, focusTasksData}: 
 		return a.name.localeCompare(b.name)
 	}
 
-	const todoTasks: FocusTask[] = focusTasksData.dataQuery.data
+	const todoTasks: FocusTask[] = focusTasksData.query.data
 		?.filter(e => !e.isComplete)
 		.sort(sortAscending) ?? []
 
-	const completedTasks: FocusTask[] = focusTasksData.dataQuery.data
+	const completedTasks: FocusTask[] = focusTasksData.query.data
 		?.filter(e => e.isComplete)
 		.sort(sortAscending) ?? []
 

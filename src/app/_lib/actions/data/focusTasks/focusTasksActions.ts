@@ -21,6 +21,13 @@ async function upsertFocusTask(args: UpsertFocusTaskType): Promise<FocusTask> {
 	})
 }
 
+async function deleteFocusTask(focusTaskId: string): Promise<FocusTask> {
+	return prisma.focusTask.delete({
+		where: {
+			id: focusTaskId
+		}
+	})
+}
 async function getFocusTasks(userId: string): Promise<FocusTask[]> {
 	return prisma.focusTask.findMany({
 		where: {
@@ -31,5 +38,6 @@ async function getFocusTasks(userId: string): Promise<FocusTask[]> {
 
 export {
 	upsertFocusTask,
+	deleteFocusTask,
 	getFocusTasks
 }

@@ -1,9 +1,6 @@
 import {FocusTask} from "@prisma/client";
 import {cn} from "@/app/_lib/utils/cn";
 import FocusCheckbox from "@/app/_components/pomodoro/focusTasks/FocusCheckbox";
-import {useSession} from "next-auth/react";
-import {redirect} from "next/navigation";
-import Form from "next/form";
 import {UpsertFocusTaskType} from "@/app/_lib/actions/data/focusTasks/types";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 
@@ -20,8 +17,13 @@ export default function FocusTaskSection({title, focusTasks, activeTask, focusTa
 			...focusTask,
 			isComplete: checked,
 		}
-		await focusTasksData.dataMutation.mutateAsync(newTask)
-		await focusTasksData.dataQuery.refetch()
+		await focusTasksData.upsertMutation.mutateAsync(newTask)
+		await focusTasksData.query.refetch()
+	}
+
+	async function handleDelete(focusTaskId: string) {
+		await focusTasksData.deleteMutation.mutateAsync(focusTaskId)
+		await focusTasksData.query.refetch()
 	}
 
 	const checkboxes = focusTasks.map(task => {
@@ -29,6 +31,7 @@ export default function FocusTaskSection({title, focusTasks, activeTask, focusTa
 			<FocusCheckbox
 				key={task.id} focusTask={task} isActive={task.id === activeTask?.id}
 				onChange={(checked) => handleCheckChange(checked, task)}
+				onDelete={() => handleDelete(task.id)}
 			/>
 		)
 	})

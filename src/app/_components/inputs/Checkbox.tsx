@@ -1,35 +1,36 @@
-import {ReactNode, useContext} from "react";
+import {ReactNode} from "react";
 import {Checkbox as HeadlessUiCheckbox} from "@headlessui/react";
 import {CheckIcon} from "@heroicons/react/16/solid";
 import {fadeTransitionClasses} from "@/app/_components/common";
 import {cn} from "@/app/_lib/utils/cn";
-import {IThemeContext} from "@/app/_lib/contexts/theme/IThemeContext";
-import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";
+import {XMarkIcon} from "@heroicons/react/24/solid";
 
 interface CheckboxProps {
 	children?: ReactNode
 	checked?: boolean
 	onChange?: (checked: boolean) => void,
+	onDelete?: () => void
 	className?: string
 }
 
-const Checkbox = ({children, checked, onChange, className}: CheckboxProps) => (
+const Checkbox = ({children, checked, onChange, onDelete, className}: CheckboxProps) => (
 	<div className={cn(
 		'flex flex-row gap-3 items-center',
 		"hover:brightness-125",
+		"group/root",
 		...fadeTransitionClasses,
 		className
 	)}>
 		<HeadlessUiCheckbox
 			checked={checked} onChange={onChange}
 			className={cn(
-				"group", "peer", "size-6", "rounded-md", "bg-transparent", "p-1",
+				"group/checkbox", "peer", "size-6", "rounded-md", "bg-transparent", "p-1",
 				"ring-1", "ring-secondary-text", "ring-inset",
 				`data-[checked]:bg-secondary-text`
 			)}>
 			<CheckIcon className={cn(
-				"hidden", "bg-secondary-text", "size-4", "fill-black",
-				"group-data-[checked]:block"
+				"invisible", "bg-secondary-text", "size-4", "fill-black",
+				"group-data-[checked]/checkbox:visible"
 			)}/>
 		</HeadlessUiCheckbox>
 

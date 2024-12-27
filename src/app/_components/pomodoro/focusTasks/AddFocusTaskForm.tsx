@@ -35,8 +35,8 @@ export default function AddFocusTaskForm({focusTasksData}: IAddFocusTaskFormProp
 			name: taskName,
 			userId: userId
 		}
-		await focusTasksData.dataMutation.mutateAsync(newTask)
-		await focusTasksData.dataQuery.refetch()
+		await focusTasksData.upsertMutation.mutateAsync(newTask)
+		await focusTasksData.query.refetch()
 	}
 
 	return (
