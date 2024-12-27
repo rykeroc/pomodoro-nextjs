@@ -16,9 +16,17 @@ interface IFocusTasksDialogProps {
 }
 
 export default function FocusTasksDialog({isOpen, handleClose, focusTasksData}: IFocusTasksDialogProps) {
-	const todoTasks: FocusTask[] = focusTasksData.dataQuery.data?.filter(e => !e.isComplete) ?? []
+	function sortAscending(a: FocusTask, b: FocusTask): number {
+		return a.name.localeCompare(b.name)
+	}
 
-	const completedTasks: FocusTask[] = focusTasksData.dataQuery.data?.filter(e => e.isComplete) ?? []
+	const todoTasks: FocusTask[] = focusTasksData.dataQuery.data
+		?.filter(e => !e.isComplete)
+		.sort(sortAscending) ?? []
+
+	const completedTasks: FocusTask[] = focusTasksData.dataQuery.data
+		?.filter(e => e.isComplete)
+		.sort(sortAscending) ?? []
 
 	return (
 		<Dialog open={isOpen} as={"div"} onClose={handleClose}>
