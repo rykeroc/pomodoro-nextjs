@@ -44,14 +44,16 @@ export default function FocusTasksDialog({isOpen, handleClose, focusTasksData}: 
 
 							{/* Tasks to do */}
 							<FocusTaskSection title={"Todo"} focusTasks={todoTasks}
-											  activeTask={focusTasksData.activeTask}/>
+											  activeTask={focusTasksData.activeTask}
+											  focusTasksData={focusTasksData}/>
 
 							<AddFocusTaskForm focusTasksData={focusTasksData}/>
 
 							{/*	Completed tasks */}
 							{
 								completedTasks.length > 0 &&
-                                <FocusTaskSection title={"Completed"} focusTasks={completedTasks}/>
+                                <FocusTaskSection title={"Completed"} focusTasks={completedTasks}
+                                                  focusTasksData={focusTasksData}/>
 							}
 
 						</DialogBody>
