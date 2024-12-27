@@ -5,9 +5,9 @@
 :root {
   --primary: #116CEC;
   --background: #272727;
-  --primary-text: #f9f9f9;
-  --secondary-text: #bebebe;
-  --primary-container: #63636375;
+  --primary-text: #fcfcfc;
+  --secondary-text: #dbdbdb;
+  --primary-container: rgba(73, 73, 73, 0.46);
   --secondary-container: #F4F4F4;
 }
 
