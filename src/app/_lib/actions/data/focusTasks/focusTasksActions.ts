@@ -2,23 +2,21 @@
 
 import {FocusTask} from "@prisma/client";
 import {prisma} from "@/prisma";
-import {CreateFocusTaskType, UpdateFocusTaskType} from "@/app/_lib/actions/data/focusTasks/types";
+import {UpsertFocusTaskType} from "@/app/_lib/actions/data/focusTasks/types";
 
-async function upsertFocusTask(args : CreateFocusTaskType & UpdateFocusTaskType): Promise<FocusTask>{
+async function upsertFocusTask(args: UpsertFocusTaskType): Promise<FocusTask> {
 	return prisma.focusTask.upsert({
 		create: {
 			name: args.name,
-			order: args.order,
 			userId: args.userId
 		},
 		update: {
 			name: args.name,
-			order: args.order,
-			totalFocusSeconds: args.totalFocusSeconds,
-			isComplete: args.isComplete
+			...(args.totalFocusSeconds !== undefined && { totalFocusSeconds: args.totalFocusSeconds }),
+			...(args.isComplete !== undefined && { isComplete: args.isComplete })
 		},
 		where: {
-			id: args.id
+			id: args.id ?? ''
 		},
 	})
 }

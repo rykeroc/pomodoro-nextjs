@@ -4,7 +4,10 @@ type CreateFocusTaskType = Omit<FocusTask, "id" | "totalFocusSeconds" | "isCompl
 
 type UpdateFocusTaskType = Omit<FocusTask, "userId" | "createdAt">
 
+type UpsertFocusTaskType = CreateFocusTaskType & Partial<UpdateFocusTaskType>
+
 export type {
 	CreateFocusTaskType,
-	UpdateFocusTaskType
+	UpdateFocusTaskType,
+	UpsertFocusTaskType
 }

@@ -3,14 +3,14 @@
 import {useMutation, UseMutationResult, useQuery, UseQueryResult} from "@tanstack/react-query";
 import {getFocusTasks, upsertFocusTask} from "@/app/_lib/actions/data/focusTasks/focusTasksActions";
 import {FocusTask} from "@prisma/client";
-import {CreateFocusTaskType, UpdateFocusTaskType} from "@/app/_lib/actions/data/focusTasks/types";
+import {UpsertFocusTaskType} from "@/app/_lib/actions/data/focusTasks/types";
 import {Dispatch, SetStateAction, useState} from "react";
 
 export interface IFocusTasksData {
 	activeTask: FocusTask | null
 	setActiveTask: Dispatch<SetStateAction<FocusTask | null>>
 	dataQuery:  UseQueryResult<FocusTask[], Error>
-	dataMutation:  UseMutationResult<FocusTask, Error, CreateFocusTaskType & UpdateFocusTaskType>
+	dataMutation:  UseMutationResult<FocusTask, Error, UpsertFocusTaskType>
 }
 
 export default function useFocusTasksData(userId: string): IFocusTasksData {
@@ -22,7 +22,7 @@ export default function useFocusTasksData(userId: string): IFocusTasksData {
 	})
 
 	const mutation = useMutation({
-		mutationFn: async (focusTask: CreateFocusTaskType & UpdateFocusTaskType) => {
+		mutationFn: async (focusTask: UpsertFocusTaskType) => {
 			return await upsertFocusTask(focusTask)
 		}
 	})

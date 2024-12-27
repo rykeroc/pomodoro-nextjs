@@ -1,7 +1,7 @@
 "use client"
 
 import PomodoroTimerIndicator from "@/app/_components/pomodoro/PomodoroTimerIndicator";
-import FocusTasksDialog from "@/app/_components/pomodoro/FocusTasksDialog";
+import FocusTasksDialog from "@/app/_components/pomodoro/focusTasks/FocusTasksDialog";
 import {useState} from "react";
 import {useSession} from "next-auth/react";
 import usePomodoro, {IPomodoro} from "@/app/_lib/hooks/usePomodoro";
