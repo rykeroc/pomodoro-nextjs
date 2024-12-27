@@ -38,7 +38,7 @@ export default function FocusTaskSection({title, focusTasks, activeTask, focusTa
 			"flex", "flex-col", "items-start", "gap-3",
 			"w-full"
 		)}>
-			<h5 className={"text-secondary-text"}>
+			<h5 className={"text-primary-text"}>
 				{title}
 			</h5>
 			<div className={cn(
