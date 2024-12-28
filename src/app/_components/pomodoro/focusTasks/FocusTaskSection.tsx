@@ -1,6 +1,6 @@
 import {FocusTask} from "@prisma/client";
 import {cn} from "@/app/_lib/utils/cn";
-import FocusCheckbox from "@/app/_components/pomodoro/focusTasks/FocusCheckbox";
+import FocusItem from "@/app/_components/pomodoro/focusTasks/FocusItem";
 import {UpsertFocusTaskType} from "@/app/_lib/actions/focusTasks/types";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 
@@ -38,11 +38,12 @@ export default function FocusTaskSection({title, focusTasks, activeTask, focusTa
 
 	const checkboxes = focusTasks.map(task => {
 		return (
-			<FocusCheckbox
+			<FocusItem
 				key={task.id} focusTask={task} isActive={task.id === activeTask?.id}
 				onChange={(checked) => handleCheckChange(checked, task)}
 				onDelete={() => handleDelete(task)}
 				onSetActiveTask={handleSetActiveTask}
+				focusTasksData={focusTasksData}
 			/>
 		)
 	})
