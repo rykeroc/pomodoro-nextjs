@@ -1,12 +1,13 @@
 import {Field, Input} from "@headlessui/react";
 import {cn} from "@/app/_lib/utils/cn";
-import {fadeTransitionClasses} from "@/app/_components/common";
 import {PlusIcon} from "@heroicons/react/24/solid";
-import {UpsertFocusTaskType} from "@/app/_lib/actions/focusTasks/types";
 import Form from "next/form";
 import {useSession} from "next-auth/react";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 import {redirect} from "next/navigation";
+import ErrorMessage from "@/app/_components/ErrorMessage";
+import {createFocusTask} from "@/app/_lib/actions/focusTasks/focusTasksActions";
+import {useMutation} from "@tanstack/react-query";
 
 interface IAddFocusTaskFormProps {
 	focusTasksData: IFocusTasksData
@@ -26,33 +27,34 @@ export default function AddFocusTaskForm({focusTasksData}: IAddFocusTaskFormProp
 
 	const userId = session.user.id;
 
-	async function handleSubmit(formData: FormData) {
-		const taskName = formData.get("focusTaskName") as string
-
-		if (!taskName) return
-
-		const newTask: UpsertFocusTaskType = {
-			name: taskName,
-			userId: userId
-		}
-		await focusTasksData.upsertMutation.mutateAsync(newTask)
+	async function handleCreate(formData: FormData) {
+		await createFocusTask(formData)
 		await focusTasksData.query.refetch()
 	}
 
-	return (
-		<Form action={handleSubmit}>
+	const {
+		mutate,
+		isError,
+		error
+	} = useMutation({
+		mutationFn: async (formData: FormData) => handleCreate(formData)
+	})
 
-			{/* Add Text Field*/}
+	return (
+		<Form action={async (formData: FormData) => mutate(formData)} className={cn("flex", "flex-col", "gap-2")}>
+			{/* Add Text Field */}
 			<Field className={cn(
 				"w-full", "flex", "flex-row", "flex-row-reverse", "justify-end", "items-center", "gap-2",
-				...fadeTransitionClasses,
 			)}>
 				<Input
-					name={"focusTaskName"} type={"text"} placeholder={"Add task"} required
+					name={"name"}
+					type={"text"}
+					placeholder={"Add task"}
 					className={cn(
 						"bg-transparent", "border-transparent", "text-primary-text", "placeholder-secondary-text",
 						"focus:outline-none", "peer"
 					)}
+					required
 				/>
 				<PlusIcon className={cn(
 					"size-6", "fill-secondary-text",
@@ -60,6 +62,13 @@ export default function AddFocusTaskForm({focusTasksData}: IAddFocusTaskFormProp
 				)}/>
 			</Field>
 
+			{
+				isError &&
+                <ErrorMessage>{error.message}</ErrorMessage>
+			}
+
+			<Input name={"userId"} type={"text"} value={userId} hidden readOnly/>
+			<Input type={"submit"} hidden/>
 		</Form>
 	)
 }

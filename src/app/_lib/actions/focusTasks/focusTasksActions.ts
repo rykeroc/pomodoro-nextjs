@@ -2,22 +2,45 @@
 
 import {FocusTask} from "@prisma/client";
 import {prisma} from "@/prisma";
-import {UpsertFocusTaskType} from "@/app/_lib/actions/focusTasks/types";
+import {createFocusTaskSchema, updateFocusTaskSchema} from "@/app/_lib/actions/focusTasks/schemas";
 
-async function upsertFocusTask(args: UpsertFocusTaskType): Promise<FocusTask> {
-	return prisma.focusTask.upsert({
-		create: {
-			name: args.name,
-			userId: args.userId
-		},
-		update: {
-			name: args.name,
-			...(args.totalFocusSeconds !== undefined && { totalFocusSeconds: args.totalFocusSeconds }),
-			...(args.isComplete !== undefined && { isComplete: args.isComplete })
-		},
+async function createFocusTask(formData: FormData): Promise<FocusTask> {
+	const validatedFields = await createFocusTaskSchema.safeParseAsync({
+		name: formData.get("name"),
+		userId: formData.get("userId")
+	})
+
+	if (validatedFields.error)
+		throw new Error(validatedFields.error.errors[0].message)
+
+	return prisma.focusTask.create({
+		data: {
+			name: validatedFields.data.name,
+			userId: validatedFields.data.userId
+		}
+	})
+}
+
+async function updateFocusTask(formData: FormData): Promise<FocusTask> {
+	const validatedFields = await updateFocusTaskSchema.safeParseAsync({
+		id: formData.get("id"),
+		name: formData.get("name"),
+		totalFocusSeconds: formData.get("totalFocusSeconds") ?? undefined,
+		isComplete: formData.get("isComplete") ?? undefined
+	})
+
+	if (validatedFields.error)
+		throw new Error(validatedFields.error.errors[0].message)
+
+	return prisma.focusTask.update({
 		where: {
-			id: args.id ?? ''
+			id: validatedFields.data.id
 		},
+		data: {
+			name: validatedFields.data.name,
+			totalFocusSeconds: validatedFields.data.totalFocusSeconds,
+			isComplete: validatedFields.data.isComplete
+		}
 	})
 }
 
@@ -37,7 +60,8 @@ async function getFocusTasks(userId: string): Promise<FocusTask[]> {
 }
 
 export {
-	upsertFocusTask,
+	createFocusTask,
+	updateFocusTask,
 	deleteFocusTask,
 	getFocusTasks
 }
