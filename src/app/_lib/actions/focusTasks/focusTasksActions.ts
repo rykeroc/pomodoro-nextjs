@@ -2,7 +2,7 @@
 
 import {FocusTask} from "@prisma/client";
 import {prisma} from "@/prisma";
-import {UpsertFocusTaskType} from "@/app/_lib/actions/data/focusTasks/types";
+import {UpsertFocusTaskType} from "@/app/_lib/actions/focusTasks/types";
 
 async function upsertFocusTask(args: UpsertFocusTaskType): Promise<FocusTask> {
 	return prisma.focusTask.upsert({

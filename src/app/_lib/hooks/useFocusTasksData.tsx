@@ -1,9 +1,9 @@
 "use client"
 
 import {useMutation, UseMutationResult, useQuery, UseQueryResult} from "@tanstack/react-query";
-import {deleteFocusTask, getFocusTasks, upsertFocusTask} from "@/app/_lib/actions/data/focusTasks/focusTasksActions";
+import {deleteFocusTask, getFocusTasks, upsertFocusTask} from "@/app/_lib/actions/focusTasks/focusTasksActions";
 import {FocusTask} from "@prisma/client";
-import {UpsertFocusTaskType} from "@/app/_lib/actions/data/focusTasks/types";
+import {UpsertFocusTaskType} from "@/app/_lib/actions/focusTasks/types";
 import {Dispatch, SetStateAction, useState} from "react";
 
 export interface IFocusTasksData {

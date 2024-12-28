@@ -7,7 +7,6 @@ type CreateUserPreferenceType = Omit<UserPreference, "id">
 
 async function fetchUserPreferences(userId: string | null): Promise<UserPreference | null> {
 	if (userId === null) return null
-	console.log("Fetching user preferences")
 	return prisma.userPreference.findUnique({
 		where: {
 			userId: userId

@@ -1,7 +1,7 @@
 import {FocusTask} from "@prisma/client";
 import {cn} from "@/app/_lib/utils/cn";
 import FocusCheckbox from "@/app/_components/pomodoro/focusTasks/FocusCheckbox";
-import {UpsertFocusTaskType} from "@/app/_lib/actions/data/focusTasks/types";
+import {UpsertFocusTaskType} from "@/app/_lib/actions/focusTasks/types";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 
 interface IFocusTaskSectionProps {

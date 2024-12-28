@@ -4,7 +4,7 @@ import {Montserrat} from 'next/font/google'
 import {cn} from "@/app/_lib/utils/cn";
 import Providers from "@/app/providers";
 import {auth} from "@/auth";
-import {fetchUserPreferences} from "@/app/_lib/actions/data/userPreferencesActions";
+import {fetchUserPreferences} from "@/app/_lib/actions/userPreferencesActions";
 import {ReactNode} from "react";
 import globalThemes from "@/app/_lib/contexts/theme/globalThemes";
 

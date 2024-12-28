@@ -2,7 +2,7 @@
 
 import {createContext, ReactNode, useState} from "react";
 import {ITheme, IThemeContext} from "@/app/_lib/contexts/theme/IThemeContext";
-import {upsertUserPreferences} from "@/app/_lib/actions/data/userPreferencesActions";
+import {upsertUserPreferences} from "@/app/_lib/actions/userPreferencesActions";
 import {useSession} from "next-auth/react";
 import globalThemes from "@/app/_lib/contexts/theme/globalThemes";
 

@@ -2,7 +2,7 @@ import {Field, Input} from "@headlessui/react";
 import {cn} from "@/app/_lib/utils/cn";
 import {fadeTransitionClasses} from "@/app/_components/common";
 import {PlusIcon} from "@heroicons/react/24/solid";
-import {UpsertFocusTaskType} from "@/app/_lib/actions/data/focusTasks/types";
+import {UpsertFocusTaskType} from "@/app/_lib/actions/focusTasks/types";
 import Form from "next/form";
 import {useSession} from "next-auth/react";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
