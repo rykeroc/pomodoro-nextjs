@@ -3,13 +3,11 @@ import Checkbox from "@/app/_components/inputs/Checkbox";
 import {cn} from "@/app/_lib/utils/cn";
 import {XMarkIcon} from "@heroicons/react/24/solid";
 import {cx} from "class-variance-authority";
-import {Field, Input} from "@headlessui/react";
+import {Input} from "@headlessui/react";
 import Form from "next/form";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 import {useRef} from "react";
-import {useMutation} from "@tanstack/react-query";
 import ErrorMessage from "@/app/_components/ErrorMessage";
-import {updateFocusTask} from "@/app/_lib/actions/focusTasks/focusTasksActions";
 
 interface IFocusCheckboxProps {
 	isActive: boolean,
@@ -30,19 +28,21 @@ export default function FocusItem(
 			inputRef.current.blur();
 	}
 
+	const {
+		mutateAsync,
+		isError,
+		error
+	} = focusTasksData.updateMutation
+
 	async function handleUpdate(formData: FormData) {
-		await updateFocusTask(formData)
-		await focusTasksData.query.refetch()
+		await mutateAsync(formData)
 		blurInput()
 	}
 
-	const {
-		mutate,
-		isError,
-		error
-	} = useMutation({
-		mutationFn: async (formData: FormData) => handleUpdate(formData)
-	})
+	function handleBlur(e: any) {
+		if (inputRef.current && !e.hasFocus)
+			inputRef.current.value = focusTask.name
+	}
 
 	return (
 		<div className={cn(
@@ -54,7 +54,7 @@ export default function FocusItem(
 				onChange={onChange}
 				onDelete={onDelete}>
 				<div className={cn("flex", "items-center", "justify-between")}>
-					<Form action={async (formData: FormData) => mutate(formData)}>
+					<Form action={handleUpdate}>
 						<Input name={"id"} value={focusTask.id} hidden readOnly/>
 						<Input
 							ref={inputRef}
@@ -65,6 +65,7 @@ export default function FocusItem(
 							)}
 							disabled={focusTask.isComplete}
 							type={"text"}
+							onBlur={handleBlur}
 							required
 						/>
 						<Input type={"submit"} hidden/>

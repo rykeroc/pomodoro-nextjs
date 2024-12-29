@@ -6,8 +6,6 @@ import {useSession} from "next-auth/react";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 import {redirect} from "next/navigation";
 import ErrorMessage from "@/app/_components/ErrorMessage";
-import {createFocusTask} from "@/app/_lib/actions/focusTasks/focusTasksActions";
-import {useMutation} from "@tanstack/react-query";
 
 interface IAddFocusTaskFormProps {
 	focusTasksData: IFocusTasksData
@@ -27,21 +25,18 @@ export default function AddFocusTaskForm({focusTasksData}: IAddFocusTaskFormProp
 
 	const userId = session.user.id;
 
-	async function handleCreate(formData: FormData) {
-		await createFocusTask(formData)
-		await focusTasksData.query.refetch()
-	}
-
 	const {
-		mutate,
+		mutateAsync,
 		isError,
 		error
-	} = useMutation({
-		mutationFn: async (formData: FormData) => handleCreate(formData)
-	})
+	} = focusTasksData.createMutation
+
+	async function handleCreate(formData: FormData) {
+		await mutateAsync(formData)
+	}
 
 	return (
-		<Form action={async (formData: FormData) => mutate(formData)} className={cn("flex", "flex-col", "gap-2")}>
+		<Form action={handleCreate} className={cn("flex", "flex-col", "gap-2")}>
 			{/* Add Text Field */}
 			<Field className={cn(
 				"w-full", "flex", "flex-row", "flex-row-reverse", "justify-end", "items-center", "gap-2",

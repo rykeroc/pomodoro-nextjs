@@ -2,8 +2,9 @@
 
 import {useMutation, UseMutationResult, useQuery, UseQueryResult} from "@tanstack/react-query";
 import {
+	createFocusTask,
 	deleteFocusTask,
-	getFocusTasks,
+	getFocusTasks, updateFocusTask,
 } from "@/app/_lib/actions/focusTasks/focusTasksActions";
 import {FocusTask} from "@prisma/client";
 import {Dispatch, SetStateAction, useState} from "react";
@@ -12,6 +13,8 @@ export interface IFocusTasksData {
 	activeTask: FocusTask | null
 	setActiveTask: Dispatch<SetStateAction<FocusTask | null>>
 	query:  UseQueryResult<FocusTask[], Error>
+	createMutation: UseMutationResult<FocusTask, Error, FormData>
+	updateMutation: UseMutationResult<FocusTask, Error, FormData>
 	deleteMutation: UseMutationResult<FocusTask, Error, string>
 }
 
@@ -23,6 +26,21 @@ export default function useFocusTasksData(userId: string): IFocusTasksData {
 		queryKey: [userId]
 	})
 
+	const createMutation = useMutation({
+		mutationFn: async (formData: FormData) => await createFocusTask(formData),
+		onSuccess: async () => {
+			await query.refetch()
+		}
+	})
+
+	const updateMutation = useMutation({
+		mutationFn: async (formData: FormData) => await updateFocusTask(formData),
+		onSuccess: async (data) => {
+			await query.refetch()
+			if (data.id === activeTask?.id) setActiveTask(data)
+		}
+	})
+
 	const deleteMutation = useMutation({
 		mutationFn: async (focusTaskId: string) => await deleteFocusTask(focusTaskId)
 	})
@@ -31,6 +49,8 @@ export default function useFocusTasksData(userId: string): IFocusTasksData {
 		activeTask,
 		setActiveTask,
 		query,
+		createMutation,
+		updateMutation,
 		deleteMutation
 	}
 }
