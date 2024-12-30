@@ -1,4 +1,4 @@
-import {Dispatch, SetStateAction, useCallback, useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import CountdownStatus from "@/app/_lib/constants/CountdownStatus";
 
 interface CounterInfo {
@@ -11,7 +11,7 @@ export interface ICountdown {
 	remaining: number
 	total: number
 	status: CountdownStatus,
-	setOnCompleteAction: Dispatch<SetStateAction<() => void>>
+	setOnCompleteAction: (callback: () => void) => void
 	startCountdown: () => void
 	pauseCountdown: () => void
 	resetCountdown: (newTotalSeconds: number) => void
@@ -26,7 +26,10 @@ export default function useCountdown(startingSeconds: number): ICountdown {
 		remaining: startingSeconds,
 		status: CountdownStatus.NotStarted
 	})
-	const [onCompleteAction, setOnCompleteAction] = useState<() => void>(() => {})
+	const onCompleteActionRef = useRef<(() => void) | null>(null);
+	const setOnCompleteAction = useCallback((callback: () => void) => {
+		onCompleteActionRef.current = callback;
+	}, []);
 
 	const intervalId = useRef<NodeJS.Timeout | null>(null)
 
@@ -66,7 +69,7 @@ export default function useCountdown(startingSeconds: number): ICountdown {
 				status: CountdownStatus.Running
 			}
 		))
-	}, [info.remaining,  onInterval])
+	}, [info.remaining, onInterval])
 
 	const pause = useCallback(() => {
 		// If not started, paused, or complete, do nothing
@@ -145,18 +148,19 @@ export default function useCountdown(startingSeconds: number): ICountdown {
 
 	// Check if countdown is complete
 	useEffect(() => {
-		if (info.remaining <= 0) {
+		if (info.remaining <= 0 && info.status === CountdownStatus.Running) {
 			pause()
 			// Set state to complete
-			setInfo(prevState => (
-				{
+			setInfo(prevState => {
+				if (onCompleteActionRef.current) onCompleteActionRef.current()
+
+				return {
 					...prevState,
 					status: CountdownStatus.Complete
 				}
-			))
-			if (onCompleteAction) onCompleteAction()
+			})
 		}
-	}, [info.remaining, pause, onCompleteAction, setOnCompleteAction]);
+	}, [info.remaining, info.status, pause]);
 
 	return {
 		setOnCompleteAction,

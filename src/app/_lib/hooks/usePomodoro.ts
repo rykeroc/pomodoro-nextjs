@@ -3,6 +3,7 @@ import useCountdown from "@/app/_lib/hooks/useCountdown";
 import PomodoroState from "@/app/_lib/constants/PomodoroState";
 import PomodoroStages, {PomodoroStageInfo} from "@/app/_lib/constants/PomodoroStages";
 import useFocusTasksData, {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
+import {FocusTask} from "@prisma/client";
 
 interface PomodoroInfo {
 	state: PomodoroState
@@ -36,8 +37,27 @@ export default function usePomodoro(userId: string): IPomodoro {
 
 	// Debugging logs
 	useEffect(() => {
-		console.log(`Focus Count updated: ${info.focusCount}`)
-	}, [info.focusCount]);
+		console.log(info)
+	}, [info, focusTasksData.activeTask]);
+
+	/*
+	Update the total focus session seconds for the active task
+	 */
+	const updateActiveTask = useCallback(() => {
+		console.log("updateActiveTask")
+		if (!focusTasksData.activeTask) return
+		const activeTask: FocusTask = focusTasksData.activeTask
+
+		const elapsed = PomodoroStages.focusSession.seconds - countdown.remaining
+		console.log(focusTasksData.activeTask,)
+		console.log(countdown.remaining, elapsed)
+		activeTask.totalFocusSeconds += elapsed
+		const formData = Object.entries(activeTask).reduce((previousValue, [key, value]) => {
+			previousValue.append(key, value as string)
+			return previousValue
+		}, new FormData())
+		return focusTasksData.updateMutation.mutate(formData)
+	}, [focusTasksData.activeTask, focusTasksData.updateMutation, countdown.remaining])
 
 	/*
 	 Called when the countdown completes.
@@ -53,6 +73,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 			let newFocusCount = prev.focusCount
 			if (prev.state === PomodoroState.FocusRunning) {
 				newFocusCount++
+				updateActiveTask()
 			}
 
 			/*
@@ -67,12 +88,12 @@ export default function usePomodoro(userId: string): IPomodoro {
 
 			return {focusCount: newFocusCount, state: newState, stage: newStage}
 		})
-	}, [setInfo])
+	}, [setInfo, updateActiveTask])
 
 	// Set completion callback
 	useEffect(() => {
-		countdown.setOnCompleteAction(() => onCompleteAction)
-	});
+		countdown.setOnCompleteAction(onCompleteAction)
+	}, [countdown, onCompleteAction]);
 
 	// Auto reset countdown if break was completed
 	useEffect(() => {
@@ -104,6 +125,10 @@ export default function usePomodoro(userId: string): IPomodoro {
 	}, [countdown, setInfo])
 
 	const finish = useCallback(() => {
+		// Update the active task if focus session
+		if (info.stage === PomodoroStages.focusSession)
+			updateActiveTask()
+
 		countdown.resetCountdown(PomodoroStages.focusSession.seconds)
 		setInfo(prev => (
 			{
@@ -112,7 +137,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 				state: PomodoroState.FocusPending
 			}
 		))
-	}, [countdown, setInfo])
+	}, [info.stage, updateActiveTask, countdown, setInfo])
 
 	const relax = useCallback(() => {
 		const isLongBreak = (info.focusCount % 4) === 0
