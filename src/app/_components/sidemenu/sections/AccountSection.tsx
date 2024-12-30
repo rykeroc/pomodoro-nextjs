@@ -3,9 +3,7 @@
 import {ISidemenuSection} from "@/app/_components/sidemenu/ISidemenuSection";
 import {ArrowRightStartOnRectangleIcon, UserIcon} from "@heroicons/react/24/solid";
 import Button from "@/app/_components/inputs/Button";
-import Image from "next/image";
-import {signIn, signOut, useSession} from "next-auth/react";
-import {redirect} from "next/navigation";
+import {signOut, useSession} from "next-auth/react";
 
 const AccountSectionContent = () => {
 	const { data: session } = useSession()

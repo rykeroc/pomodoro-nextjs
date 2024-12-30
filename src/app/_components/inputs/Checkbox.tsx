@@ -3,17 +3,15 @@ import {Checkbox as HeadlessUiCheckbox} from "@headlessui/react";
 import {CheckIcon} from "@heroicons/react/16/solid";
 import {fadeTransitionClasses} from "@/app/_components/common";
 import {cn} from "@/app/_lib/utils/cn";
-import {XMarkIcon} from "@heroicons/react/24/solid";
 
 interface CheckboxProps {
 	children?: ReactNode
 	checked?: boolean
 	onChange?: (checked: boolean) => void,
-	onDelete?: () => void
 	className?: string
 }
 
-const Checkbox = ({children, checked, onChange, onDelete, className}: CheckboxProps) => (
+const Checkbox = ({children, checked, onChange, className}: CheckboxProps) => (
 	<div className={cn(
 		'flex flex-row gap-3 items-center',
 		"hover:brightness-125",

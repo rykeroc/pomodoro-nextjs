@@ -6,7 +6,7 @@ import {cx} from "class-variance-authority";
 import {Input} from "@headlessui/react";
 import Form from "next/form";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
-import {useRef} from "react";
+import React, {useRef} from "react";
 import ErrorMessage from "@/app/_components/ErrorMessage";
 
 interface IFocusCheckboxProps {
@@ -39,9 +39,10 @@ export default function FocusItem(
 		blurInput()
 	}
 
-	function handleBlur(e: any) {
-		if (inputRef.current && !e.hasFocus)
-			inputRef.current.value = focusTask.name
+	// Reset name value when blurred
+	function handleBlur(e: React.FocusEvent<HTMLInputElement>): void {
+		if (e.currentTarget.value !== focusTask.name)
+			e.currentTarget.value = focusTask.name
 	}
 
 	return (
@@ -51,8 +52,7 @@ export default function FocusItem(
 			<Checkbox
 				className={"w-full"}
 				checked={focusTask.isComplete}
-				onChange={onChange}
-				onDelete={onDelete}>
+				onChange={onChange}>
 				<div className={cn("flex", "items-center", "justify-between")}>
 					<Form action={handleUpdate}>
 						<Input name={"id"} value={focusTask.id} hidden readOnly/>

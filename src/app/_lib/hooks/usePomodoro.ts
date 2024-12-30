@@ -78,7 +78,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 	useEffect(() => {
 		if (info.state === PomodoroState.FocusPending)
 			countdown.resetCountdown(info.stage.seconds)
-	}, [info.state, info.stage.seconds, countdown.resetCountdown]);
+	}, [info.state, info.stage.seconds, countdown, countdown.resetCountdown]);
 
 	const start = useCallback(() => {
 		countdown.startCountdown()
@@ -90,7 +90,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 				state: PomodoroState.FocusRunning
 			}
 		))
-	}, [countdown.startCountdown, setInfo])
+	}, [countdown, setInfo])
 
 	const pause = useCallback(() => {
 		countdown.pauseCountdown()
@@ -101,7 +101,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 				state: PomodoroState.FocusPaused
 			}
 		))
-	}, [countdown.pauseCountdown, setInfo])
+	}, [countdown, setInfo])
 
 	const finish = useCallback(() => {
 		countdown.resetCountdown(PomodoroStages.focusSession.seconds)
@@ -112,9 +112,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 				state: PomodoroState.FocusPending
 			}
 		))
-	}, [
-		countdown.resetCountdown, setInfo
-	])
+	}, [countdown, setInfo])
 
 	const relax = useCallback(() => {
 		const isLongBreak = (info.focusCount % 4) === 0
@@ -127,7 +125,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 				state: isLongBreak ? PomodoroState.LongBreakRunning : PomodoroState.ShortBreakRunning
 			}
 		))
-	}, [info.focusCount, countdown.restartCountdown, setInfo])
+	}, [info.focusCount, countdown, setInfo])
 
 	return {
 		...info,
