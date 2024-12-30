@@ -27,14 +27,14 @@ export default function useFocusTasksData(userId: string): IFocusTasksData {
 	})
 
 	const createMutation = useMutation({
-		mutationFn: async (formData: FormData) => await createFocusTask(formData),
+		mutationFn: createFocusTask,
 		onSuccess: async () => {
 			await query.refetch()
 		}
 	})
 
 	const updateMutation = useMutation({
-		mutationFn: async (formData: FormData) => await updateFocusTask(formData),
+		mutationFn: updateFocusTask,
 		onSuccess: async (data) => {
 			await query.refetch()
 			if (data.id === activeTask?.id) setActiveTask(data)

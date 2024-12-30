@@ -2,7 +2,10 @@
 
 import {FocusTask} from "@prisma/client";
 import {prisma} from "@/prisma";
-import {createFocusTaskSchema, updateFocusTaskSchema} from "@/app/_lib/actions/focusTasks/schemas";
+import {
+	createFocusTaskSchema,
+	updateFocusTaskSchema,
+} from "@/app/_lib/actions/focusTasks/schemas";
 
 async function createFocusTask(formData: FormData): Promise<FocusTask> {
 	const validatedFields = await createFocusTaskSchema.safeParseAsync({
@@ -10,8 +13,9 @@ async function createFocusTask(formData: FormData): Promise<FocusTask> {
 		userId: formData.get("userId")
 	})
 
-	if (validatedFields.error)
+	if (validatedFields.error){
 		throw new Error(validatedFields.error.errors[0].message)
+	}
 
 	return prisma.focusTask.create({
 		data: {
@@ -25,12 +29,13 @@ async function updateFocusTask(formData: FormData): Promise<FocusTask> {
 	const validatedFields = await updateFocusTaskSchema.safeParseAsync({
 		id: formData.get("id"),
 		name: formData.get("name"),
-		totalFocusSeconds: formData.get("totalFocusSeconds") ?? undefined,
-		isComplete: formData.get("isComplete") ?? undefined
+		totalFocusSeconds: formData.has("totalFocusSeconds") ? parseInt(formData.get("totalFocusSeconds") as string) : undefined,
+		isComplete: formData.has("isComplete") ? formData.get("isComplete") === "true" :  undefined
 	})
 
-	if (validatedFields.error)
+	if (validatedFields.error){
 		throw new Error(validatedFields.error.errors[0].message)
+	}
 
 	return prisma.focusTask.update({
 		where: {

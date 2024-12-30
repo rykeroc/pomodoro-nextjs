@@ -1,7 +1,6 @@
 import {FocusTask} from "@prisma/client";
 import {cn} from "@/app/_lib/utils/cn";
 import FocusItem from "@/app/_components/pomodoro/focusTasks/FocusItem";
-import {UpsertFocusTaskType} from "@/app/_lib/actions/focusTasks/schemas";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 
 interface IFocusTaskSectionProps {
@@ -13,11 +12,13 @@ interface IFocusTaskSectionProps {
 
 export default function FocusTaskSection({title, focusTasks, activeTask, focusTasksData}: IFocusTaskSectionProps) {
 	async function handleCheckChange(checked: boolean, focusTask: FocusTask) {
-		const newTask: UpsertFocusTaskType = {
-			...focusTask,
-			isComplete: checked,
-		}
-		await focusTasksData.upsertMutation.mutateAsync(newTask)
+		focusTask.isComplete = checked
+		const formData = Object.entries(focusTask).reduce((previousValue, [key, value]) => {
+			previousValue.append(key, value as string)
+			return previousValue
+		}, new FormData())
+
+		await focusTasksData.updateMutation.mutateAsync(formData)
 		if (checked) focusTasksData.setActiveTask(null)
 		await focusTasksData.query.refetch()
 	}
