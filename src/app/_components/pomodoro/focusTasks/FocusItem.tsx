@@ -8,6 +8,7 @@ import Form from "next/form";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 import React, {useRef} from "react";
 import ErrorMessage from "@/app/_components/ErrorMessage";
+import {secondsToMinutes} from "@/app/_lib/utils/dateTimeUtils";
 
 interface IFocusCheckboxProps {
 	isActive: boolean,
@@ -72,7 +73,7 @@ export default function FocusItem(
 					</Form>
 
 					<div className={cn(
-						"flex", "flex-row", "gap-2"
+						"flex", "flex-row",  "items-center", "gap-2"
 					)}>
 						<small className={cn(
 							cx({
