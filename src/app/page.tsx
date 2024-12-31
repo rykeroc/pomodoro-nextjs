@@ -4,7 +4,7 @@ import SettingsMenu from "@/app/_components/settingsMenu/SettingsMenu";
 import FocusQuote from "@/app/_components/FocusQuote";
 import PomodoroComponents from "@/app/_components/pomodoro/PomodoroComponents";
 
-export default async function Page(){
+export default async function Page() {
 	return (
 		<div>
 			<div className={cn(
