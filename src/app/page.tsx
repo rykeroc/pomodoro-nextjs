@@ -1,6 +1,6 @@
 import ThemeImage from "@/app/_components/theme/ThemeImage";
 import {cn} from "@/app/_lib/utils/cn";
-import SideMenu from "@/app/_components/sidemenu/SideMenu";
+import SettingsMenu from "@/app/_components/settingsMenu/SettingsMenu";
 import FocusQuote from "@/app/_components/FocusQuote";
 import PomodoroComponents from "@/app/_components/pomodoro/PomodoroComponents";
 
@@ -11,7 +11,7 @@ export default async function Page(){
 				"fixed", 'h-screen', 'w-screen', 'z-10', 'p-5',
 				"flex", 'flex-col', 'justify-between'
 			)}>
-				<SideMenu/>
+				<SettingsMenu/>
 				<PomodoroComponents/>
 				<FocusQuote/>
 			</div>
