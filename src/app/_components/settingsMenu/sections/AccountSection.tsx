@@ -1,9 +1,9 @@
 "use client"
 
-import {ISidemenuSection} from "@/app/_components/sidemenu/ISidemenuSection";
 import {ArrowRightStartOnRectangleIcon, UserIcon} from "@heroicons/react/24/solid";
 import Button from "@/app/_components/inputs/Button";
 import {signOut, useSession} from "next-auth/react";
+import {ISettingsMenuSection} from "@/app/_components/settingsMenu/SettingsMenuSections";
 
 const AccountSectionContent = () => {
 	const { data: session } = useSession()
@@ -22,7 +22,7 @@ const AccountSectionContent = () => {
 	)
 }
 
-const AccountSection: ISidemenuSection = {
+const AccountSection: ISettingsMenuSection = {
 	title: "Account",
 	icon: <UserIcon className={'size-5'}/>,
 	content: <AccountSectionContent/>

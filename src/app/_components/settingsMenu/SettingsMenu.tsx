@@ -3,27 +3,27 @@
 import {cn} from "@/app/_lib/utils/cn";
 import {glassEffectClasses} from "@/app/_components/common";
 import {useState} from "react";
-import sidemenuSections from "@/app/_components/sidemenu/sidemenuSections";
 import Button from "@/app/_components/inputs/Button";
 import VerticalLine from "@/app/_components/VerticalLine";
 import {Bars3Icon, ChevronRightIcon} from "@heroicons/react/16/solid";
 import {Dialog, DialogPanel, DialogTitle} from "@headlessui/react";
-import {ISidemenuSection} from "@/app/_components/sidemenu/ISidemenuSection";
+import SettingsMenuSections, {ISettingsMenuSection} from "@/app/_components/settingsMenu/SettingsMenuSections";
 
-export default function SideMenu() {
+export default function SettingsMenu() {
 	const [isOpen, setIsOpen] = useState(false)
 	const close = () => setIsOpen(false)
 	const open = () => setIsOpen(true)
 
-	const [section, setSection] = useState(sidemenuSections[0])
+	const [section, setSection] = useState(SettingsMenuSections[0])
 
-	const sectionButtons = sidemenuSections.map((s: ISidemenuSection, index: number) => (
-		<Button key={index} variant={"none"} onClick={() => setSection(s)}>
-			{s.icon}
-			{s.title}
-		</Button>
-	))
-
+	const sectionButtons = SettingsMenuSections.map(
+		(s: ISettingsMenuSection, index: number) => (
+			<Button key={index} variant={"none"} onClick={() => setSection(s)}>
+				{s.icon}
+				{s.title}
+			</Button>
+		)
+	)
 
 	return (
 		<>
