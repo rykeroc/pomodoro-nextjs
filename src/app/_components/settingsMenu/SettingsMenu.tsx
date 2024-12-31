@@ -5,9 +5,10 @@ import {glassEffectClasses} from "@/app/_components/common";
 import {useState} from "react";
 import Button from "@/app/_components/inputs/Button";
 import VerticalLine from "@/app/_components/VerticalLine";
-import {Bars3Icon, ChevronRightIcon} from "@heroicons/react/16/solid";
+import {ChevronRightIcon} from "@heroicons/react/16/solid";
 import {Dialog, DialogPanel, DialogTitle} from "@headlessui/react";
 import SettingsMenuSections, {ISettingsMenuSection} from "@/app/_components/settingsMenu/SettingsMenuSections";
+import {Cog6ToothIcon} from "@heroicons/react/24/solid";
 
 export default function SettingsMenu() {
 	const [isOpen, setIsOpen] = useState(false)
@@ -32,7 +33,7 @@ export default function SettingsMenu() {
 			)}>
 				{/* Menu button */}
 				<Button variant={'glass'} className={cn('px-3')} onClick={open}>
-					<Bars3Icon className={'size-5'}/>
+					<Cog6ToothIcon className={'size-6'}/>
 				</Button>
 			</div>
 
