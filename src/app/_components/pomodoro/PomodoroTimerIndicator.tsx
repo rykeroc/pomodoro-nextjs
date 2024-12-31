@@ -62,7 +62,8 @@ function PomodoroTimerIndicator({timerInfo, focusTasksData, handleOpen}: IPomodo
 
 	const remainingSeconds = timerInfo.stage === PomodoroStages.focusSession ?
 		timerInfo.remaining : getElapsedSeconds(timerInfo.remaining, timerInfo.total)
-	const percentage = Math.min(100, (timerInfo.remaining / timerInfo.total) * 100)
+
+	const percentage = Math.min(100, (remainingSeconds / timerInfo.total) * 100)
 
 	const dashOffset = dashArray - (dashArray * percentage) / 100
 	const minutesString = secondsToMinutes(remainingSeconds)
