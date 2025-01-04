@@ -26,27 +26,27 @@ export default function TopBarMenus() {
 	const closeSettings = () => setIsSettingsOpen(false)
 	const openSettings = () => setIsSettingsOpen(true)
 
+	const iconClasses = ['size-6']
 	const topBarButtonsList: TopBarButtons[] = [
 		// Focus tasks menu
 		{
 			isOpen: isTasksOpen,
 			onClick: openTasks,
-			icon: <ListBulletIcon className={'size-6'}/>
+			icon: <ListBulletIcon className={cn(iconClasses)}/>
 
 		},
 		// Settings menu
 		{
 			isOpen: isSettingsOpen,
 			onClick: openSettings,
-			icon: <Cog6ToothIcon className={'size-6'}/>
+			icon: <Cog6ToothIcon className={cn(iconClasses)}/>
 		}
 	]
 
 	const topBarButtons = topBarButtonsList.map((item, index) => (
 		<Button key={index} variant={'glass'} className={
 			cn(
-				'px-3',
-				'visible',
+				'px-3', 'visible',
 				cx({'invisible': item.isOpen})
 			)
 		} onClick={item.onClick}>
