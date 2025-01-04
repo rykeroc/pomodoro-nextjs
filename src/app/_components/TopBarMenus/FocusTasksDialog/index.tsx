@@ -3,7 +3,7 @@
 import {cn} from "@/app/_lib/utils/cn";
 import {Dialog, DialogPanel, DialogTitle} from "@headlessui/react";
 import {glassEffectClasses, IDialogMenuProps} from "@/app/_components/common";
-import FocusTaskSection from "@/app/_components/pomodoro/focusTasks/FocusTaskSection";
+import FocusTaskSection from "@/app/_components/TopBarMenus/FocusTasksDialog/FocusTaskSection";
 import AddFocusTaskForm from "@/app/_components/pomodoro/focusTasks/AddFocusTaskForm";
 import {FocusTask} from "@prisma/client";
 import useFocusTasksData from "@/app/_lib/hooks/useFocusTasksData";
@@ -24,7 +24,7 @@ export default function FocusTasksDialog({isOpen, onClose}: IDialogMenuProps) {
 						transition
 						className={cn(
 							'fixed', "z-50",
-							"h-full", ...glassEffectClasses, "p-4", "rounded-r-2xl", "min-w-1/4",
+							"h-full", ...glassEffectClasses, "p-4", "rounded-r-2xl", "w-1/3",
 							"duration-300", "ease-in-out",
 							"data-[closed]:-translate-x-full", "data-[closed]:opacity-0"
 						)}>
