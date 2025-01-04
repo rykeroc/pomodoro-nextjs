@@ -1,26 +1,76 @@
 import {FocusTask} from "@prisma/client";
-import Checkbox from "@/app/_components/inputs/Checkbox";
 import {cn} from "@/app/_lib/utils/cn";
-import {XMarkIcon} from "@heroicons/react/24/solid";
-import {cx} from "class-variance-authority";
-import {Input} from "@headlessui/react";
-import Form from "next/form";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 import React, {useRef} from "react";
+import Checkbox from "@/app/_components/inputs/Checkbox";
+import Form from "next/form";
+import {XMarkIcon} from "@heroicons/react/24/solid";
 import ErrorMessage from "@/app/_components/ErrorMessage";
-import {secondsToMinutes} from "@/app/_lib/utils/dateTimeUtils";
+import {Input} from "@headlessui/react";
 
-interface IFocusCheckboxProps {
-	isActive: boolean,
-	focusTask: FocusTask
-	onChange: (checked: boolean) => void
-	onDelete: () => void
-	onSetActiveTask: (focusTask: FocusTask) => void
+interface IFocusTaskSectionProps {
+	title: string
+	focusTasks: FocusTask[]
 	focusTasksData: IFocusTasksData
 }
 
-export default function FocusItem(
-	{isActive, focusTask, onChange, onDelete, onSetActiveTask, focusTasksData}: IFocusCheckboxProps
+export default function FocusTasksDialogSection({title, focusTasks, focusTasksData}: IFocusTaskSectionProps) {
+	async function handleCheckChange(checked: boolean, focusTask: FocusTask) {
+		focusTask.isComplete = checked
+		const formData = Object.entries(focusTask).reduce((previousValue, [key, value]) => {
+			previousValue.append(key, value as string)
+			return previousValue
+		}, new FormData())
+
+		await focusTasksData.updateMutation.mutateAsync(formData)
+		if (checked) focusTasksData.setActiveTask(null)
+		await focusTasksData.query.refetch()
+	}
+
+	async function handleDelete(focusTask: FocusTask) {
+		await focusTasksData.deleteMutation.mutateAsync(focusTask.id)
+		focusTasksData.setActiveTask(null)
+		await focusTasksData.query.refetch()
+	}
+
+	const checkboxes = focusTasks.map(task => {
+		return (
+			<FocusItem
+				key={task.id} focusTask={task}
+				onChange={(checked) => handleCheckChange(checked, task)}
+				onDelete={() => handleDelete(task)}
+				focusTasksData={focusTasksData}
+			/>
+		)
+	})
+
+	return (
+		<div className={cn(
+			"flex", "flex-col", "items-start", "gap-3",
+			"w-full"
+		)}>
+			<h5 className={"text-primary-text"}>
+				{title}
+			</h5>
+			<div className={cn(
+				"flex", "flex-col", "gap-2",
+				"w-full"
+			)}>
+				{checkboxes}
+			</div>
+		</div>
+	)
+}
+
+interface IFocusItemProps {
+	focusTask: FocusTask
+	onChange: (checked: boolean) => void
+	onDelete: () => void
+	focusTasksData: IFocusTasksData
+}
+
+function FocusItem(
+	{focusTask, onChange, onDelete, focusTasksData}: IFocusItemProps
 ) {
 	const inputRef = useRef<HTMLInputElement>(null); // Create a ref for the input
 	function blurInput() {
@@ -48,7 +98,7 @@ export default function FocusItem(
 
 	return (
 		<div className={cn(
-			"flex", "flex-col", "gap-2"
+			"flex", "flex-col", "gap-2", "ps-2"
 		)}>
 			<Checkbox
 				className={"w-full"}
@@ -73,19 +123,8 @@ export default function FocusItem(
 					</Form>
 
 					<div className={cn(
-						"flex", "flex-row",  "items-center", "gap-2"
+						"flex", "flex-row", "items-center", "gap-2"
 					)}>
-						<small className={cn(
-							cx({
-								"block": isActive,			// Show by default if active
-								"hidden": !isActive,		// Hide by default if not active
-								"group-hover/root:block": !isActive && !focusTask.isComplete	// Show when hovered, if task is not active and not completed
-							}),
-							"cursor-pointer",
-						)} onClick={() => onSetActiveTask(focusTask)}>
-							{isActive ? "Active" : "Set active"}
-						</small>
-
 						<div className={cn(
 							"invisible", "group-hover/root:visible",
 						)}>
