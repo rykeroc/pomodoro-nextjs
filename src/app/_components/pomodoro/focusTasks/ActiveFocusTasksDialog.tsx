@@ -6,9 +6,10 @@ import {CloseIcon} from "next/dist/client/components/react-dev-overlay/internal/
 import {FocusTask} from "@prisma/client";
 import Button from "@/app/_components/inputs/Button";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
-import FocusTaskSection from "@/app/_components/pomodoro/focusTasks/FocusTaskSection";
-import AddFocusTaskForm from "@/app/_components/pomodoro/focusTasks/AddFocusTaskForm";
+import FocusTasksDialogSection from "@/app/_components/TopBarMenus/FocusTasksDialog/FocusTasksDialogSection";
+import AddFocusTaskForm from "@/app/_components/TopBarMenus/FocusTasksDialog/AddFocusTaskForm";
 import {filterCompletedTasks, filterTodoTasks} from "@/app/_lib/utils/focusTasksHelpers";
+import ActiveFocusTaskSection from "@/app/_components/pomodoro/focusTasks/ActiveFocusTaskSection";
 
 interface IFocusTasksDialogProps {
 	isOpen: boolean
@@ -16,7 +17,7 @@ interface IFocusTasksDialogProps {
 	handleClose: () => void
 }
 
-export default function FocusTasksDialog({isOpen, handleClose, focusTasksData}: IFocusTasksDialogProps) {
+export default function ActiveFocusTasksDialog({isOpen, handleClose, focusTasksData}: IFocusTasksDialogProps) {
 	const todoTasks: FocusTask[] = filterTodoTasks(focusTasksData.query.data ?? [])
 
 	const completedTasks: FocusTask[] = filterCompletedTasks(focusTasksData.query.data ?? [])
@@ -44,17 +45,15 @@ export default function FocusTasksDialog({isOpen, handleClose, focusTasksData}: 
 						<DialogBody className={cn("flex", "flex-col", "w-full", "gap-4", "min-w-96")}>
 
 							{/* Tasks to do */}
-							<FocusTaskSection title={"Todo"} focusTasks={todoTasks}
-											  activeTask={focusTasksData.activeTask}
-											  focusTasksData={focusTasksData}/>
-
-							<AddFocusTaskForm focusTasksData={focusTasksData}/>
+							<ActiveFocusTaskSection title={"Todo"} focusTasks={todoTasks}
+													 activeTask={focusTasksData.activeTask}
+													 focusTasksData={focusTasksData}/>
 
 							{/*	Completed tasks */}
 							{
 								completedTasks.length > 0 &&
-                                <FocusTaskSection title={"Completed"} focusTasks={completedTasks}
-                                                  focusTasksData={focusTasksData}/>
+                                <ActiveFocusTaskSection title={"Completed"} focusTasks={completedTasks}
+                                                         focusTasksData={focusTasksData}/>
 							}
 
 						</DialogBody>

@@ -4,14 +4,15 @@ import {useMutation, UseMutationResult, useQuery, UseQueryResult} from "@tanstac
 import {
 	createFocusTask,
 	deleteFocusTask,
-	getFocusTasks, updateFocusTask,
+	getFocusTasks,
+	updateFocusTask,
 } from "@/app/_lib/actions/focusTasks/focusTasksActions";
 import {FocusTask} from "@prisma/client";
-import {Dispatch, SetStateAction, useState} from "react";
+import {useState} from "react";
 
 export interface IFocusTasksData {
 	activeTask: FocusTask | null
-	setActiveTask: Dispatch<SetStateAction<FocusTask | null>>
+	setActiveTask: (focusTaskId: string | null) => void
 	query:  UseQueryResult<FocusTask[], Error>
 	createMutation: UseMutationResult<FocusTask, Error, FormData>
 	updateMutation: UseMutationResult<FocusTask, Error, FormData>
@@ -19,12 +20,25 @@ export interface IFocusTasksData {
 }
 
 export default function useFocusTasksData(userId: string): IFocusTasksData {
-	const [activeTask, setActiveTask] = useState<FocusTask | null>(null)
+	const [activeTask, _setActiveTask] = useState<FocusTask | null>(null)
 
 	const query = useQuery({
 		queryFn: async () => getFocusTasks(userId),
 		queryKey: [userId]
 	})
+
+	function setActiveTask(focusTaskId: string | null) {
+		_setActiveTask(prev => {
+			// If not id, clear active task
+			if (!focusTaskId) return null
+
+			// If prev and new are equal, unset the active task
+			if (focusTaskId === prev?.id) return null
+
+			// Set new active task
+			return query.data?.find(task => task.id === focusTaskId) ?? null
+		})
+	}
 
 	const createMutation = useMutation({
 		mutationFn: createFocusTask,
@@ -37,7 +51,7 @@ export default function useFocusTasksData(userId: string): IFocusTasksData {
 		mutationFn: updateFocusTask,
 		onSuccess: async (data) => {
 			await query.refetch()
-			if (data.id === activeTask?.id) setActiveTask(data)
+			if (data.id === activeTask?.id) setActiveTask(data.id)
 		}
 	})
 
