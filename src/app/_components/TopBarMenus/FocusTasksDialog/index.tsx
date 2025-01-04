@@ -3,8 +3,8 @@
 import {cn} from "@/app/_lib/utils/cn";
 import {Dialog, DialogPanel, DialogTitle} from "@headlessui/react";
 import {glassEffectClasses, IDialogMenuProps} from "@/app/_components/common";
-import FocusTaskSection from "@/app/_components/TopBarMenus/FocusTasksDialog/FocusTaskSection";
-import AddFocusTaskForm from "@/app/_components/pomodoro/focusTasks/AddFocusTaskForm";
+import FocusTasksDialogSection from "@/app/_components/TopBarMenus/FocusTasksDialog/FocusTasksDialogSection";
+import AddFocusTaskForm from "@/app/_components/TopBarMenus/FocusTasksDialog/AddFocusTaskForm";
 import {FocusTask} from "@prisma/client";
 import useFocusTasksData from "@/app/_lib/hooks/useFocusTasksData";
 import {useSession} from "next-auth/react";
@@ -12,6 +12,7 @@ import {redirect} from "next/navigation";
 import Button from "@/app/_components/inputs/Button";
 import {ChevronLeftIcon} from "@heroicons/react/24/solid";
 import {filterCompletedTasks, filterTodoTasks} from "@/app/_lib/utils/focusTasksHelpers";
+import React from "react";
 
 
 export default function FocusTasksDialog({isOpen, onClose}: IDialogMenuProps) {
@@ -62,17 +63,18 @@ function Content({onClose}: IContentProps) {
 				<div className={cn("flex", "flex-col", "w-full", "gap-5",)}>
 					<AddFocusTaskForm focusTasksData={focusTasksData}/>
 
-					{/* Tasks to do */}
-					<FocusTaskSection title={"Todo"} focusTasks={todoTasks}
-									  activeTask={focusTasksData.activeTask}
-									  focusTasksData={focusTasksData}/>
-
+					{
+						todoTasks.length === 0 ? <p>There are currently no uncompleted focus tasks</p> : (
+							<FocusTasksDialogSection title={"Todo"} focusTasks={todoTasks}
+													 focusTasksData={focusTasksData}/>
+						)
+					}
 
 					{/*	Completed tasks */}
 					{
 						completedTasks.length > 0 &&
-                        <FocusTaskSection title={"Completed"} focusTasks={completedTasks}
-                                          focusTasksData={focusTasksData}/>
+                        <FocusTasksDialogSection title={"Completed"} focusTasks={completedTasks}
+                                                 focusTasksData={focusTasksData}/>
 					}
 				</div>
 			</div>
