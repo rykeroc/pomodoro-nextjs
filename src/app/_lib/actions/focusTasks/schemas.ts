@@ -21,13 +21,15 @@ const createFocusTaskSchema = z.object({
 const updateFocusTaskSchema = z.object({
 	id: z
 		.string()
-		.nonempty(),
+		.nonempty({
+			message: "Invalid focus task ID"
+		}),
 	name: z
 		.string()
 		.nonempty()
 		.min(1)
 		.max(50, {
-			message: "name must be between 1 and 50 characters"
+			message: "Name must be between 1 and 50 characters"
 		}),
 	totalFocusSeconds: z.number().optional(),
 	isComplete: z.boolean().optional(),
