@@ -1,3 +1,5 @@
+"use client"
+
 import {FocusTask} from "@prisma/client";
 import {cn} from "@/app/_lib/utils/cn";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
@@ -7,6 +9,9 @@ import Form from "next/form";
 import {XMarkIcon} from "@heroicons/react/24/solid";
 import ErrorMessage from "@/app/_components/ErrorMessage";
 import {Input} from "@headlessui/react";
+import {useSession} from "next-auth/react";
+import {redirect} from "next/navigation";
+import {IFocusTaskDeleteArgs, IFocusTaskUpdateArgs} from "@/app/_lib/actions/focusTasks/types";
 
 interface IFocusTaskSectionProps {
 	title: string
@@ -15,20 +20,38 @@ interface IFocusTaskSectionProps {
 }
 
 export default function FocusTasksDialogSection({title, focusTasks, focusTasksData}: IFocusTaskSectionProps) {
+	const {data: session} = useSession({
+		required: true,
+		onUnauthenticated() {
+			redirect("/sign-in")
+		}
+	})
+
+	if (!session?.user?.id) {
+		return null;
+	}
+
+	const userId = session.user.id;
+
 	async function handleCheckChange(checked: boolean, focusTask: FocusTask) {
-		focusTask.isComplete = checked
-		const formData = Object.entries(focusTask).reduce((previousValue, [key, value]) => {
+		const formData = Object.entries({...focusTask, isComplete: checked}).reduce((previousValue, [key, value]) => {
 			previousValue.append(key, value as string)
 			return previousValue
 		}, new FormData())
 
-		await focusTasksData.updateMutation.mutateAsync(formData)
+		const updateArgs: IFocusTaskUpdateArgs = {formData, userId}
+
+		await focusTasksData.updateMutation.mutateAsync(updateArgs)
 		if (checked) focusTasksData.setActiveTask(null)
 		await focusTasksData.query.refetch()
 	}
 
 	async function handleDelete(focusTask: FocusTask) {
-		await focusTasksData.deleteMutation.mutateAsync(focusTask.id)
+		const deleteArgs: IFocusTaskDeleteArgs = {
+			focusTaskId: focusTask.id,
+			userId
+		}
+		await focusTasksData.deleteMutation.mutateAsync(deleteArgs)
 		focusTasksData.setActiveTask(null)
 		await focusTasksData.query.refetch()
 	}
@@ -36,7 +59,9 @@ export default function FocusTasksDialogSection({title, focusTasks, focusTasksDa
 	const checkboxes = focusTasks.map(task => {
 		return (
 			<FocusItem
-				key={task.id} focusTask={task}
+				key={task.id}
+				userId={userId}
+				focusTask={task}
 				onChange={(checked) => handleCheckChange(checked, task)}
 				onDelete={() => handleDelete(task)}
 				focusTasksData={focusTasksData}
@@ -63,6 +88,7 @@ export default function FocusTasksDialogSection({title, focusTasks, focusTasksDa
 }
 
 interface IFocusItemProps {
+	userId: string
 	focusTask: FocusTask
 	onChange: (checked: boolean) => void
 	onDelete: () => void
@@ -70,7 +96,7 @@ interface IFocusItemProps {
 }
 
 function FocusItem(
-	{focusTask, onChange, onDelete, focusTasksData}: IFocusItemProps
+	{userId, focusTask, onChange, onDelete, focusTasksData}: IFocusItemProps
 ) {
 	const inputRef = useRef<HTMLInputElement>(null); // Create a ref for the input
 	function blurInput() {
@@ -86,8 +112,18 @@ function FocusItem(
 	} = focusTasksData.updateMutation
 
 	async function handleUpdate(formData: FormData) {
-		await mutateAsync(formData)
-		blurInput()
+		const updateArgs: IFocusTaskUpdateArgs = {
+			formData,
+			userId
+		}
+
+		try {
+			await mutateAsync(updateArgs)
+		} catch (e) {
+			console.log(e)
+		} finally {
+			blurInput()
+		}
 	}
 
 	// Reset name value when blurred

@@ -4,6 +4,7 @@ import PomodoroState from "@/app/_lib/constants/PomodoroState";
 import PomodoroStages, {PomodoroStageInfo} from "@/app/_lib/constants/PomodoroStages";
 import useFocusTasksData, {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 import {FocusTask} from "@prisma/client";
+import {IFocusTaskUpdateArgs} from "@/app/_lib/actions/focusTasks/types";
 
 interface PomodoroInfo {
 	state: PomodoroState
@@ -53,8 +54,13 @@ export default function usePomodoro(userId: string): IPomodoro {
 			previousValue.append(key, value as string)
 			return previousValue
 		}, new FormData())
+
+		const updateArgs: IFocusTaskUpdateArgs = {
+			formData,
+			userId
+		}
 		// Update the active task data
-		return focusTasksData.updateMutation.mutate(formData)
+		return focusTasksData.updateMutation.mutate(updateArgs)
 	}, [focusTasksData.activeTask, focusTasksData.updateMutation, countdown.remaining])
 
 	/*

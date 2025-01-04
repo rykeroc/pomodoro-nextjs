@@ -30,7 +30,7 @@ const updateFocusTaskSchema = z.object({
 			message: "name must be between 1 and 50 characters"
 		}),
 	totalFocusSeconds: z.number().optional(),
-	isComplete: z.boolean().optional()
+	isComplete: z.boolean().optional(),
 }) satisfies z.Schema<Prisma.FocusTaskUncheckedUpdateInput>
 
 export {
