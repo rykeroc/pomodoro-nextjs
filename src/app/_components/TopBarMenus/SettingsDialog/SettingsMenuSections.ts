@@ -1,6 +1,6 @@
 import {ReactElement, ReactNode} from "react";
-import AccountSection from "@/app/_components/settingsMenu/sections/AccountSection";
-import ThemeSelector from "@/app/_components/settingsMenu/sections/theme/ThemeSelector";
+import AccountSection from "@/app/_components/TopBarMenus/SettingsDialog/sections/AccountSection";
+import ThemeSelector from "@/app/_components/TopBarMenus/SettingsDialog/sections/theme/ThemeSelector";
 
 interface ISettingsMenuSection {
 	title: string

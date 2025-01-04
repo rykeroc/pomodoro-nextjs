@@ -12,7 +12,16 @@ const glassEffectClasses: string[] = [
 	"backdrop-blur-sm",
 ]
 
+interface IDialogMenuProps {
+	isOpen: boolean
+	onClose: () => void
+}
+
 export {
 	fadeTransitionClasses,
 	glassEffectClasses
+}
+
+export type {
+	IDialogMenuProps
 }
