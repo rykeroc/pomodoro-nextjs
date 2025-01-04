@@ -3,8 +3,8 @@ import {useContext} from "react";
 import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";
 import {ITheme, IThemeContext} from "@/app/_lib/contexts/theme/IThemeContext";
 import {cn} from "@/app/_lib/utils/cn";
-import ThemeButton from "@/app/_components/settingsMenu/sections/theme/ThemeButton";
-import {ISettingsMenuSection} from "@/app/_components/settingsMenu/SettingsMenuSections";
+import ThemeButton from "@/app/_components/TopBarMenus/SettingsDialog/sections/theme/ThemeButton";
+import {ISettingsMenuSection} from "@/app/_components/TopBarMenus/SettingsDialog/SettingsMenuSections";
 
 const ThemeSelectorContent = () => {
 	const themeContext = useContext<IThemeContext | null>(ThemeContext)
