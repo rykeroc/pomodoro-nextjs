@@ -9,14 +9,15 @@ import {
 } from "@/app/_lib/actions/focusTasks/focusTasksActions";
 import {FocusTask} from "@prisma/client";
 import {useState} from "react";
+import {IFocusTaskDeleteArgs, IFocusTaskUpdateArgs} from "@/app/_lib/actions/focusTasks/types";
 
 export interface IFocusTasksData {
 	activeTask: FocusTask | null
 	setActiveTask: (focusTaskId: string | null) => void
 	query:  UseQueryResult<FocusTask[], Error>
 	createMutation: UseMutationResult<FocusTask, Error, FormData>
-	updateMutation: UseMutationResult<FocusTask, Error, FormData>
-	deleteMutation: UseMutationResult<FocusTask, Error, string>
+	updateMutation: UseMutationResult<FocusTask, Error, IFocusTaskUpdateArgs>
+	deleteMutation: UseMutationResult<FocusTask, Error, IFocusTaskDeleteArgs>
 }
 
 export default function useFocusTasksData(userId: string): IFocusTasksData {
@@ -56,7 +57,7 @@ export default function useFocusTasksData(userId: string): IFocusTasksData {
 	})
 
 	const deleteMutation = useMutation({
-		mutationFn: async (focusTaskId: string) => await deleteFocusTask(focusTaskId)
+		mutationFn:  deleteFocusTask
 	})
 
 	return {
