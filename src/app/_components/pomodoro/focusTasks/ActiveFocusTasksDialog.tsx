@@ -6,8 +6,6 @@ import {CloseIcon} from "next/dist/client/components/react-dev-overlay/internal/
 import {FocusTask} from "@prisma/client";
 import Button from "@/app/_components/inputs/Button";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
-import FocusTasksDialogSection from "@/app/_components/TopBarMenus/FocusTasksDialog/FocusTasksDialogSection";
-import AddFocusTaskForm from "@/app/_components/TopBarMenus/FocusTasksDialog/AddFocusTaskForm";
 import {filterCompletedTasks, filterTodoTasks} from "@/app/_lib/utils/focusTasksHelpers";
 import ActiveFocusTaskSection from "@/app/_components/pomodoro/focusTasks/ActiveFocusTaskSection";
 
