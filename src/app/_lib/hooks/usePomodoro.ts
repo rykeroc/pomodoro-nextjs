@@ -73,9 +73,6 @@ export default function usePomodoro(userId: string): IPomodoro {
 			pomodoroInfo.state !== PomodoroState.LongBreakRunning
 		) return
 
-		console.log("onCompleteAction")
-		console.log(pomodoroInfo.state)
-
 		let newFocusCount = pomodoroInfo.focusCount
 		// Update focus count if focus session was completed
 		if (pomodoroInfo.state === PomodoroState.FocusRunning) {
@@ -101,7 +98,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 				stage: newStage
 			}
 		})
-	}, [pomodoroInfo.state, setPomodoroInfo, updateActiveTask])
+	}, [pomodoroInfo.state, pomodoroInfo.focusCount, setPomodoroInfo, updateActiveTask])
 
 	// Set completion callback
 	useEffect(() => {
