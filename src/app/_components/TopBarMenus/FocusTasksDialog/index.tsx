@@ -11,6 +11,7 @@ import {useSession} from "next-auth/react";
 import {redirect} from "next/navigation";
 import Button from "@/app/_components/inputs/Button";
 import {ChevronLeftIcon} from "@heroicons/react/24/solid";
+import {filterCompletedTasks, filterTodoTasks} from "@/app/_lib/utils/focusTasksHelpers";
 
 
 export default function FocusTasksDialog({isOpen, onClose}: IDialogMenuProps) {
@@ -46,17 +47,9 @@ function Content({onClose}: IContentProps) {
 
 	const focusTasksData = useFocusTasksData(session.user.id)
 
-	function sortAscending(a: FocusTask, b: FocusTask): number {
-		return a.name.localeCompare(b.name)
-	}
+	const todoTasks: FocusTask[] = filterTodoTasks(focusTasksData.query.data ?? [])
 
-	const todoTasks: FocusTask[] = focusTasksData.query.data
-		?.filter(e => !e.isComplete)
-		.sort(sortAscending) ?? []
-
-	const completedTasks: FocusTask[] = focusTasksData.query.data
-		?.filter(e => e.isComplete)
-		.sort(sortAscending) ?? []
+	const completedTasks: FocusTask[] = filterCompletedTasks(focusTasksData.query.data ?? [])
 
 	return (
 		<div className={cn("flex", "flex-row", "gap-6", "h-full")}>
