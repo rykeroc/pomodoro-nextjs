@@ -8,6 +8,7 @@ import Button from "@/app/_components/inputs/Button";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 import FocusTaskSection from "@/app/_components/pomodoro/focusTasks/FocusTaskSection";
 import AddFocusTaskForm from "@/app/_components/pomodoro/focusTasks/AddFocusTaskForm";
+import {filterCompletedTasks, filterTodoTasks} from "@/app/_lib/utils/focusTasksHelpers";
 
 interface IFocusTasksDialogProps {
 	isOpen: boolean
@@ -16,17 +17,9 @@ interface IFocusTasksDialogProps {
 }
 
 export default function FocusTasksDialog({isOpen, handleClose, focusTasksData}: IFocusTasksDialogProps) {
-	function sortAscending(a: FocusTask, b: FocusTask): number {
-		return a.name.localeCompare(b.name)
-	}
+	const todoTasks: FocusTask[] = filterTodoTasks(focusTasksData.query.data ?? [])
 
-	const todoTasks: FocusTask[] = focusTasksData.query.data
-		?.filter(e => !e.isComplete)
-		.sort(sortAscending) ?? []
-
-	const completedTasks: FocusTask[] = focusTasksData.query.data
-		?.filter(e => e.isComplete)
-		.sort(sortAscending) ?? []
+	const completedTasks: FocusTask[] = filterCompletedTasks(focusTasksData.query.data ?? [])
 
 	return (
 		<Dialog open={isOpen} as={"div"} onClose={handleClose}>
