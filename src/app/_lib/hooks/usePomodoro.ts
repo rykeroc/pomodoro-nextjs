@@ -150,7 +150,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 				state: PomodoroState.FocusRunning
 			}
 		))
-	}, [pause, setPomodoroInfo])
+	}, [resume, setPomodoroInfo])
 
 	// Finish a focus session early
 	const finishFocus = useCallback(() => {
@@ -164,7 +164,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 			stage: PomodoroStages.focusSession,
 			state: PomodoroState.FocusPending
 		}))
-	}, [pomodoroInfo.stage, updateActiveTask, start, pause, setPomodoroInfo])
+	}, [pomodoroInfo.stage, updateActiveTask, reset, setPomodoroInfo])
 
 	// Start a break
 	const startBreak = useCallback(() => {
@@ -182,7 +182,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 	const skipBreak = useCallback(() => {
 		reset(PomodoroStages.focusSession.seconds)
 		onBreakComplete()
-	}, [reset, setPomodoroInfo])
+	}, [reset, onBreakComplete])
 
 	return {
 		...pomodoroInfo,

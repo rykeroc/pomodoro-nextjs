@@ -19,11 +19,13 @@ export interface ICountdown {
 }
 
 interface ITimer {
-	startedTimestamp: number | null;
-	lastIntervalTimestamp: number | null;
-	msTotal: number;
-	msRemaining: number;
-	requestId: number | null;
+	startedTimestamp: number | null
+	lastIntervalTimestamp: number | null
+	msTotal: number
+	msRemaining: number
+	requestId: number | null
+	realStartTime: number | null
+	pausedAt: number | null
 }
 
 export default function useCountdown(startingSeconds: number, intervalMs = 1000): ICountdown {
@@ -43,41 +45,65 @@ export default function useCountdown(startingSeconds: number, intervalMs = 1000)
 		onCompleteActionRef.current = callback;
 	}, []);
 
-	const run = (ts: DOMHighResTimeStamp) => {
+	const run = useCallback((ts: DOMHighResTimeStamp) => {
 		if (!timer.current) return
 
-		/*
-		 Update the started and last interval timestamp
-			if the timer was just started
-		 */
+		// Initialize timer on the first run
 		if (!timer.current.startedTimestamp) {
 			timer.current.startedTimestamp = ts;
 			timer.current.lastIntervalTimestamp = ts;
+			timer.current.pausedAt = null;
 		}
 
-		/*
-		Update timer and countdown info if the correct amount of time has passed
-			since the last interval
-		 */
-		const localInterval = Math.min(intervalMs, (timer.current.msRemaining || Infinity));
+		const elapsedSinceLastInterval = ts - (timer.current.lastIntervalTimestamp ?? 0);
 
-		if (timer.current.lastIntervalTimestamp && (ts - timer.current.lastIntervalTimestamp) >= localInterval) {
-			timer.current.lastIntervalTimestamp += localInterval;
+		// Handle large time gaps (e.g., computer sleep)
+		if (elapsedSinceLastInterval > intervalMs * 2) {
+			// Calculate how much time actually passed during sleep
+			const actualTimePassedMs = Date.now() - (timer.current.realStartTime || Date.now());
+			const remainingMs = Math.max(0, timer.current.msTotal - actualTimePassedMs);
 
-			setCountdownInfo(prev => {
-				if (timer.current)
-					timer.current!.msRemaining = (prev.remaining * 1000) - localInterval ;
-				return {
+			// Update timer state
+			timer.current.msRemaining = remainingMs;
+			timer.current.startedTimestamp = ts;
+			timer.current.lastIntervalTimestamp = ts;
+
+			setCountdownInfo((prev) => ({
+				...prev,
+				remaining: Math.ceil(remainingMs / 1000),
+			}));
+
+			if (remainingMs <= 0) {
+				timer.current = null;
+				if (onCompleteActionRef.current) onCompleteActionRef.current();
+
+				setCountdownInfo((prev) => ({
 					...prev,
-					remaining: timer.current ? timer.current?.msRemaining / 1000 : 0
-				}
-			})
+					remaining: 0,
+					status: CountdownStatus.Complete,
+				}));
+				return;
+			}
+		} else {
+			// Regular interval update
+			if (timer.current.lastIntervalTimestamp && elapsedSinceLastInterval >= intervalMs) {
+				timer.current.lastIntervalTimestamp = ts;
+
+				setCountdownInfo(prev => {
+					const newRemainingMs = Math.max(0, (prev.remaining * 1000) - intervalMs);
+					if (timer.current) timer.current.msRemaining = newRemainingMs;
+					return {
+						...prev,
+						remaining: Math.ceil(newRemainingMs / 1000)
+					};
+				});
+			}
 		}
 
 		/*
 		Continue countdown if the total time has not been completed
 		 */
-		if (timer.current.msTotal && (ts - timer.current.startedTimestamp) < timer.current.msTotal) {
+		if (timer.current.msRemaining > 0) {
 			timer.current.requestId = window.requestAnimationFrame(run);
 		}
 		/*
@@ -91,11 +117,12 @@ export default function useCountdown(startingSeconds: number, intervalMs = 1000)
 			setCountdownInfo(prev => {
 				return {
 					...prev,
+					remaining: 0,
 					status: CountdownStatus.Complete
 				}
 			})
 		}
-	}
+	}, [intervalMs])
 
 	const start = useCallback((secondsToCount: number) => {
 		console.log(`Starting countdown with ${secondsToCount} seconds`)
@@ -109,6 +136,8 @@ export default function useCountdown(startingSeconds: number, intervalMs = 1000)
 			msTotal: newMsToCount,
 			msRemaining: newMsToCount,
 			requestId: null,
+			realStartTime: Date.now(), // Track real wall clock time
+			pausedAt: null
 		};
 		timer.current.requestId = window.requestAnimationFrame(run);
 
@@ -117,7 +146,7 @@ export default function useCountdown(startingSeconds: number, intervalMs = 1000)
 			remaining: secondsToCount,
 			status: CountdownStatus.Running
 		})
-	}, [setCountdownInfo])
+	}, [setCountdownInfo, run])
 
 	const pause = useCallback(() => {
 		if (!timer.current) return
@@ -125,9 +154,10 @@ export default function useCountdown(startingSeconds: number, intervalMs = 1000)
 		console.log("Pausing countdown")
 
 		window.cancelAnimationFrame(timer.current.requestId ?? 0);
+		timer.current.pausedAt = Date.now();
 		timer.current.startedTimestamp = null;
 		timer.current.lastIntervalTimestamp = null;
-		timer.current.msTotal = timer.current.msRemaining;
+
 		setCountdownInfo(prev => ({
 			...prev,
 			status: CountdownStatus.Paused
@@ -137,6 +167,13 @@ export default function useCountdown(startingSeconds: number, intervalMs = 1000)
 	const resume = useCallback(() => {
 		if (!timer.current) return
 
+		// Adjust realStartTime to account for pause duration
+		if (timer.current.pausedAt) {
+			const pauseDuration = Date.now() - timer.current.pausedAt;
+			timer.current.realStartTime = (timer.current.realStartTime || 0) + pauseDuration;
+			timer.current.pausedAt = null;
+		}
+
 		window.cancelAnimationFrame(timer.current.requestId || 0);
 		timer.current.requestId = window.requestAnimationFrame(run);
 
@@ -144,7 +181,7 @@ export default function useCountdown(startingSeconds: number, intervalMs = 1000)
 			...prev,
 			status: CountdownStatus.Running
 		}))
-	}, [setCountdownInfo])
+	}, [setCountdownInfo, run])
 
 	const reset = useCallback((secondsToCount: number) => {
 		if (!timer.current) return
@@ -153,14 +190,16 @@ export default function useCountdown(startingSeconds: number, intervalMs = 1000)
 		timer.current = {
 			startedTimestamp: null,
 			lastIntervalTimestamp: null,
-			msTotal: 0,
-			msRemaining: 0,
+			msTotal: secondsToCount * 1000,
+			msRemaining: secondsToCount * 1000,
 			requestId: null,
+			realStartTime: null,
+			pausedAt: null
 		};
 
 		// Reset seconds and state
 		setCountdownInfo({
-			total: startingSeconds,
+			total: secondsToCount,
 			remaining: secondsToCount,
 			status: CountdownStatus.NotStarted,
 		})
