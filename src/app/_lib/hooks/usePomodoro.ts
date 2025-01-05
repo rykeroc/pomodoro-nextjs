@@ -61,7 +61,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 		}
 		// Update the active task data
 		return focusTasksData.updateMutation.mutate(updateArgs)
-	}, [focusTasksData.activeTask, focusTasksData.updateMutation, countdown.remaining])
+	}, [focusTasksData.activeTask, focusTasksData.updateMutation, countdown.remaining, userId])
 
 	/*
 	 Called when the countdown completes.
