@@ -12,19 +12,29 @@ export interface ICountdown {
 	total: number
 	status: CountdownStatus,
 	setOnCompleteAction: (callback: () => void) => void
-	startCountdown: () => void
-	pauseCountdown: () => void
-	resetCountdown: (newTotalSeconds: number) => void
-	restartCountdown: (newTotalSeconds: number) => void
+	start: (secondsToCount: number) => void
+	pause: () => void
+	resume: () => void
+	reset: (newTotalSeconds: number) => void
 }
 
-export default function useCountdown(startingSeconds: number): ICountdown {
+interface ITimer {
+	startedTimestamp: number | null;
+	lastIntervalTimestamp: number | null;
+	msTotal: number;
+	msRemaining: number;
+	requestId: number | null;
+}
+
+export default function useCountdown(startingSeconds: number, intervalMs = 1000): ICountdown {
 	// Internal timer information
 	const [countdownInfo, setCountdownInfo] = useState<CounterInfo>({
 		total: startingSeconds,
 		remaining: startingSeconds,
 		status: CountdownStatus.NotStarted
 	})
+
+	const timer = useRef<ITimer | null>(null);
 
 	// Function to execute when the countdown is completed
 	const onCompleteActionRef = useRef<(() => void) | null>(null);
@@ -33,167 +43,142 @@ export default function useCountdown(startingSeconds: number): ICountdown {
 		onCompleteActionRef.current = callback;
 	}, []);
 
-	// ID of the current interval
-	const intervalId = useRef<NodeJS.Timeout | null>(null)
-	// The function to run on every interval
-	const intervalFn = useCallback(() => {
-		setCountdownInfo(prevState => (
-			{
-				...prevState,
-				remaining: prevState.remaining - 1
-			}
-		))
+	const run = (ts: DOMHighResTimeStamp) => {
+		if (!timer.current) return
+
+		/*
+		 Update the started and last interval timestamp
+			if the timer was just started
+		 */
+		if (!timer.current.startedTimestamp) {
+			timer.current.startedTimestamp = ts;
+			timer.current.lastIntervalTimestamp = ts;
+		}
+
+		/*
+		Update timer and countdown info if the correct amount of time has passed
+			since the last interval
+		 */
+		const localInterval = Math.min(intervalMs, (timer.current.msRemaining || Infinity));
+
+		if (timer.current.lastIntervalTimestamp && (ts - timer.current.lastIntervalTimestamp) >= localInterval) {
+			timer.current.lastIntervalTimestamp += localInterval;
+
+			setCountdownInfo(prev => {
+				if (timer.current)
+					timer.current!.msRemaining = (prev.remaining * 1000) - localInterval ;
+				return {
+					...prev,
+					remaining: timer.current ? timer.current?.msRemaining / 1000 : 0
+				}
+			})
+		}
+
+		/*
+		Continue countdown if the total time has not been completed
+		 */
+		if (timer.current.msTotal && (ts - timer.current.startedTimestamp) < timer.current.msTotal) {
+			timer.current.requestId = window.requestAnimationFrame(run);
+		}
+		/*
+		Stop the timer AND call the on complete action IF the timer has been completed
+		 */
+		else {
+			timer.current = null;
+			if (onCompleteActionRef.current) onCompleteActionRef.current()
+
+			// Set state to complete
+			setCountdownInfo(prev => {
+				return {
+					...prev,
+					status: CountdownStatus.Complete
+				}
+			})
+		}
+	}
+
+	const start = useCallback((secondsToCount: number) => {
+		console.log(`Starting countdown with ${secondsToCount} seconds`)
+
+		window.cancelAnimationFrame(timer.current?.requestId ?? 0);
+
+		const newMsToCount = (secondsToCount) * 1000;
+		timer.current = {
+			startedTimestamp: null,
+			lastIntervalTimestamp: null,
+			msTotal: newMsToCount,
+			msRemaining: newMsToCount,
+			requestId: null,
+		};
+		timer.current.requestId = window.requestAnimationFrame(run);
+
+		setCountdownInfo({
+			total: secondsToCount,
+			remaining: secondsToCount,
+			status: CountdownStatus.Running
+		})
 	}, [setCountdownInfo])
 
-	/*
-	Start a countdown by setting an interval to run intervalFn every second
-	 */
-	const startCountdownInterval = useCallback(() => {
-		// Run every 1000ms (1 second)
-		const intervalSpacingMs: number = 1000
-
-		intervalId.current = setInterval(
-			intervalFn,
-			intervalSpacingMs
-		)
-	}, [intervalFn])
-
-	/*
-	Clear the current interval, if it is set
-	 */
-	const clearCountdownInterval = useCallback(() => {
-		if (intervalId.current) {
-			clearInterval(intervalId.current);
-			intervalId.current = null;
-		}
-	}, [])
-
-	const start = useCallback(() => {
-		// If already started or completed, do nothing
-		{
-			if (intervalId.current !== null) {
-				console.log("Countdown already running.")
-				return
-			}
-
-			if (countdownInfo.remaining <= 0) {
-				console.log("Countdown has been completed.")
-				return
-			}
-		}
-
-		console.log("Starting countdown")
-		// Start countdown by setting interval
-		startCountdownInterval()
-		// Update status to running
-		setCountdownInfo(prevState => (
-			{
-				...prevState,
-				status: CountdownStatus.Running
-			}
-		))
-	}, [countdownInfo.remaining, startCountdownInterval])
-
 	const pause = useCallback(() => {
-		// If not started, paused, or complete, do nothing
-		{
-			if (!intervalId.current) {
-				if (countdownInfo.remaining === countdownInfo.total) {
-					console.log("Countdown has not started.")
-					return
-				} else if (countdownInfo.remaining < countdownInfo.total) {
-					console.log("Countdown is already paused.")
-					return
-				} else if (countdownInfo.remaining <= 0) {
-					console.log("Countdown has been completed.")
-					return
-				}
-			}
-		}
+		if (!timer.current) return
 
 		console.log("Pausing countdown")
 
-		// Pause timer by clearing interval
-		clearCountdownInterval()
+		window.cancelAnimationFrame(timer.current.requestId ?? 0);
+		timer.current.startedTimestamp = null;
+		timer.current.lastIntervalTimestamp = null;
+		timer.current.msTotal = timer.current.msRemaining;
+		setCountdownInfo(prev => ({
+			...prev,
+			status: CountdownStatus.Paused
+		}))
+	}, [setCountdownInfo]);
 
-		// Update state to paused
-		setCountdownInfo(prevState => (
-			{
-				...prevState,
-				status: CountdownStatus.Paused
-			}
-		))
-	}, [intervalId, countdownInfo.remaining, countdownInfo.total, clearCountdownInterval])
+	const resume = useCallback(() => {
+		if (!timer.current) return
 
-	const reset = useCallback((newTotalSeconds: number) => {
-		// If timer is paused, not started, or completed, do nothing
-		if (intervalId.current === null && countdownInfo.remaining === countdownInfo.total) {
-			console.log("Countdown has not started.")
-			return
-		}
+		window.cancelAnimationFrame(timer.current.requestId || 0);
+		timer.current.requestId = window.requestAnimationFrame(run);
 
-		console.log("Resetting countdown")
+		setCountdownInfo(prev => ({
+			...prev,
+			status: CountdownStatus.Running
+		}))
+	}, [setCountdownInfo])
 
-		// Stop timer by clearing interval
-		clearCountdownInterval()
+	const reset = useCallback((secondsToCount: number) => {
+		if (!timer.current) return
+
+		window.cancelAnimationFrame(timer.current.requestId ?? 0);
+		timer.current = {
+			startedTimestamp: null,
+			lastIntervalTimestamp: null,
+			msTotal: 0,
+			msRemaining: 0,
+			requestId: null,
+		};
 
 		// Reset seconds and state
 		setCountdownInfo({
-			total: newTotalSeconds,
-			remaining: newTotalSeconds,
+			total: startingSeconds,
+			remaining: secondsToCount,
 			status: CountdownStatus.NotStarted,
 		})
-	}, [countdownInfo.remaining, countdownInfo.total, clearCountdownInterval, setCountdownInfo])
+	}, [setCountdownInfo])
 
-	const restart = useCallback((newTotalSeconds: number) => {
-		console.log("Restarting countdown")
-
-		// Explicitly clear any existing interval
-		clearCountdownInterval()
-
-		// Start the countdown
-		startCountdownInterval()
-
-		// Reset seconds and state to running
-		setCountdownInfo({
-			total: newTotalSeconds,
-			remaining: newTotalSeconds,
-			status: CountdownStatus.Running
-		})
-	}, [
-		clearCountdownInterval,
-		startCountdownInterval,
-		setCountdownInfo,
-	])
-
-	// Check if countdown is complete
+	// Cleanup
 	useEffect(() => {
-		/*
-		Return if countdown is NOT running OR remaining time is greater than 0
-		 */
-		if (countdownInfo.status !== CountdownStatus.Running || countdownInfo.remaining > 0)
-			return
-
-		clearCountdownInterval()
-		// Call on complete callback
-		if (onCompleteActionRef.current) onCompleteActionRef.current()
-		// Set state to complete
-		setCountdownInfo(prevState => {
-			return {
-				...prevState,
-				status: CountdownStatus.Complete
-			}
-		})
-	}, [countdownInfo.remaining, countdownInfo.status, clearCountdownInterval]);
+		return () => window.cancelAnimationFrame(timer.current?.requestId ?? 0);
+	}, []);
 
 	return {
 		setOnCompleteAction,
 		status: countdownInfo.status,
 		remaining: countdownInfo.remaining,
 		total: countdownInfo.total,
-		startCountdown: start,
-		pauseCountdown: pause,
-		resetCountdown: reset,
-		restartCountdown: restart
+		start,
+		resume,
+		pause,
+		reset,
 	}
 }

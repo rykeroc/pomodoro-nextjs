@@ -11,22 +11,22 @@ import {IPomodoroTimer} from "@/app/_lib/hooks/usePomodoro";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 
 interface IPomodoroTimerIndicatorProps {
-	timerInfo: IPomodoroTimer
+	pomodoroTimer: IPomodoroTimer
 	focusTasksData: IFocusTasksData
 	handleOpen: () => void,
 }
 
-function PomodoroTimerIndicator({timerInfo, focusTasksData, handleOpen}: IPomodoroTimerIndicatorProps) {
+function PomodoroTimerIndicator({pomodoroTimer, focusTasksData, handleOpen}: IPomodoroTimerIndicatorProps) {
 	const getElapsedSeconds = (remaining: number, total: number) => total - remaining
 
 	const PomodoroButtons = ({state}: { state: PomodoroState }) => {
 		const buttonsMap: { [key: string]: ButtonProps } = {
-			start: {children: "Start", onClick: timerInfo.start, variant: "primary"},
-			resume: {children: "Resume", onClick: timerInfo.start, variant: "primary"},
-			pause: {children: "Pause", onClick: timerInfo.pause, variant: "glass"},
-			finish: {children: "Finish", onClick: timerInfo.finish, variant: "glass"},
-			relax: {children: "Relax", onClick: timerInfo.relax, variant: "primary"},
-			skip: {children: "Skip", onClick: timerInfo.finish, variant: "glass"},
+			start: {children: "Start", onClick: pomodoroTimer.start, variant: "primary"},
+			resume: {children: "Resume", onClick: pomodoroTimer.resume, variant: "primary"},
+			pause: {children: "Pause", onClick: pomodoroTimer.pause, variant: "glass"},
+			finish: {children: "Finish", onClick: pomodoroTimer.finish, variant: "glass"},
+			relax: {children: "Relax", onClick: pomodoroTimer.relax, variant: "primary"},
+			skip: {children: "Skip", onClick: pomodoroTimer.skip, variant: "glass"},
 		}
 
 		const selectedButtons = []
@@ -60,10 +60,10 @@ function PomodoroTimerIndicator({timerInfo, focusTasksData, handleOpen}: IPomodo
 	const radius = (size - strokeWidth) / 2
 	const dashArray = radius * Math.PI * 2
 
-	const remainingSeconds = timerInfo.stage === PomodoroStages.focusSession ?
-		timerInfo.remaining : getElapsedSeconds(timerInfo.remaining, timerInfo.total)
+	const remainingSeconds = pomodoroTimer.stage === PomodoroStages.focusSession ?
+		pomodoroTimer.remaining : getElapsedSeconds(pomodoroTimer.remaining, pomodoroTimer.total)
 
-	const percentage = Math.min(100, (remainingSeconds / timerInfo.total) * 100)
+	const percentage = Math.min(100, (remainingSeconds / pomodoroTimer.total) * 100)
 
 	const dashOffset = dashArray - (dashArray * percentage) / 100
 	const minutesString = secondsToMinutes(remainingSeconds)
@@ -130,9 +130,9 @@ function PomodoroTimerIndicator({timerInfo, focusTasksData, handleOpen}: IPomodo
 						<h5
 							className={cn(
 								["text-primary-text"],
-								{"invisible": timerInfo.stage === PomodoroStages.focusSession}
+								{"invisible": pomodoroTimer.stage === PomodoroStages.focusSession}
 							)}>
-							{timerInfo.stage.name}
+							{pomodoroTimer.stage.name}
 						</h5>
 						<h1>
 							{minutesString}
@@ -149,7 +149,7 @@ function PomodoroTimerIndicator({timerInfo, focusTasksData, handleOpen}: IPomodo
 			</svg>
 
 			<div className={"flex flex-row gap-3"}>
-				<PomodoroButtons state={timerInfo.state}/>
+				<PomodoroButtons state={pomodoroTimer.state}/>
 			</div>
 			</div>
 		</>
