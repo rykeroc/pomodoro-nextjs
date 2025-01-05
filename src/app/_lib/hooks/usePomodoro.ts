@@ -1,10 +1,10 @@
 import {useCallback, useEffect, useState} from "react";
-import useCountdown from "@/app/_lib/hooks/useCountdown";
 import PomodoroState from "@/app/_lib/constants/PomodoroState";
 import PomodoroStages, {PomodoroStageInfo} from "@/app/_lib/constants/PomodoroStages";
 import useFocusTasksData, {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 import {FocusTask} from "@prisma/client";
 import {IFocusTaskUpdateArgs} from "@/app/_lib/actions/focusTasks/types";
+import useCountdown from "@/app/_lib/hooks/useCountdown";
 
 interface PomodoroInfo {
 	state: PomodoroState
@@ -20,7 +20,9 @@ export interface IPomodoroTimer {
 	relax: () => void
 	start: () => void
 	pause: () => void
+	resume: () => void
 	finish: () => void
+	skip: () => void
 }
 
 export interface IPomodoro extends IPomodoroTimer, IFocusTasksData {
@@ -33,9 +35,22 @@ export default function usePomodoro(userId: string): IPomodoro {
 		focusCount: 0
 	})
 
+	useEffect(() => {
+		console.log(pomodoroInfo.focusCount)
+	}, [pomodoroInfo.focusCount]);
+
 	const focusTasksData = useFocusTasksData(userId)
 
-	const countdown = useCountdown(pomodoroInfo.stage.seconds)
+	const initialSeconds = PomodoroStages.focusSession.seconds; // initial time in milliseconds
+	const {
+		setOnCompleteAction,
+		remaining,
+		total,
+		start,
+		pause,
+		resume,
+		reset
+	} = useCountdown(initialSeconds)
 
 	/*
 	Update the total focus session seconds for the active task
@@ -43,10 +58,12 @@ export default function usePomodoro(userId: string): IPomodoro {
 	const updateActiveTask = useCallback(() => {
 		// Return if not active task
 		if (!focusTasksData.activeTask) return
+
+		console.log("updateActiveTask")
 		const activeTask: FocusTask = focusTasksData.activeTask
 
 		// Calculate elapsed time
-		const elapsed = PomodoroStages.focusSession.seconds - countdown.remaining
+		const elapsed = PomodoroStages.focusSession.seconds - remaining
 		activeTask.totalFocusSeconds += elapsed
 
 		// Transform to FormData for mutate fn
@@ -61,65 +78,46 @@ export default function usePomodoro(userId: string): IPomodoro {
 		}
 		// Update the active task data
 		return focusTasksData.updateMutation.mutate(updateArgs)
-	}, [focusTasksData.activeTask, focusTasksData.updateMutation, countdown.remaining, userId])
+	}, [focusTasksData.activeTask, focusTasksData.updateMutation, remaining, userId])
 
-	/*
-	 Called when the countdown completes.
-	 */
+	const onFocusComplete = useCallback(() => {
+		console.log("onFocusCompleted")
+
+		updateActiveTask()
+		setPomodoroInfo(prev => ({
+			focusCount: prev.focusCount + 1,
+			state: PomodoroState.FocusComplete,
+			stage: PomodoroStages.focusSession
+		}))
+	}, [setPomodoroInfo, updateActiveTask])
+
+	const onBreakComplete = useCallback(() => {
+		console.log("onBreakComplete")
+
+		setPomodoroInfo(prev => ({
+			...prev,
+			state: PomodoroState.FocusPending,
+			stage: PomodoroStages.focusSession
+		}))
+	}, [setPomodoroInfo])
+
 	const onCompleteAction = useCallback(() => {
-		/*
-		 The countdown completes when in the following states:
-		 - Focus running
-		 - Short break running
-		 - Long break running
-		 */
-		if (
-			pomodoroInfo.state !== PomodoroState.FocusRunning &&
-			pomodoroInfo.state !== PomodoroState.ShortBreakRunning &&
-			pomodoroInfo.state !== PomodoroState.LongBreakRunning
-		) return
+		console.log("onCompleteAction")
 
-		let newFocusCount = pomodoroInfo.focusCount
-		// Update focus count if focus session was completed
-		if (pomodoroInfo.state === PomodoroState.FocusRunning) {
-			newFocusCount++
-			updateActiveTask()
-		}
-
-		setPomodoroInfo(prev => {
-			/*
-			If previous state was running focus session, set state to Focus complete.
-
-			If previous state was short or long break, set state to Focus Pending.
-			 */
-			const newState = prev.state === PomodoroState.FocusRunning ?
-				PomodoroState.FocusComplete : PomodoroState.FocusPending
-
-			// Next stage will always be focus session
-			const newStage = PomodoroStages.focusSession
-
-			return {
-				focusCount: newFocusCount,
-				state: newState,
-				stage: newStage
-			}
-		})
-	}, [pomodoroInfo.state, pomodoroInfo.focusCount, setPomodoroInfo, updateActiveTask])
+		if (pomodoroInfo.state === PomodoroState.FocusRunning)
+			onFocusComplete()
+		else
+			onBreakComplete()
+	}, [pomodoroInfo.state, onFocusComplete, onBreakComplete])
 
 	// Set completion callback
 	useEffect(() => {
-		countdown.setOnCompleteAction(onCompleteAction)
-	}, [countdown, onCompleteAction]);
-
-	// Auto reset countdown if break was completed
-	useEffect(() => {
-		if (pomodoroInfo.state === PomodoroState.FocusPending)
-			countdown.resetCountdown(pomodoroInfo.stage.seconds)
-	}, [pomodoroInfo.state, pomodoroInfo.stage.seconds, countdown, countdown.resetCountdown]);
+		setOnCompleteAction(onCompleteAction)
+	}, [setOnCompleteAction, onCompleteAction]);
 
 	// Start a focus session
 	const startFocus = useCallback(() => {
-		countdown.startCountdown()
+		start(PomodoroStages.focusSession.seconds)
 		// Update pomodoro state to running
 		setPomodoroInfo(prev => (
 			{
@@ -128,11 +126,11 @@ export default function usePomodoro(userId: string): IPomodoro {
 				state: PomodoroState.FocusRunning
 			}
 		))
-	}, [countdown, setPomodoroInfo])
+	}, [start, setPomodoroInfo])
 
 	// Pause the current focus session
 	const pauseFocus = useCallback(() => {
-		countdown.pauseCountdown()
+		pause()
 		// Update pomodoro state to paused
 		setPomodoroInfo(prev => (
 			{
@@ -140,7 +138,19 @@ export default function usePomodoro(userId: string): IPomodoro {
 				state: PomodoroState.FocusPaused
 			}
 		))
-	}, [countdown, setPomodoroInfo])
+	}, [pause, setPomodoroInfo])
+
+	// Pause the current focus session
+	const resumeFocus = useCallback(() => {
+		resume()
+		// Update pomodoro state to paused
+		setPomodoroInfo(prev => (
+			{
+				...prev,
+				state: PomodoroState.FocusRunning
+			}
+		))
+	}, [pause, setPomodoroInfo])
 
 	// Finish a focus session early
 	const finishFocus = useCallback(() => {
@@ -148,21 +158,18 @@ export default function usePomodoro(userId: string): IPomodoro {
 		if (pomodoroInfo.stage === PomodoroStages.focusSession)
 			updateActiveTask()
 
-		countdown.resetCountdown(PomodoroStages.focusSession.seconds)
-		setPomodoroInfo(prev => (
-			{
-				...prev,
-				stage: PomodoroStages.focusSession,
-				state: PomodoroState.FocusPending
-			}
-		))
-	}, [pomodoroInfo.stage, updateActiveTask, countdown, setPomodoroInfo])
+		reset(PomodoroStages.focusSession.seconds)
+		setPomodoroInfo(({
+			focusCount: 0,
+			stage: PomodoroStages.focusSession,
+			state: PomodoroState.FocusPending
+		}))
+	}, [pomodoroInfo.stage, updateActiveTask, start, pause, setPomodoroInfo])
 
 	// Start a break
 	const startBreak = useCallback(() => {
 		const isLongBreak = (pomodoroInfo.focusCount % 4) === 0
-		const seconds = isLongBreak ? PomodoroStages.longBreak.seconds : PomodoroStages.shortBreak.seconds
-		countdown.restartCountdown(seconds)
+		start(isLongBreak ? PomodoroStages.longBreak.seconds : PomodoroStages.shortBreak.seconds)
 		setPomodoroInfo(prev => (
 			{
 				...prev,
@@ -170,15 +177,23 @@ export default function usePomodoro(userId: string): IPomodoro {
 				state: isLongBreak ? PomodoroState.LongBreakRunning : PomodoroState.ShortBreakRunning
 			}
 		))
-	}, [pomodoroInfo.focusCount, countdown, setPomodoroInfo])
+	}, [pomodoroInfo.focusCount, start, setPomodoroInfo])
+
+	const skipBreak = useCallback(() => {
+		reset(PomodoroStages.focusSession.seconds)
+		onBreakComplete()
+	}, [reset, setPomodoroInfo])
 
 	return {
 		...pomodoroInfo,
 		...focusTasksData,
-		...countdown,
-		relax: startBreak,
+		remaining,
+		total,
 		start: startFocus,
 		pause: pauseFocus,
+		resume: resumeFocus,
 		finish: finishFocus,
+		relax: startBreak,
+		skip: skipBreak,
 	}
 }

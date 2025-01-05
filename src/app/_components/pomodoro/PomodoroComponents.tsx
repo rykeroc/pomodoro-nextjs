@@ -20,7 +20,7 @@ export default function PomodoroComponents() {
 
 	return (
 		<>
-			<PomodoroTimerIndicator handleOpen={openDialog} timerInfo={pomodoroData} focusTasksData={pomodoroData}/>
+			<PomodoroTimerIndicator handleOpen={openDialog} pomodoroTimer={pomodoroData} focusTasksData={pomodoroData}/>
 			<ActiveFocusTasksDialog isOpen={isDialogOpen} handleClose={closeDialog} focusTasksData={pomodoroData}/>
 		</>
 	)
