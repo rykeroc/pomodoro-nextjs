@@ -24,6 +24,18 @@ const globalThemes: ITheme[] = [
 			stroke: "stroke-amber-600",
 			border: "border-amber-600"
 		}
+	},
+	{
+		id: 3,
+		backgroundName: "All Girls Are The Same",
+		backgroundFilename: "all-girls-are-the-same.mp4",
+		backgroundType: EBackgroundType.Video,
+		colorClasses: {
+			text: "text-amber-600",
+			background: "bg-amber-600",
+			stroke: "stroke-amber-600",
+			border: "border-amber-600"
+		}
 	}
 ]
 
