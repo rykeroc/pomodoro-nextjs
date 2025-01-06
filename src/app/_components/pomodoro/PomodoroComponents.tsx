@@ -5,7 +5,7 @@ import {useState} from "react";
 import {useSession} from "next-auth/react";
 import usePomodoro, {IPomodoro} from "@/app/_lib/hooks/usePomodoro";
 import {redirect} from "next/navigation";
-import ActiveFocusTasksDialog from "@/app/_components/pomodoro/focusTasks/ActiveFocusTasksDialog";
+import ActiveFocusTasksDialog from "@/app/_components/pomodoro/ActiveFocusTaskSection/ActiveFocusTasksDialog";
 
 export default function PomodoroComponents() {
 	const [isDialogOpen, setIsDialogOpen] = useState(false)

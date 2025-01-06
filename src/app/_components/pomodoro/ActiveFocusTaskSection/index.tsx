@@ -12,7 +12,7 @@ interface IFocusTaskSectionProps {
 	focusTasksData: IFocusTasksData
 }
 
-export default function ActiveFocusTaskSection(
+export default function ActiveFocusTasksSection(
 	{
 		title,
 		focusTasks,
