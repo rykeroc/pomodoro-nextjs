@@ -20,13 +20,13 @@ const ThemeButton = ({theme, onClick}: IThemeButtonProps) => (
 						'h-full', 'w-full', 'object-cover', 'rounded-xl',
 						'border-2', 'border-primary-container'
 					)}
-					src={`/wallpapers/${theme.wallpaperFilename}`}
-					alt={`${theme.wallpaperFilename}`}
+					src={`/wallpapers/${theme.backgroundFilename}`}
+					alt={`${theme.backgroundFilename}`}
 					width={500}
 					height={500}
 				/>
 			</div>
-			<p>{theme.wallpaperName}</p>
+			<p>{theme.backgroundName}</p>
 		</div>
 	</Button>
 )

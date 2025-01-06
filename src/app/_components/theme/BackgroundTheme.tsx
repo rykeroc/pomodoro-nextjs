@@ -6,7 +6,7 @@ import {useContext} from "react";
 import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";
 import globalThemes from "@/app/_lib/contexts/theme/globalThemes";
 
-export default function ThemeImage (){
+export default function BackgroundTheme (){
 	const themeContext = useContext(ThemeContext)
 	const theme = themeContext?.theme ?? globalThemes[0]
 	return <Image
@@ -14,8 +14,8 @@ export default function ThemeImage (){
 			'object-cover', 'brightness-75',
 			'h-screen', 'w-screen',
 		)}
-		src={`/wallpapers/${theme.wallpaperFilename}`}
-		alt={theme.wallpaperName}
+		src={`/wallpapers/${theme.backgroundFilename}`}
+		alt={theme.backgroundName}
 		width={3840}
 		height={2160}
 	/>
