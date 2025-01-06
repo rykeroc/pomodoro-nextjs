@@ -1,10 +1,11 @@
-import {ITheme} from "@/app/_lib/contexts/theme/IThemeContext";
+import {EBackgroundType, ITheme} from "@/app/_lib/contexts/theme/IThemeContext";
 
 const globalThemes: ITheme[] = [
 	{
 		id: 1,
-		wallpaperName: "City Sunset View",
-		wallpaperFilename: "anime-wallpaper-1.jpg",
+		backgroundName: "City Sunset View",
+		backgroundFilename: "anime-wallpaper-1.jpg",
+		backgroundType: EBackgroundType.Image,
 		colorClasses: {
 			text: "text-violet-900",
 			background: "bg-violet-900",
@@ -14,8 +15,9 @@ const globalThemes: ITheme[] = [
 	},
 	{
 		id: 2,
-		wallpaperName: "Ocean Sunset View",
-		wallpaperFilename: "sunset-wallpaper.jpg",
+		backgroundName: "Ocean Sunset View",
+		backgroundFilename: "sunset-wallpaper.jpg",
+		backgroundType: EBackgroundType.Image,
 		colorClasses: {
 			text: "text-amber-600",
 			background: "bg-amber-600",

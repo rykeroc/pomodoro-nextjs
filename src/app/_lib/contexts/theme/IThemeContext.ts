@@ -5,10 +5,15 @@ interface IColorClasses {
 	border: string
 }
 
+enum EBackgroundType {
+	Image, Video
+}
+
 interface ITheme {
 	id: number
-	wallpaperName: string
-	wallpaperFilename: string
+	backgroundName: string
+	backgroundFilename: string
+	backgroundType: EBackgroundType
 	colorClasses: IColorClasses
 }
 
@@ -17,6 +22,10 @@ interface IThemeContext {
 	setTheme: (theme: ITheme) => void
 	error: string | null
 	globalThemes: ITheme[]
+}
+
+export {
+	EBackgroundType,
 }
 
 export type {
