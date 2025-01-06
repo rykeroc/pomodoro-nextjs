@@ -3,7 +3,7 @@ import {EBackgroundType, ITheme} from "@/app/_lib/contexts/theme/IThemeContext";
 const globalThemes: ITheme[] = [
 	{
 		id: 1,
-		backgroundName: "City Sunset View",
+		themeName: "City Sunset View",
 		backgroundFilename: "anime-wallpaper-1.jpg",
 		backgroundType: EBackgroundType.Image,
 		colorClasses: {
@@ -15,7 +15,7 @@ const globalThemes: ITheme[] = [
 	},
 	{
 		id: 2,
-		backgroundName: "Ocean Sunset View",
+		themeName: "Ocean Sunset View",
 		backgroundFilename: "sunset-wallpaper.jpg",
 		backgroundType: EBackgroundType.Image,
 		colorClasses: {
@@ -27,14 +27,14 @@ const globalThemes: ITheme[] = [
 	},
 	{
 		id: 3,
-		backgroundName: "All Girls Are The Same",
+		themeName: "All Girls Are The Same",
 		backgroundFilename: "all-girls-are-the-same.mp4",
 		backgroundType: EBackgroundType.Video,
 		colorClasses: {
-			text: "text-amber-600",
-			background: "bg-amber-600",
-			stroke: "stroke-amber-600",
-			border: "border-amber-600"
+			text: "text-blue-500",
+			background: "bg-blue-500",
+			stroke: "stroke-blue-500",
+			border: "border-blue-500"
 		}
 	}
 ]

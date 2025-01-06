@@ -30,7 +30,7 @@ function ThemeButton ({theme, onClick}: IThemeButtonProps)  {
 						height={500}
 					/>
 				</div>
-				<p>{theme.backgroundName}</p>
+				<p>{theme.themeName}</p>
 			</div>
 		</Button>
 	)
