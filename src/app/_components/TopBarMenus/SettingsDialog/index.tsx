@@ -32,7 +32,8 @@ export default function SettingsDialog({isOpen, onClose}: IDialogMenuProps) {
 						transition
 						className={cn(
 							'fixed', "z-50",
-							"h-full", ...glassEffectClasses, "p-4", "rounded-l-2xl", "w-3/4",
+							"h-full", ...glassEffectClasses, "p-4", "rounded-l-2xl",
+							"md:w-full", "xl:w-2/3", "2xl:w-1/2",
 							"duration-300", "ease-in-out",
 							"data-[closed]:translate-x-full", "data-[closed]:opacity-0"
 						)}

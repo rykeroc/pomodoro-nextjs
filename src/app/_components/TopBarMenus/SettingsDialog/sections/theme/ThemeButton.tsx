@@ -3,13 +3,15 @@ import {HTMLProps} from "react";
 import Button from "@/app/_components/inputs/Button";
 import Image from "next/image";
 import {cn} from "@/app/_lib/utils/cn";
+import {cx} from "class-variance-authority";
 
 interface IThemeButtonProps extends HTMLProps<HTMLButtonElement> {
 	theme: ITheme
+	isActive: boolean
 }
 
-function ThemeButton ({theme, onClick}: IThemeButtonProps)  {
-	const themeImageFile = theme.backgroundType === EBackgroundType.Image ?
+function ThemeButton ({theme, isActive, onClick}: IThemeButtonProps)  {
+	const themeImageFile = theme.backgroundType === EBackgroundType.Static ?
 		`/backgrounds/images/${theme.backgroundFilename}` : `/backgrounds/videos/thumbnails/${theme.backgroundFilename}.png`
 
 	return (
@@ -21,8 +23,11 @@ function ThemeButton ({theme, onClick}: IThemeButtonProps)  {
 				)}>
 					<Image
 						className={cn(
-							'h-full', 'w-full', 'object-cover', 'rounded-xl',
-							'border-2', 'border-primary-container'
+							'h-full', 'w-full', 'object-cover', 'rounded-xl', 'border-2',
+							cx({
+								'border-secondary-text': isActive,
+								'border-primary-container': !isActive
+							})
 						)}
 						src={themeImageFile}
 						alt={`${theme.backgroundFilename}`}
@@ -30,7 +35,6 @@ function ThemeButton ({theme, onClick}: IThemeButtonProps)  {
 						height={500}
 					/>
 				</div>
-				<p>{theme.themeName}</p>
 			</div>
 		</Button>
 	)
