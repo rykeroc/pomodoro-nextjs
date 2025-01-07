@@ -1,4 +1,4 @@
-import BackgroundTheme from "@/app/_components/theme/BackgroundTheme";
+import ThemeBackground from "@/app/_components/theme/ThemeBackground";
 import {cn} from "@/app/_lib/utils/cn";
 import FocusQuote from "@/app/_components/FocusQuote";
 import PomodoroComponents from "@/app/_components/pomodoro/PomodoroComponents";
@@ -20,7 +20,7 @@ export default async function Page() {
 				"z-0", 'h-screen', 'w-screen',
 				'fixed', 'top-1/2', 'left-1/2', '-translate-x-1/2', '-translate-y-1/2',
 			)}>
-				<BackgroundTheme/>
+				<ThemeBackground/>
 			</div>
 		</div>
 	)

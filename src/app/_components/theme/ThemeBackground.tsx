@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import {cn} from "@/app/_lib/utils/cn";
-import {useContext} from "react";
+import {ReactElement, useContext} from "react";
 import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";
 import globalThemes from "@/app/_lib/contexts/theme/globalThemes";
 import {EBackgroundType, ITheme} from "@/app/_lib/contexts/theme/IThemeContext";
@@ -10,17 +10,21 @@ import {EBackgroundType, ITheme} from "@/app/_lib/contexts/theme/IThemeContext";
 type Dimensions = [width: number, height: number]
 const backgroundDimensions: Dimensions = [3840, 2160]
 
-export default function BackgroundTheme() {
+export default function ThemeBackground() {
 	const themeContext = useContext(ThemeContext)
 	const theme = themeContext?.theme ?? globalThemes[0]
-
-	return (theme.backgroundType === EBackgroundType.Image) ? (
+	const backgroundComponent: ReactElement = (theme.backgroundType === EBackgroundType.Static) ? (
 		// Display image background
-		<BackgroundImage theme={theme}/>
+		<StaticBackground theme={theme}/>
 	) : (
 		// Display video background
 
-		<BackgroundVideo theme={theme}/>
+		<LiveBackground theme={theme}/>
+	)
+	return (
+		<div>
+			{backgroundComponent}
+		</div>
 	)
 }
 
@@ -28,7 +32,7 @@ interface IBackgroundImageProps {
 	theme: ITheme
 }
 
-function BackgroundImage({theme}: IBackgroundImageProps) {
+function StaticBackground({theme}: IBackgroundImageProps) {
 	const imageSrc = `/backgrounds/images/${theme.backgroundFilename}`
 	return <Image
 		className={cn('object-cover', 'brightness-75', 'h-screen', 'w-screen',)}
@@ -43,7 +47,7 @@ interface IBackgroundVideoProps {
 	theme: ITheme
 }
 
-function BackgroundVideo({theme}: IBackgroundVideoProps) {
+function LiveBackground({theme}: IBackgroundVideoProps) {
 	const videoSrc = `/backgrounds/videos/${theme.backgroundFilename}`
 	const srcType = "video/mp4"
 	return (

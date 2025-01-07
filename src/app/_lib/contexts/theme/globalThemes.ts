@@ -5,7 +5,7 @@ const globalThemes: ITheme[] = [
 		id: 1,
 		themeName: "City Sunset View",
 		backgroundFilename: "anime-wallpaper-1.jpg",
-		backgroundType: EBackgroundType.Image,
+		backgroundType: EBackgroundType.Static,
 		colorClasses: {
 			text: "text-violet-900",
 			background: "bg-violet-900",
@@ -17,7 +17,7 @@ const globalThemes: ITheme[] = [
 		id: 2,
 		themeName: "Ocean Sunset View",
 		backgroundFilename: "sunset-wallpaper.jpg",
-		backgroundType: EBackgroundType.Image,
+		backgroundType: EBackgroundType.Static,
 		colorClasses: {
 			text: "text-amber-600",
 			background: "bg-amber-600",
@@ -29,7 +29,7 @@ const globalThemes: ITheme[] = [
 		id: 3,
 		themeName: "All Girls Are The Same",
 		backgroundFilename: "all-girls-are-the-same.mp4",
-		backgroundType: EBackgroundType.Video,
+		backgroundType: EBackgroundType.Live,
 		colorClasses: {
 			text: "text-blue-500",
 			background: "bg-blue-500",

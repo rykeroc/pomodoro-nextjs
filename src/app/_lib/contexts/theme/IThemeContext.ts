@@ -6,7 +6,7 @@ interface IColorClasses {
 }
 
 enum EBackgroundType {
-	Image, Video
+	Static, Live
 }
 
 interface ITheme {
