@@ -94,11 +94,15 @@ export default function usePomodoro(userId: string): IPomodoro {
 	const onBreakComplete = useCallback(() => {
 		console.log("onBreakComplete")
 
-		setPomodoroInfo(prev => ({
-			...prev,
-			state: PomodoroState.FocusPending,
-			stage: PomodoroStages.focusSession
-		}))
+		setPomodoroInfo(prev => {
+			reset(PomodoroStages.focusSession.seconds)
+
+			return {
+				...prev,
+				state: PomodoroState.FocusPending,
+				stage: PomodoroStages.focusSession
+			}
+		})
 	}, [setPomodoroInfo])
 
 	const onCompleteAction = useCallback(() => {

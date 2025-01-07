@@ -184,9 +184,7 @@ export default function useCountdown(startingSeconds: number, intervalMs = 1000)
 	}, [setCountdownInfo, run])
 
 	const reset = useCallback((secondsToCount: number) => {
-		if (!timer.current) return
-
-		window.cancelAnimationFrame(timer.current.requestId ?? 0);
+		window.cancelAnimationFrame(timer.current?.requestId ?? 0);
 		timer.current = {
 			startedTimestamp: null,
 			lastIntervalTimestamp: null,
