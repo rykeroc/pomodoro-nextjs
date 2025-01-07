@@ -29,6 +29,7 @@ const globalThemes: ITheme[] = [
 		id: 3,
 		themeName: "All Girls Are The Same",
 		backgroundFilename: "all-girls-are-the-same.mp4",
+		backgroundSrc: "https://steamcommunity.com/sharedfiles/filedetails/?id=3392206747",
 		backgroundType: EBackgroundType.Live,
 		colorClasses: {
 			text: "text-blue-500",

@@ -13,6 +13,7 @@ interface ITheme {
 	id: number
 	themeName: string
 	backgroundFilename: string
+	backgroundSrc?: string
 	backgroundType: EBackgroundType
 	colorClasses: IColorClasses
 }

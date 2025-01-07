@@ -2,8 +2,6 @@ import {PaintBrushIcon} from "@heroicons/react/24/solid";
 import {useContext} from "react";
 import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";
 import {EBackgroundType, ITheme, IThemeContext} from "@/app/_lib/contexts/theme/IThemeContext";
-import {cn} from "@/app/_lib/utils/cn";
-import ThemeButton from "@/app/_components/TopBarMenus/SettingsDialog/sections/theme/ThemeButton";
 import {ISettingsMenuSection} from "@/app/_components/TopBarMenus/SettingsDialog/SettingsMenuSections";
 import ThemeTypeSection from "@/app/_components/TopBarMenus/SettingsDialog/sections/theme/ThemeTypeSection";
 
