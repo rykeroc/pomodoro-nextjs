@@ -25,7 +25,8 @@ export default function FocusTasksDialog({isOpen, onClose}: IDialogMenuProps) {
 						transition
 						className={cn(
 							'fixed', "z-50",
-							"h-full", ...glassEffectClasses, "p-4", "rounded-r-2xl", "w-1/3",
+							"h-full", ...glassEffectClasses, "p-4", "rounded-r-2xl",
+							"w-full", "md:w-3/4", "lg:w-2/3", "xl:w-1/2", "2xl:w-1/3",
 							"duration-300", "ease-in-out",
 							"data-[closed]:-translate-x-full", "data-[closed]:opacity-0"
 						)}>
@@ -55,7 +56,7 @@ function Content({onClose}: IContentProps) {
 	return (
 		<div className={cn("flex", "flex-row", "gap-6", "h-full")}>
 			<div className={cn(
-				"flex", "flex-col", "gap-5", 'w-full'
+				"flex", "flex-col", "gap-5", "w-full"
 			)}>
 				<DialogTitle as={"h3"}>
 					Focus Tasks
