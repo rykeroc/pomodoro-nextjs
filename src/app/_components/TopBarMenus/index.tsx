@@ -3,7 +3,7 @@
 import {cn} from "@/app/_lib/utils/cn";
 import {ReactNode, useState} from "react";
 import Button from "@/app/_components/inputs/Button";
-import {Cog6ToothIcon, ListBulletIcon} from "@heroicons/react/24/solid";
+import {Bars3Icon, ListBulletIcon} from "@heroicons/react/24/solid";
 import {cx} from "class-variance-authority";
 import * as React from "react";
 import FocusTasksDialog from "@/app/_components/TopBarMenus/FocusTasksDialog";
@@ -39,7 +39,7 @@ export default function TopBarMenus() {
 		{
 			isOpen: isSettingsOpen,
 			onClick: openSettings,
-			icon: <Cog6ToothIcon className={cn(iconClasses)}/>
+			icon: <Bars3Icon className={cn(iconClasses)}/>
 		}
 	]
 
