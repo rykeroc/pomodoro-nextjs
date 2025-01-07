@@ -9,6 +9,7 @@ import {useContext} from "react";
 import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";
 import {IPomodoroTimer} from "@/app/_lib/hooks/usePomodoro";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
+import PomodoroFocusCountIndicators from "@/app/_components/pomodoro/PomodoroFocusCountIndicators";
 
 interface IPomodoroTimerIndicatorProps {
 	pomodoroTimer: IPomodoroTimer
@@ -79,81 +80,87 @@ function PomodoroTimerIndicator({pomodoroTimer, focusTasksData, handleOpen}: IPo
 			<div className={cn(
 				'flex', 'flex-col', 'justify-center', 'items-center', 'gap-6'
 			)}>
-			<svg width={size} height={size} viewBox={viewBox}>
-				{/* Background */}
-				<foreignObject
-					x={"0%"}
-					y={"0%"}
-					width={size}
-					height={size}>
-					<div className={cn(
-						...glassEffectClasses,
-						'rounded-full', 'absolute',
-						'h-full', 'w-full'
-					)}/>
-				</foreignObject>
+				<svg width={size} height={size} viewBox={viewBox}>
+					{/* Background */}
+					<foreignObject
+						x={"0%"}
+						y={"0%"}
+						width={size}
+						height={size}>
+						<div className={cn(
+							...glassEffectClasses,
+							'rounded-full', 'absolute',
+							'h-full', 'w-full'
+						)}/>
+					</foreignObject>
 
-				{/* Outline circle */}
-				<circle
-					className={"fill-none stroke-primary-container opacity-75"}
-					cx={size / 2}
-					cy={size / 2}
-					strokeWidth={`${strokeWidth - 1}px`}
-					r={radius}
-				/>
+					{/* Outline circle */}
+					<circle
+						className={"fill-none stroke-primary-container opacity-75"}
+						cx={size / 2}
+						cy={size / 2}
+						strokeWidth={`${strokeWidth - 1}px`}
+						r={radius}
+					/>
 
-				{/* Progress circle*/}
-				<circle
-					className={cn(
-						strokeClass,
-						"fill-none",
-						"transition-all", "ease-linear",
-					)}
-					cx={size / 2}
-					cy={size / 2}
-					r={radius}
-					strokeLinecap={"butt"}
-					strokeWidth={`${strokeWidth}px`}
-					strokeDasharray={dashArray}
-					strokeDashoffset={isNaN(dashOffset) ? 0 : dashOffset}
-					transform={`rotate(-90 ${size / 2} ${size / 2})`}
-				/>
+					{/* Progress circle*/}
+					<circle
+						className={cn(
+							strokeClass,
+							"fill-none",
+							"transition-all", "ease-linear",
+						)}
+						cx={size / 2}
+						cy={size / 2}
+						r={radius}
+						strokeLinecap={"butt"}
+						strokeWidth={`${strokeWidth}px`}
+						strokeDasharray={dashArray}
+						strokeDashoffset={isNaN(dashOffset) ? 0 : dashOffset}
+						transform={`rotate(-90 ${size / 2} ${size / 2})`}
+					/>
 
-				{/* Timer details */}
-				<foreignObject
-					x={"0%"}
-					y={"0%"}
-					width={size}
-					height={size}>
-					<div
-						className={"flex flex-col items-center justify-center w-full h-full gap-5"}>
-						<h5
-							className={cn(
-								["text-primary-text"],
-								{"invisible": pomodoroTimer.stage === PomodoroStages.focusSession}
-							)}>
-							{pomodoroTimer.stage.name}
-						</h5>
-						<h1>
-							{minutesString}
-						</h1>
+					{/* Timer details */}
+					<foreignObject
+						x={"0%"}
+						y={"0%"}
+						width={size}
+						height={size}>
+						<div
+							className={"flex flex-col items-center justify-center w-full h-full gap-5"}>
+							<h5 className={cn(
+									["text-primary-text"],
+									{ "invisible": pomodoroTimer.stage === PomodoroStages.focusSession }
+								)}>
+								{pomodoroTimer.stage.name}
+							</h5>
 
-						<Button onClick={handleOpen}>
-							<h4 className={"text-secondary-text"}>
-								{ activeTaskName }
-							</h4>
-							<ChevronRightIcon className={"size-8 fill-secondary-text"}/>
-						</Button>
-					</div>
-				</foreignObject>
-			</svg>
+							<div className={cn("flex", "flex-col", "gap-1", "items-center")}>
+								<PomodoroFocusCountIndicators focusCount={pomodoroTimer.focusCount}/>
 
-			<div className={"flex flex-row gap-3"}>
-				<PomodoroButtons state={pomodoroTimer.state}/>
-			</div>
+								<h1>
+									{minutesString}
+								</h1>
+
+							</div>
+
+							<Button onClick={handleOpen}>
+								<h4 className={"text-secondary-text"}>
+									{activeTaskName}
+								</h4>
+								<ChevronRightIcon className={"size-8 fill-secondary-text"}/>
+							</Button>
+						</div>
+					</foreignObject>
+				</svg>
+
+				<div className={"flex flex-row gap-3"}>
+					<PomodoroButtons state={pomodoroTimer.state}/>
+				</div>
 			</div>
 		</>
 	)
 }
+
 
 export default PomodoroTimerIndicator
