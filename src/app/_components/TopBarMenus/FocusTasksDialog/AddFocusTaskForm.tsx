@@ -4,7 +4,6 @@ import {PlusIcon} from "@heroicons/react/24/solid";
 import Form from "next/form";
 import {useSession} from "next-auth/react";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
-import {redirect} from "next/navigation";
 import ErrorMessage from "@/app/_components/ErrorMessage";
 
 interface IAddFocusTaskFormProps {
@@ -12,12 +11,7 @@ interface IAddFocusTaskFormProps {
 }
 
 export default function AddFocusTaskForm({focusTasksData}: IAddFocusTaskFormProps) {
-	const {data: session} = useSession({
-		required: true,
-		onUnauthenticated() {
-			redirect("/sign-in")
-		}
-	})
+	const {data: session} = useSession()
 
 	if (!session?.user?.id) {
 		return null;
