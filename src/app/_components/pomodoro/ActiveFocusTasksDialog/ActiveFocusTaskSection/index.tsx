@@ -41,7 +41,7 @@ export default function ActiveFocusTasksSection(
 			"flex", "flex-col", "items-start", "gap-3",
 			"w-full"
 		)}>
-			<h5 className={"text-primary-text"}>
+			<h5 className={"text-secondary-text"}>
 				{title}
 			</h5>
 			<div className={cn(
