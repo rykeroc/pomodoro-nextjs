@@ -1,10 +1,10 @@
 import {useQuery, UseQueryResult} from "@tanstack/react-query";
 import getQuote from "@/app/_lib/actions/getQuote";
-import {QuoteResponseData} from "@/app/_lib/actions/responseModels";
+import {Quote} from "@prisma/client";
 
-export default function useQuoteQuery(): UseQueryResult<QuoteResponseData> {
+export default function useQuoteQuery(): UseQueryResult<Quote | null> {
 	const queryResult = useQuery({
-		queryFn: async () => await getQuote(),
+		queryFn: getQuote,
 		queryKey: ["quote"]
 	})
 
