@@ -5,6 +5,9 @@ import useFocusTasksData, {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasks
 import {FocusTask} from "@prisma/client";
 import {IFocusTaskUpdateArgs} from "@/app/_lib/actions/focusTasks/types";
 import useCountdown from "@/app/_lib/hooks/useCountdown";
+import {IUseDocumentTitle, useDocumentTitle} from "@/app/_lib/hooks/useDocumentTitle";
+import {secondsToMinutes} from "@/app/_lib/utils/dateTimeUtils";
+import CountdownStatus from "@/app/_lib/constants/CountdownStatus";
 
 interface PomodoroInfo {
 	state: PomodoroState
@@ -43,15 +46,9 @@ export default function usePomodoro(userId: string): IPomodoro {
 	const focusTasksData = useFocusTasksData(userId)
 
 	const initialSeconds = PomodoroStages.focusSession.seconds; // initial time in milliseconds
-	const {
-		setOnCompleteAction,
-		remaining,
-		total,
-		start,
-		pause,
-		resume,
-		reset
-	} = useCountdown(initialSeconds)
+	const countdown = useCountdown(initialSeconds)
+
+	const documentTitle: IUseDocumentTitle = useDocumentTitle()
 
 	/*
 	Update the total focus session seconds for the active task
@@ -64,7 +61,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 		const activeTask: FocusTask = focusTasksData.activeTask
 
 		// Calculate elapsed time
-		const elapsed = PomodoroStages.focusSession.seconds - remaining
+		const elapsed = PomodoroStages.focusSession.seconds - countdown.remaining
 		activeTask.totalFocusSeconds += elapsed
 
 		// Transform to FormData for mutate fn
@@ -79,7 +76,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 		}
 		// Update the active task data
 		return focusTasksData.updateMutation.mutate(updateArgs)
-	}, [focusTasksData.activeTask, focusTasksData.updateMutation, remaining, userId])
+	}, [focusTasksData.activeTask, focusTasksData.updateMutation, countdown, userId])
 
 	const onFocusComplete = useCallback(() => {
 		console.log("onFocusCompleted")
@@ -96,7 +93,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 		console.log("onBreakComplete")
 
 		setPomodoroInfo(prev => {
-			reset(PomodoroStages.focusSession.seconds)
+			countdown.reset(PomodoroStages.focusSession.seconds)
 
 			return {
 				...prev,
@@ -104,7 +101,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 				stage: PomodoroStages.focusSession
 			}
 		})
-	}, [reset, setPomodoroInfo])
+	}, [countdown, setPomodoroInfo])
 
 	const onCompleteAction = useCallback(() => {
 		console.log("onCompleteAction")
@@ -117,12 +114,12 @@ export default function usePomodoro(userId: string): IPomodoro {
 
 	// Set completion callback
 	useEffect(() => {
-		setOnCompleteAction(onCompleteAction)
-	}, [setOnCompleteAction, onCompleteAction]);
+		countdown.setOnCompleteAction(onCompleteAction)
+	}, [countdown, onCompleteAction]);
 
 	// Start a focus session
 	const startFocus = useCallback(() => {
-		start(PomodoroStages.focusSession.seconds)
+		countdown.start(PomodoroStages.focusSession.seconds)
 		// Update pomodoro state to running
 		setPomodoroInfo(prev => (
 			{
@@ -131,11 +128,11 @@ export default function usePomodoro(userId: string): IPomodoro {
 				state: PomodoroState.FocusRunning
 			}
 		))
-	}, [start, setPomodoroInfo])
+	}, [countdown, setPomodoroInfo])
 
 	// Pause the current focus session
 	const pauseFocus = useCallback(() => {
-		pause()
+		countdown.pause()
 		// Update pomodoro state to paused
 		setPomodoroInfo(prev => (
 			{
@@ -143,11 +140,11 @@ export default function usePomodoro(userId: string): IPomodoro {
 				state: PomodoroState.FocusPaused
 			}
 		))
-	}, [pause, setPomodoroInfo])
+	}, [countdown, setPomodoroInfo])
 
 	// Pause the current focus session
 	const resumeFocus = useCallback(() => {
-		resume()
+		countdown.resume()
 		// Update pomodoro state to paused
 		setPomodoroInfo(prev => (
 			{
@@ -155,7 +152,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 				state: PomodoroState.FocusRunning
 			}
 		))
-	}, [resume, setPomodoroInfo])
+	}, [countdown, setPomodoroInfo])
 
 	// Finish a focus session early
 	const finishFocus = useCallback(() => {
@@ -163,18 +160,18 @@ export default function usePomodoro(userId: string): IPomodoro {
 		if (pomodoroInfo.stage === PomodoroStages.focusSession)
 			updateActiveTask()
 
-		reset(PomodoroStages.focusSession.seconds)
+		countdown.reset(PomodoroStages.focusSession.seconds)
 		setPomodoroInfo(({
 			focusCount: 0,
 			stage: PomodoroStages.focusSession,
 			state: PomodoroState.FocusPending
 		}))
-	}, [pomodoroInfo.stage, updateActiveTask, reset, setPomodoroInfo])
+	}, [pomodoroInfo.stage, updateActiveTask, countdown, setPomodoroInfo])
 
 	// Start a break
 	const startBreak = useCallback(() => {
 		const isLongBreak = (pomodoroInfo.focusCount % PomodoroValues.maxFocusCount) === 0
-		start(isLongBreak ? PomodoroStages.longBreak.seconds : PomodoroStages.shortBreak.seconds)
+		countdown.start(isLongBreak ? PomodoroStages.longBreak.seconds : PomodoroStages.shortBreak.seconds)
 		setPomodoroInfo(prev => (
 			{
 				...prev,
@@ -182,18 +179,29 @@ export default function usePomodoro(userId: string): IPomodoro {
 				state: isLongBreak ? PomodoroState.LongBreakRunning : PomodoroState.ShortBreakRunning
 			}
 		))
-	}, [pomodoroInfo.focusCount, start, setPomodoroInfo])
+	}, [pomodoroInfo.focusCount, countdown, setPomodoroInfo])
 
 	const skipBreak = useCallback(() => {
-		reset(PomodoroStages.focusSession.seconds)
+		countdown.reset(PomodoroStages.focusSession.seconds)
 		onBreakComplete()
-	}, [reset, onBreakComplete])
+	}, [countdown, onBreakComplete])
+
+	const getTitle = useCallback((): string | null => {
+		if (countdown.status !== CountdownStatus.Running || countdown.remaining <= 0) return null
+		const minutesString = secondsToMinutes(countdown.remaining)
+		return `${pomodoroInfo.stage.name} - ${minutesString}`
+	}, [pomodoroInfo.stage, countdown])
+
+	// Append remaining time to title if countdown is running
+	useEffect(() => {
+		const newTitle: string | null = getTitle()
+		documentTitle.setTitle(newTitle)
+	}, [getTitle, documentTitle]);
 
 	return {
 		...pomodoroInfo,
 		...focusTasksData,
-		remaining,
-		total,
+		...countdown,
 		start: startFocus,
 		pause: pauseFocus,
 		resume: resumeFocus,
