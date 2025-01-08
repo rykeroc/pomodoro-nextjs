@@ -10,6 +10,7 @@ import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";
 import {IPomodoroTimer} from "@/app/_lib/hooks/usePomodoro";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 import PomodoroFocusCountIndicators from "@/app/_components/pomodoro/PomodoroFocusCountIndicators";
+import {useSession} from "next-auth/react";
 
 interface IPomodoroTimerIndicatorProps {
 	pomodoroTimer: IPomodoroTimer
@@ -17,7 +18,23 @@ interface IPomodoroTimerIndicatorProps {
 	handleOpen: () => void,
 }
 
-function PomodoroTimerIndicator({pomodoroTimer, focusTasksData, handleOpen}: IPomodoroTimerIndicatorProps) {
+function PomodoroTimer({pomodoroTimer, focusTasksData, handleOpen}: IPomodoroTimerIndicatorProps) {
+	const activeTaskName = focusTasksData.activeTask?.name ?? "Focus"
+	const {data: session} = useSession()
+
+	const focusTaskSelectorButton = (
+		<Button onClick={handleOpen} disabled={!session}>
+			<h4 className={"text-secondary-text"}>
+				{activeTaskName}
+			</h4>
+			{
+				session && (
+					<ChevronRightIcon className={"size-8 fill-secondary-text"}/>
+				)
+			}
+		</Button>
+	)
+
 	const getElapsedSeconds = (remaining: number, total: number) => total - remaining
 
 	const PomodoroButtons = ({state}: { state: PomodoroState }) => {
@@ -73,7 +90,6 @@ function PomodoroTimerIndicator({pomodoroTimer, focusTasksData, handleOpen}: IPo
 	const strokeClass = themeContext?.theme.colorClasses.stroke
 		? themeContext?.theme.colorClasses.stroke : "stroke-primary-text"
 
-	const activeTaskName = focusTasksData.activeTask?.name ?? "Focus"
 
 	return (
 		<>
@@ -141,15 +157,10 @@ function PomodoroTimerIndicator({pomodoroTimer, focusTasksData, handleOpen}: IPo
 								<h1>
 									{minutesString}
 								</h1>
-
 							</div>
 
-							<Button onClick={handleOpen}>
-								<h4 className={"text-secondary-text"}>
-									{activeTaskName}
-								</h4>
-								<ChevronRightIcon className={"size-8 fill-secondary-text"}/>
-							</Button>
+							{focusTaskSelectorButton}
+
 						</div>
 					</foreignObject>
 				</svg>
@@ -163,4 +174,4 @@ function PomodoroTimerIndicator({pomodoroTimer, focusTasksData, handleOpen}: IPo
 }
 
 
-export default PomodoroTimerIndicator
+export default PomodoroTimer
