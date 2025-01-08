@@ -1,10 +1,9 @@
 "use client"
 
-import PomodoroTimerIndicator from "@/app/_components/pomodoro/PomodoroTimerIndicator";
+import PomodoroTimer from "@/app/_components/pomodoro/PomodoroTimer";
 import {useState} from "react";
 import {useSession} from "next-auth/react";
 import usePomodoro, {IPomodoro} from "@/app/_lib/hooks/usePomodoro";
-import {redirect} from "next/navigation";
 import ActiveFocusTasksDialog from "@/app/_components/pomodoro/ActiveFocusTaskSection/ActiveFocusTasksDialog";
 
 export default function PomodoroComponents() {
@@ -14,13 +13,11 @@ export default function PomodoroComponents() {
 
 	const {data: session} = useSession()
 
-	if (!session?.user?.id) redirect("/sign-in")
-
-	const pomodoroData: IPomodoro = usePomodoro(session.user.id)
+	const pomodoroData: IPomodoro = usePomodoro(session?.user?.id ?? "")
 
 	return (
 		<>
-			<PomodoroTimerIndicator handleOpen={openDialog} pomodoroTimer={pomodoroData} focusTasksData={pomodoroData}/>
+			<PomodoroTimer handleOpen={openDialog} pomodoroTimer={pomodoroData} focusTasksData={pomodoroData}/>
 			<ActiveFocusTasksDialog isOpen={isDialogOpen} handleClose={closeDialog} focusTasksData={pomodoroData}/>
 		</>
 	)
