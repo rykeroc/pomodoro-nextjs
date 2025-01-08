@@ -5,6 +5,7 @@ import Button from "@/app/_components/inputs/Button";
 import {signOut, signIn, useSession} from "next-auth/react";
 import {ISettingsMenuSection} from "@/app/_components/TopBarMenus/SettingsDialog/SettingsMenuSections";
 import {User} from "next-auth";
+import {redirect} from "next/navigation";
 
 const AccountSectionContent = () => {
 	const { data: session } = useSession()
@@ -38,7 +39,7 @@ function SignedInContent({user}: ISignedInContentProps) {
 }
 
 function SignedOutContent() {
-	const handleSignIn = () => signIn()
+	const handleSignIn = () => redirect("/sign-in")
 
 	return (
 		<>
