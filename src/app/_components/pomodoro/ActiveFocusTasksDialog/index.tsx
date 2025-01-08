@@ -7,7 +7,7 @@ import {FocusTask} from "@prisma/client";
 import Button from "@/app/_components/inputs/Button";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 import {filterCompletedTasks, filterTodoTasks} from "@/app/_lib/utils/focusTasksHelpers";
-import ActiveFocusTasksSection from "@/app/_components/pomodoro/ActiveFocusTaskSection/index";
+import ActiveFocusTasksSection from "@/app/_components/pomodoro/ActiveFocusTasksDialog/ActiveFocusTaskSection";
 
 interface IFocusTasksDialogProps {
 	isOpen: boolean
@@ -43,15 +43,20 @@ export default function ActiveFocusTasksDialog({isOpen, handleClose, focusTasksD
 						<DialogBody className={cn("flex", "flex-col", "w-full", "gap-4", "min-w-96")}>
 
 							{/* Tasks to do */}
-							<ActiveFocusTasksSection title={"Todo"} focusTasks={todoTasks}
-													 activeTask={focusTasksData.activeTask}
-													 focusTasksData={focusTasksData}/>
+							{
+								todoTasks.length > 0 && (
+									<ActiveFocusTasksSection title={"Todo"} focusTasks={todoTasks}
+															 activeTask={focusTasksData.activeTask}
+															 focusTasksData={focusTasksData}/>
+								)
+							}
 
 							{/*	Completed tasks */}
 							{
-								completedTasks.length > 0 &&
-                                <ActiveFocusTasksSection title={"Completed"} focusTasks={completedTasks}
-                                                         focusTasksData={focusTasksData}/>
+								completedTasks.length > 0 && (
+									<ActiveFocusTasksSection title={"Completed"} focusTasks={completedTasks}
+															 focusTasksData={focusTasksData}/>
+								)
 							}
 
 						</DialogBody>
