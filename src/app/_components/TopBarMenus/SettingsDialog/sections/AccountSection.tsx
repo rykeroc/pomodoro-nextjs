@@ -2,7 +2,7 @@
 
 import {ArrowRightEndOnRectangleIcon, ArrowRightStartOnRectangleIcon, UserIcon} from "@heroicons/react/24/solid";
 import Button from "@/app/_components/inputs/Button";
-import {signOut, signIn, useSession} from "next-auth/react";
+import {signOut, useSession} from "next-auth/react";
 import {ISettingsMenuSection} from "@/app/_components/TopBarMenus/SettingsDialog/SettingsMenuSections";
 import {User} from "next-auth";
 import {redirect} from "next/navigation";
