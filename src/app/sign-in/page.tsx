@@ -1,14 +1,21 @@
 import {cn} from "@/app/_lib/utils/cn";
-import {redirect} from "next/navigation";
 import {auth} from "@/auth";
 import ProviderButtons from "@/app/sign-in/_components/ProviderButtons";
+import getUser from "@/app/_lib/actions/getUser";
+import {redirect} from "next/navigation";
 
 export default async function SignIn() {
 	const session = await auth()
 
-	console.log(session)
 	// Redirect to home if user is already signed in
-	if (session?.user) redirect("/")
+	if (session?.user?.id) {
+		// Get user from DB using user id in session
+		const user = await getUser(session?.user?.id)
+		console.log(`Sign in: ${user}`)
+
+		// Redirect to home if user exists in DB
+		if (user) redirect("/")
+	}
 
 	return (
 		<div className={cn(
