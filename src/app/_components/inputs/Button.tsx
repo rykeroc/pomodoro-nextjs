@@ -15,6 +15,7 @@ const buttonClasses = cva(
 		"flex", "flex-row", "items-center", "justify-center", "gap-2",
 		'cursor-pointer',
 		"hover:brightness-110",
+		"disabled:brightness-100", "disabled:cursor-default"
 	],
 	{
 		variants: {
