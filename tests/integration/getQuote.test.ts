@@ -7,8 +7,9 @@ describe("getQuote action", () => {
 		const responseData = await getQuote()
 
 		expect(responseData).toBeTruthy()
-		expect(responseData.a.length).toBeGreaterThan(0)
-		expect(responseData.q.length).toBeGreaterThan(0)
+		if (responseData!.author)
+			expect(responseData!.author.length).toBeGreaterThan(0)
+		expect(responseData!.text.length).toBeGreaterThan(0)
 	})
 
 })

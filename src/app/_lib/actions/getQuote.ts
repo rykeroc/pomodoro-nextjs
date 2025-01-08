@@ -1,26 +1,19 @@
 "use server"
 
-import axios from "axios";
-import {QuoteResponseData} from "@/app/_lib/actions/responseModels";
+import {Quote} from "@prisma/client"
+import {prisma} from "@/prisma";
 
-/*
- TODO:
-  The current websites certificates have expired
-  Use quotes from own database
- */
-async function getQuote(): Promise<QuoteResponseData> {
+async function getQuote(): Promise<Quote | null> {
+	const count = await prisma.quote.count();
+	const randomOffset = Math.floor(Math.random() * count);
 
-	const url = "https://zenquotes.io/api/quotes"
-
-	const response = await axios.get(url)
-
-	try {
-		return response.data[0] as QuoteResponseData
-	} catch (e) {
-		console.log("Invalid or malformed response data")
-		console.log(e)
-		throw e
-	}
+	return prisma.quote.findFirst({
+		orderBy: {
+			id: "asc"
+		},
+		take: 1,
+		skip: randomOffset
+	})
 }
 
 export default getQuote
