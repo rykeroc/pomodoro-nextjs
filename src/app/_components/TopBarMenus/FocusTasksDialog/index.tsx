@@ -8,7 +8,6 @@ import AddFocusTaskForm from "@/app/_components/TopBarMenus/FocusTasksDialog/Add
 import {FocusTask} from "@prisma/client";
 import useFocusTasksData from "@/app/_lib/hooks/useFocusTasksData";
 import {useSession} from "next-auth/react";
-import {redirect} from "next/navigation";
 import Button from "@/app/_components/inputs/Button";
 import {ChevronLeftIcon} from "@heroicons/react/24/solid";
 import {filterCompletedTasks, filterTodoTasks} from "@/app/_lib/utils/focusTasksHelpers";
@@ -16,6 +15,12 @@ import React from "react";
 
 
 export default function FocusTasksDialog({isOpen, onClose}: IDialogMenuProps) {
+	const {data: session} = useSession()
+
+	const userId = session?.user?.id
+
+	const content = userId ? <SignedInContent userId={userId}/> : <SignedOutContent/>
+
 	return (
 		<>
 			<Dialog open={isOpen} onClose={onClose}>
@@ -30,7 +35,24 @@ export default function FocusTasksDialog({isOpen, onClose}: IDialogMenuProps) {
 							"duration-300", "ease-in-out",
 							"data-[closed]:-translate-x-full", "data-[closed]:opacity-0"
 						)}>
-						<Content onClose={onClose}/>
+						<div className={cn("flex", "flex-row", "gap-6", "h-full")}>
+							<div className={cn(
+								"flex", "flex-col", "gap-5", "w-full"
+							)}>
+								<DialogTitle as={"h3"}>
+									Focus Tasks
+								</DialogTitle>
+
+								{content}
+							</div>
+
+							{/* Hide button */}
+							<div className={cn('h-full', 'flex', 'flex-col', 'justify-center')}>
+								<Button onClick={onClose}>
+									<ChevronLeftIcon className={'size-6'}/>
+								</Button>
+							</div>
+						</div>
 					</DialogPanel>
 				</div>
 			</Dialog>
@@ -38,54 +60,45 @@ export default function FocusTasksDialog({isOpen, onClose}: IDialogMenuProps) {
 	)
 }
 
-interface IContentProps {
-	onClose: () => void
+function SignedOutContent() {
+	return (
+		<p>Sign in to create focus tasks</p>
+	)
 }
 
-function Content({onClose}: IContentProps) {
-	const {data: session} = useSession()
+interface ISignedInContentProps {
+	userId: string
+}
 
-	if (!session?.user?.id) redirect("/sign-in")
-
-	const focusTasksData = useFocusTasksData(session.user.id)
+function SignedInContent({userId}: ISignedInContentProps) {
+	const focusTasksData = useFocusTasksData(userId)
 
 	const todoTasks: FocusTask[] = filterTodoTasks(focusTasksData.query.data ?? [])
 
 	const completedTasks: FocusTask[] = filterCompletedTasks(focusTasksData.query.data ?? [])
 
 	return (
-		<div className={cn("flex", "flex-row", "gap-6", "h-full")}>
-			<div className={cn(
-				"flex", "flex-col", "gap-5", "w-full"
-			)}>
-				<DialogTitle as={"h3"}>
-					Focus Tasks
-				</DialogTitle>
-				<div className={cn("flex", "flex-col", "w-full", "gap-5",)}>
-					<AddFocusTaskForm focusTasksData={focusTasksData}/>
+		<>
+			<DialogTitle as={"h3"}>
+				Focus Tasks
+			</DialogTitle>
+			<div className={cn("flex", "flex-col", "w-full", "gap-5",)}>
+				<AddFocusTaskForm focusTasksData={focusTasksData}/>
 
-					{
-						todoTasks.length === 0 ? <p>There are currently no uncompleted focus tasks</p> : (
-							<FocusTasksDialogSection title={"Todo"} focusTasks={todoTasks}
-													 focusTasksData={focusTasksData}/>
-						)
-					}
+				{
+					todoTasks.length === 0 ? <p>There are currently no uncompleted focus tasks</p> : (
+						<FocusTasksDialogSection title={"Todo"} focusTasks={todoTasks}
+												 focusTasksData={focusTasksData}/>
+					)
+				}
 
-					{/*	Completed tasks */}
-					{
-						completedTasks.length > 0 &&
-                        <FocusTasksDialogSection title={"Completed"} focusTasks={completedTasks}
-                                                 focusTasksData={focusTasksData}/>
-					}
-				</div>
+				{/*	Completed tasks */}
+				{
+					completedTasks.length > 0 &&
+                    <FocusTasksDialogSection title={"Completed"} focusTasks={completedTasks}
+                                             focusTasksData={focusTasksData}/>
+				}
 			</div>
-
-			{/* Hide button */}
-			<div className={cn('h-full', 'flex', 'flex-col', 'justify-center')}>
-				<Button onClick={onClose}>
-					<ChevronLeftIcon className={'size-6'}/>
-				</Button>
-			</div>
-		</div>
+		</>
 	)
 }
