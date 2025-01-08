@@ -79,26 +79,21 @@ function SignedInContent({userId}: ISignedInContentProps) {
 
 	return (
 		<>
-			<DialogTitle as={"h3"}>
-				Focus Tasks
-			</DialogTitle>
-			<div className={cn("flex", "flex-col", "w-full", "gap-5",)}>
-				<AddFocusTaskForm focusTasksData={focusTasksData}/>
+			<AddFocusTaskForm focusTasksData={focusTasksData}/>
 
-				{
-					todoTasks.length === 0 ? <p>There are currently no uncompleted focus tasks</p> : (
-						<FocusTasksDialogSection title={"Todo"} focusTasks={todoTasks}
-												 focusTasksData={focusTasksData}/>
-					)
-				}
+			{
+				todoTasks.length === 0 ? <p>There are currently no uncompleted focus tasks</p> : (
+					<FocusTasksDialogSection title={"Todo"} focusTasks={todoTasks}
+											 focusTasksData={focusTasksData}/>
+				)
+			}
 
-				{/*	Completed tasks */}
-				{
-					completedTasks.length > 0 &&
-                    <FocusTasksDialogSection title={"Completed"} focusTasks={completedTasks}
-                                             focusTasksData={focusTasksData}/>
-				}
-			</div>
+			{/*	Completed tasks */}
+			{
+				completedTasks.length > 0 &&
+                <FocusTasksDialogSection title={"Completed"} focusTasks={completedTasks}
+                                         focusTasksData={focusTasksData}/>
+			}
 		</>
 	)
 }
