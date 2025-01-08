@@ -88,3 +88,11 @@ model FocusTask {
 
   @@map("focus_tasks")
 }
+
+model Quote {
+  id     Int     @id @default(autoincrement())
+  text   String
+  author String?
+
+  @@map("quotes")
+}
