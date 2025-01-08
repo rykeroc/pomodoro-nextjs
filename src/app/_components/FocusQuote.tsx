@@ -6,7 +6,7 @@ import useQuoteQuery from "@/app/_lib/hooks/useQuoteQuery";
 export default function FocusQuote() {
 	const quoteQuery = useQuoteQuery()
 
-	const quote = quoteQuery.data ? `"${quoteQuery.data.q}"` : ''
+	const quote = quoteQuery.data ? `"${quoteQuery.data.text}"` : ""
 	return (
 		<div className={cn(
 			"flex", "flex-row", "justify-center", "items-end"
