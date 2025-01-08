@@ -104,7 +104,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 				stage: PomodoroStages.focusSession
 			}
 		})
-	}, [setPomodoroInfo])
+	}, [reset, setPomodoroInfo])
 
 	const onCompleteAction = useCallback(() => {
 		console.log("onCompleteAction")
