@@ -41,7 +41,8 @@ export default function SpotifyPlaylistDialog() {
 								...glassEffectClasses,
 								"w-1/2", 'fixed', "z-50", "gap-4", "p-4", "rounded-2xl",
 								"flex", "flex-col", "items-center",
-								"duration-300", "ease-in-out", "data-[closed]:transform-[scale(95%)]", "data-[closed]:opacity-0"
+								"duration-300", "ease-in-out",
+								"data-[closed]:translate-y-full", "data-[closed]:transform-[scale(95%)]", "data-[closed]:opacity-0"
 							)}>
 							<DialogHeader className={"w-full"}>
 								<Button onClick={close}>
