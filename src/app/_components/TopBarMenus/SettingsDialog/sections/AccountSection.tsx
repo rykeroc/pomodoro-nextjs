@@ -1,11 +1,12 @@
 "use client"
 
-import {ArrowRightEndOnRectangleIcon, ArrowRightStartOnRectangleIcon, UserIcon} from "@heroicons/react/24/solid";
+import {ArrowRightStartOnRectangleIcon, UserIcon} from "@heroicons/react/24/solid";
 import Button from "@/app/_components/inputs/Button";
 import {signOut, useSession} from "next-auth/react";
 import {ISettingsMenuSection} from "@/app/_components/TopBarMenus/SettingsDialog/SettingsMenuSections";
 import {User} from "next-auth";
-import {redirect} from "next/navigation";
+import ProviderButtons from "@/app/_components/ProviderButtons";
+import {revalidatePath} from "next/cache";
 
 const AccountSectionContent = () => {
 	const { data: session } = useSession()
@@ -24,7 +25,10 @@ interface ISignedInContentProps {
 }
 
 function SignedInContent({user}: ISignedInContentProps) {
-	const handleSignOut = () => signOut({redirectTo: "/sign-in"})
+	const handleSignOut = async () => {
+		await signOut({redirectTo: "/"})
+		revalidatePath("/")
+	}
 
 	return (
 		<>
@@ -39,16 +43,11 @@ function SignedInContent({user}: ISignedInContentProps) {
 }
 
 function SignedOutContent() {
-	const handleSignIn = () => redirect("/sign-in")
-
 	return (
 		<>
-			<p>Create an account or sign in to help unlock your true potential!</p>
+			<p>Sign in with one of the following providers.</p>
 
-			<Button onClick={handleSignIn} variant={"secondary"}>
-				<ArrowRightEndOnRectangleIcon className={'size-6'}/>
-				Sign in
-			</Button>
+			<ProviderButtons/>
 		</>
 	)
 }

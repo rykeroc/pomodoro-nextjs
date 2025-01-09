@@ -35,17 +35,20 @@ const buttonClasses = cva(
 				none: [
 				 	"text-secondary-text", "bg-transparent", "hover:brightness-125"
 				]
+			},
+			active: {
+				true: ["brightness-125"],
+				false: []
 			}
 		}
 	}
 )
 
-interface ButtonProps
+interface IButtonProps
 	extends ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonClasses> {
 }
 
-
-const Button = ({className, variant = "none", ...props}: ButtonProps) => {
+const Button = ({className, variant = "none", active = false, ...props}: IButtonProps) => {
 	const theme = useContext<IThemeContext | null>(ThemeContext)
 	// Apply color theme to button if primary variant
 	const themeClasses: string[] | null = variant === "primary" && theme?.theme ?
@@ -53,7 +56,7 @@ const Button = ({className, variant = "none", ...props}: ButtonProps) => {
 
 	return <HeadlessUiButton
 		className={cn(
-			buttonClasses({variant,}),
+			buttonClasses({variant, active}),
 			className,
 			themeClasses
 		)}
@@ -64,5 +67,5 @@ const Button = ({className, variant = "none", ...props}: ButtonProps) => {
 export default Button
 
 export type {
-	ButtonProps,
+	IButtonProps,
 }

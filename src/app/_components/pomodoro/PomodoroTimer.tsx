@@ -1,4 +1,4 @@
-import Button, {ButtonProps} from "@/app/_components/inputs/Button";
+import Button, {IButtonProps} from "@/app/_components/inputs/Button";
 import {ChevronRightIcon} from "@heroicons/react/16/solid";
 import {secondsToMinutes} from "@/app/_lib/utils/dateTimeUtils";
 import PomodoroStages from "@/app/_lib/constants/PomodoroStages";
@@ -38,7 +38,7 @@ function PomodoroTimer({pomodoroTimer, focusTasksData, handleOpen}: IPomodoroTim
 	const getElapsedSeconds = (remaining: number, total: number) => total - remaining
 
 	const PomodoroButtons = ({state}: { state: PomodoroState }) => {
-		const buttonsMap: { [key: string]: ButtonProps } = {
+		const buttonsMap: { [key: string]: IButtonProps } = {
 			start: {children: "Start", onClick: pomodoroTimer.start, variant: "primary"},
 			resume: {children: "Resume", onClick: pomodoroTimer.resume, variant: "primary"},
 			pause: {children: "Pause", onClick: pomodoroTimer.pause, variant: "glass"},
