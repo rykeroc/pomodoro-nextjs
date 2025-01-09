@@ -14,14 +14,16 @@ import SettingsMenuSections, {
 export default function SettingsDialog({isOpen, onClose}: IDialogMenuProps) {
 	const [section, setSection] = useState(SettingsMenuSections[0])
 
-	const sectionButtons = SettingsMenuSections.map(
-		(s: ISettingsMenuSection, index: number) => (
-			<Button key={index} variant={"none"} onClick={() => setSection(s)}>
+	const sectionButtons = SettingsMenuSections.map((s: ISettingsMenuSection, index: number) => {
+		const isActive = SettingsMenuSections.indexOf(section) === index
+
+		return (
+			<Button key={index} active={isActive} onClick={() => setSection(s)}>
 				{s.icon}
 				{s.title}
 			</Button>
 		)
-	)
+	})
 
 	return (
 		<>
@@ -36,8 +38,7 @@ export default function SettingsDialog({isOpen, onClose}: IDialogMenuProps) {
 							"md:w-full", "xl:w-2/3", "2xl:w-1/2",
 							"duration-300", "ease-in-out",
 							"data-[closed]:translate-x-full", "data-[closed]:opacity-0"
-						)}
-					>
+						)}>
 						<div className={cn("flex", "flex-row", "gap-6", "h-full")}>
 							{/* Hide button */}
 							<div className={cn('h-full', 'flex', 'flex-col', 'justify-center')}>

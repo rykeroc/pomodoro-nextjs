@@ -27,12 +27,16 @@ export default function ProviderButtons() {
 		}
 	]
 
-	const providerButtons = providers.map(p => (
-		<Button key={p.name} onClick={() => signIn(p.name.toLowerCase())} variant={"none"}>
-			<Image src={`/logos/${p.logo}`} alt={p.logoAlt} width={logoSize} height={logoSize}/>
-			<p>Sign in with {p.name}</p>
-		</Button>
-	))
+	const providerButtons = providers.map(p => {
+		const handleSignIn = () => signIn(p.name.toLowerCase())
+
+		return (
+			<Button key={p.name} onClick={handleSignIn}>
+				<Image src={`/logos/${p.logo}`} alt={p.logoAlt} width={logoSize} height={logoSize}/>
+				<p>Continue with {p.name}</p>
+			</Button>
+		)
+	})
 
 	return (
 		<div className={cn("flex", "flex-col", "gap-3")}>
