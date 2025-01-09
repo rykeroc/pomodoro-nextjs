@@ -5,7 +5,7 @@ import Button from "@/app/_components/inputs/Button";
 import {signOut, useSession} from "next-auth/react";
 import {ISettingsMenuSection} from "@/app/_components/TopBarMenus/SettingsDialog/SettingsMenuSections";
 import {User} from "next-auth";
-import ProviderButtons from "@/app/_components/ProviderButtons";
+import LoginProviderButtons from "@/app/_components/LoginProviderButtons";
 import {revalidatePath} from "next/cache";
 
 const AccountSectionContent = () => {
@@ -47,7 +47,7 @@ function SignedOutContent() {
 		<>
 			<p>Sign in with one of the following providers.</p>
 
-			<ProviderButtons/>
+			<LoginProviderButtons/>
 		</>
 	)
 }

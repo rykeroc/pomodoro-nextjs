@@ -11,7 +11,7 @@ interface SocialProvider {
 	logoAlt: string
 }
 
-export default function ProviderButtons() {
+export default function LoginProviderButtons() {
 	const logoSize = 24
 
 	const providers: SocialProvider[] = [
@@ -24,6 +24,11 @@ export default function ProviderButtons() {
 			name: "Google",
 			logo: "google-g.svg",
 			logoAlt: "Google logo"
+		},
+		{
+			name: "Spotify",
+			logo: "spotify-logo.svg",
+			logoAlt: "Spotify logo"
 		}
 	]
 
