@@ -42,6 +42,12 @@ export default function ActiveFocusTasksDialog({isOpen, handleClose, focusTasksD
 						</DialogTitle>
 						<DialogBody className={cn("flex", "flex-col", "w-full", "gap-4", "min-w-96")}>
 
+							{
+								todoTasks.length === 0 && (
+									<p>No focus tasks have been created</p>
+								)
+							}
+
 							{/* Tasks to do */}
 							{
 								todoTasks.length > 0 && (
