@@ -20,11 +20,11 @@ export default function ProviderButtons() {
 			logo: "github-mark.svg",
 			logoAlt: "GitHub logo"
 		},
-		// {
-		// 	name: "Google",
-		// 	logo: "google-g.svg",
-		// 	logoAlt: "Google logo"
-		// }
+		{
+			name: "Google",
+			logo: "google-g.svg",
+			logoAlt: "Google logo"
+		}
 	]
 
 	const providerButtons = providers.map(p => (
@@ -35,7 +35,7 @@ export default function ProviderButtons() {
 	))
 
 	return (
-		<div className={cn("flex", "flex-col", "gap-2")}>
+		<div className={cn("flex", "flex-col", "gap-3")}>
 			{providerButtons}
 		</div>
 	)
