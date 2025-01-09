@@ -3,6 +3,7 @@ import {cn} from "@/app/_lib/utils/cn";
 import FocusQuote from "@/app/_components/FocusQuote";
 import PomodoroComponents from "@/app/_components/pomodoro/PomodoroComponents";
 import TopBarMenus from "@/app/_components/TopBarMenus";
+import SpotifyPlaylistDialog from "@/app/_components/SpotifyPlaylistDialog";
 
 export default async function Page() {
 	return (
@@ -13,7 +14,13 @@ export default async function Page() {
 			)}>
 				<TopBarMenus/>
 				<PomodoroComponents/>
-				<FocusQuote/>
+
+				<div className={cn(
+					"flex", "flex-col", "items-center", "gap-3"
+				)}>
+					<SpotifyPlaylistDialog/>
+					<FocusQuote/>
+				</div>
 			</div>
 
 			<div className={cn(
