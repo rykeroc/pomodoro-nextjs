@@ -4,9 +4,7 @@ import {Montserrat} from 'next/font/google'
 import {cn} from "@/app/_lib/utils/cn";
 import Providers from "@/app/providers";
 import {auth} from "@/auth";
-import {fetchUserPreferences} from "@/app/_lib/actions/userPreferencesActions";
 import {ReactNode} from "react";
-import globalThemes from "@/app/_lib/contexts/theme/globalThemes";
 
 const montserrat = Montserrat({
 	subsets: ['latin'],
@@ -20,13 +18,11 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({children,}: Readonly<{ children: ReactNode; }>) {
 	const session = await auth()
-	const userPreferences = await fetchUserPreferences(session?.user?.id ?? null)
-	const theme = globalThemes.find(t => t.id === userPreferences?.themeId) ?? globalThemes[0]
 
 	return (
 		<html lang="en">
 		<body className={cn(montserrat.className, 'antialiased')}>
-			<Providers initialTheme={theme} initialSession={session}>
+			<Providers initialSession={session}>
 				{children}
 			</Providers>
 		</body>
