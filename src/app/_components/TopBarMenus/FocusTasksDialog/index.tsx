@@ -8,7 +8,7 @@ import AddFocusTaskForm from "@/app/_components/TopBarMenus/FocusTasksDialog/Add
 import {FocusTask} from "@prisma/client";
 import useFocusTasksData from "@/app/_lib/hooks/useFocusTasksData";
 import {useSession} from "next-auth/react";
-import Button from "@/app/_components/inputs/Button";
+import Button from "@/app/_components/Button";
 import {ChevronLeftIcon} from "@heroicons/react/24/solid";
 import {filterCompletedTasks, filterTodoTasks} from "@/app/_lib/utils/focusTasksHelpers";
 import React from "react";

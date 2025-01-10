@@ -1,4 +1,4 @@
-import Button, {IButtonProps} from "@/app/_components/inputs/Button";
+import Button, {IButtonProps} from "@/app/_components/Button";
 import {ChevronRightIcon} from "@heroicons/react/16/solid";
 import {secondsToMinutes} from "@/app/_lib/utils/dateTimeUtils";
 import PomodoroStages from "@/app/_lib/constants/PomodoroStages";
@@ -8,7 +8,7 @@ import PomodoroState from "@/app/_lib/constants/PomodoroState";
 import {useUserPreferences} from "@/app/_lib/theme/IUserPreferencesContext";
 import {IPomodoroTimer} from "@/app/_lib/hooks/usePomodoro";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
-import PomodoroFocusCountIndicators from "@/app/_components/pomodoro/PomodoroFocusCountIndicators";
+import PomodoroFocusCountIndicators from "@/app/_components/PomodoroComponents/PomodoroFocusCountIndicators";
 import {useSession} from "next-auth/react";
 
 interface IPomodoroTimerIndicatorProps {

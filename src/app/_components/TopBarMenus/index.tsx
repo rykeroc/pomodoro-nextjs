@@ -2,7 +2,7 @@
 
 import {cn} from "@/app/_lib/utils/cn";
 import {ReactNode, useState} from "react";
-import Button from "@/app/_components/inputs/Button";
+import Button from "@/app/_components/Button";
 import {Bars3Icon, ListBulletIcon} from "@heroicons/react/24/solid";
 import {cx} from "class-variance-authority";
 import * as React from "react";

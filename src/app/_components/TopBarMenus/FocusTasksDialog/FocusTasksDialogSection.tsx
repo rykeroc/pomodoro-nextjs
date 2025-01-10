@@ -4,7 +4,7 @@ import {FocusTask} from "@prisma/client";
 import {cn} from "@/app/_lib/utils/cn";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 import React, {useRef} from "react";
-import Checkbox from "@/app/_components/inputs/Checkbox";
+import Checkbox from "@/app/_components/Checkbox";
 import Form from "next/form";
 import {XMarkIcon} from "@heroicons/react/24/solid";
 import ErrorMessage from "@/app/_components/ErrorMessage";
