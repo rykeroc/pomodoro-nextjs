@@ -1,16 +1,22 @@
 import {useCallback, useEffect, useRef, useState} from "react";
-import CountdownStatus from "@/app/_lib/constants/CountdownStatus";
 
-interface CounterInfo {
-	remaining: number
-	total: number
-	status: CountdownStatus,
+enum ECountdownStatus {
+	NotStarted = "Not started",
+	Running = "Running",
+	Paused = "Paused",
+	Complete = "Complete"
 }
 
-export interface ICountdown {
+interface ICounterInfo {
 	remaining: number
 	total: number
-	status: CountdownStatus,
+	status: ECountdownStatus,
+}
+
+interface ICountdown {
+	remaining: number
+	total: number
+	status: ECountdownStatus,
 	setOnCompleteAction: (callback: () => void) => void
 	start: (secondsToCount: number) => void
 	pause: () => void
@@ -28,12 +34,12 @@ interface ITimer {
 	pausedAt: number | null
 }
 
-export default function useCountdown(startingSeconds: number, intervalMs = 1000): ICountdown {
+function useCountdown(startingSeconds: number, intervalMs = 1000): ICountdown {
 	// Internal timer information
-	const [countdownInfo, setCountdownInfo] = useState<CounterInfo>({
+	const [countdownInfo, setCountdownInfo] = useState<ICounterInfo>({
 		total: startingSeconds,
 		remaining: startingSeconds,
-		status: CountdownStatus.NotStarted
+		status: ECountdownStatus.NotStarted
 	})
 
 	const timer = useRef<ITimer | null>(null);
@@ -80,7 +86,7 @@ export default function useCountdown(startingSeconds: number, intervalMs = 1000)
 				setCountdownInfo((prev) => ({
 					...prev,
 					remaining: 0,
-					status: CountdownStatus.Complete,
+					status: ECountdownStatus.Complete,
 				}));
 				return;
 			}
@@ -118,7 +124,7 @@ export default function useCountdown(startingSeconds: number, intervalMs = 1000)
 				return {
 					...prev,
 					remaining: 0,
-					status: CountdownStatus.Complete
+					status: ECountdownStatus.Complete
 				}
 			})
 		}
@@ -144,7 +150,7 @@ export default function useCountdown(startingSeconds: number, intervalMs = 1000)
 		setCountdownInfo({
 			total: secondsToCount,
 			remaining: secondsToCount,
-			status: CountdownStatus.Running
+			status: ECountdownStatus.Running
 		})
 	}, [setCountdownInfo, run])
 
@@ -160,7 +166,7 @@ export default function useCountdown(startingSeconds: number, intervalMs = 1000)
 
 		setCountdownInfo(prev => ({
 			...prev,
-			status: CountdownStatus.Paused
+			status: ECountdownStatus.Paused
 		}))
 	}, [setCountdownInfo]);
 
@@ -179,7 +185,7 @@ export default function useCountdown(startingSeconds: number, intervalMs = 1000)
 
 		setCountdownInfo(prev => ({
 			...prev,
-			status: CountdownStatus.Running
+			status: ECountdownStatus.Running
 		}))
 	}, [setCountdownInfo, run])
 
@@ -199,7 +205,7 @@ export default function useCountdown(startingSeconds: number, intervalMs = 1000)
 		setCountdownInfo({
 			total: secondsToCount,
 			remaining: secondsToCount,
-			status: CountdownStatus.NotStarted,
+			status: ECountdownStatus.NotStarted,
 		})
 	}, [setCountdownInfo])
 
@@ -218,4 +224,14 @@ export default function useCountdown(startingSeconds: number, intervalMs = 1000)
 		pause,
 		reset,
 	}
+}
+
+export default useCountdown
+
+export {
+	ECountdownStatus
+}
+
+export type {
+	ICountdown
 }
