@@ -3,7 +3,7 @@
 import {cn} from "@/app/_lib/utils/cn";
 import {glassEffectClasses, IDialogMenuProps} from "@/app/_components/common";
 import {useState} from "react";
-import Button from "@/app/_components/inputs/Button";
+import Button from "@/app/_components/Button";
 import VerticalLine from "@/app/_components/VerticalLine";
 import {ChevronRightIcon} from "@heroicons/react/16/solid";
 import {Dialog, DialogPanel, DialogTitle} from "@headlessui/react";

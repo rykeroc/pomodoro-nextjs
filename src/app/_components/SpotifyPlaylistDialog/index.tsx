@@ -3,7 +3,7 @@
 import {useRef, useState} from "react";
 import {cn} from "@/app/_lib/utils/cn";
 import {cx} from "class-variance-authority";
-import Button from "@/app/_components/inputs/Button";
+import Button from "@/app/_components/Button";
 import * as React from "react";
 import {MusicalNoteIcon} from "@heroicons/react/24/solid";
 import {Dialog, DialogPanel, DialogTitle, Field, Input} from "@headlessui/react";

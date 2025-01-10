@@ -1,6 +1,6 @@
 "use client"
 
-import Button from "@/app/_components/inputs/Button";
+import Button from "@/app/_components/Button";
 import {signIn} from "next-auth/react";
 import Image from "next/image";
 import {cn} from "@/app/_lib/utils/cn";
