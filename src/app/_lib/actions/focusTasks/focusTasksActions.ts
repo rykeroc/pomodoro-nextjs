@@ -85,7 +85,9 @@ async function deleteFocusTask({focusTaskId, userId}: IFocusTaskDeleteArgs): Pro
 		}
 	})
 }
-async function getFocusTasks(userId: string): Promise<FocusTask[]> {
+async function getFocusTasks(userId: string | null): Promise<FocusTask[]> {
+	if (!userId) return [] as FocusTask[]
+
 	return prisma.focusTask.findMany({
 		where: {
 			userId: userId

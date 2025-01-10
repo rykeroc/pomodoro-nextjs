@@ -1,4 +1,4 @@
-import {EBackgroundType, ITheme} from "@/app/_lib/contexts/theme/IThemeContext";
+import {EBackgroundType, ITheme} from "@/app/_lib/theme/ITheme";
 
 const globalThemes: ITheme[] = [
 	{

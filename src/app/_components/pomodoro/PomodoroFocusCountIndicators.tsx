@@ -1,16 +1,15 @@
 import {cn} from "@/app/_lib/utils/cn";
 import {PomodoroValues} from "@/app/_lib/hooks/usePomodoro";
-import {useContext} from "react";
-import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";
+import {useUserPreferences} from "@/app/_lib/theme/IUserPreferencesContext";
 
 interface IIndicatorProps {
 	isActive: boolean
 }
 
 function Indicator({ isActive }: IIndicatorProps) {
-	const themeContext = useContext(ThemeContext)
+	const {theme} = useUserPreferences()
 
-	const backgroundClass = themeContext?.theme.colorClasses.background ?? "bg-background"
+	const backgroundClass = theme.colorClasses.background ?? "bg-background"
 
 	return <div className={cn(
 		"size-2.5", "rounded-full", {

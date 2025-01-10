@@ -1,8 +1,9 @@
-import {EBackgroundType, ITheme, IThemeContext} from "@/app/_lib/contexts/theme/IThemeContext";
-import {useContext} from "react";
-import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";
+import {
+	useUserPreferences
+} from "@/app/_lib/theme/IUserPreferencesContext";
 import ThemeButton from "@/app/_components/TopBarMenus/SettingsDialog/sections/theme/ThemeButton";
 import {cn} from "@/app/_lib/utils/cn";
+import {EBackgroundType, ITheme} from "@/app/_lib/theme/ITheme";
 
 interface IThemeTypeSectionProps {
 	type: EBackgroundType
@@ -11,11 +12,11 @@ interface IThemeTypeSectionProps {
 }
 
 export default function ThemeTypeSection({type, themes, activeTheme}: IThemeTypeSectionProps) {
-	const themeContext = useContext<IThemeContext | null>(ThemeContext)
+	const {setTheme} = useUserPreferences()
 
 	function handleClick(theme: ITheme) {
 		if (activeTheme?.id === theme.id) return
-		themeContext?.setTheme(theme)
+		setTheme(theme)
 	}
 
 	const themeButtons = themes.map((theme, index) => {

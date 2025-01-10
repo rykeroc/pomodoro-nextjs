@@ -73,9 +73,12 @@ interface ISignedInContentProps {
 function SignedInContent({userId}: ISignedInContentProps) {
 	const focusTasksData = useFocusTasksData(userId)
 
-	const todoTasks: FocusTask[] = filterTodoTasks(focusTasksData.query.data ?? [])
+	const {
+		data: tasks
+	} = focusTasksData.query
 
-	const completedTasks: FocusTask[] = filterCompletedTasks(focusTasksData.query.data ?? [])
+	const todoTasks: FocusTask[] = filterTodoTasks(tasks ?? [])
+	const completedTasks: FocusTask[] = filterCompletedTasks(tasks ?? [])
 
 	return (
 		<>

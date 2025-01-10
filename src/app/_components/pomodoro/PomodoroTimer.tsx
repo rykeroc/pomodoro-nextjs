@@ -5,8 +5,7 @@ import PomodoroStages from "@/app/_lib/constants/PomodoroStages";
 import {cn} from "@/app/_lib/utils/cn";
 import {glassEffectClasses} from "@/app/_components/common";
 import PomodoroState from "@/app/_lib/constants/PomodoroState";
-import {useContext} from "react";
-import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";
+import {useUserPreferences} from "@/app/_lib/theme/IUserPreferencesContext";
 import {IPomodoroTimer} from "@/app/_lib/hooks/usePomodoro";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 import PomodoroFocusCountIndicators from "@/app/_components/pomodoro/PomodoroFocusCountIndicators";
@@ -86,9 +85,8 @@ function PomodoroTimer({pomodoroTimer, focusTasksData, handleOpen}: IPomodoroTim
 	const dashOffset = dashArray - (dashArray * percentage) / 100
 	const minutesString = secondsToMinutes(remainingSeconds)
 
-	const themeContext = useContext(ThemeContext)
-	const strokeClass = themeContext?.theme.colorClasses.stroke
-		? themeContext?.theme.colorClasses.stroke : "stroke-primary-text"
+	const {theme} = useUserPreferences()
+	const strokeClass = theme.colorClasses.stroke ?? "stroke-primary-text"
 
 
 	return (

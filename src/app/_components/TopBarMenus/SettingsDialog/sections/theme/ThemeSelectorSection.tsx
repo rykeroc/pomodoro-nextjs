@@ -1,17 +1,18 @@
 import {PaintBrushIcon} from "@heroicons/react/24/solid";
-import {useContext} from "react";
-import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";
-import {EBackgroundType, ITheme, IThemeContext} from "@/app/_lib/contexts/theme/IThemeContext";
 import {ISettingsMenuSection} from "@/app/_components/TopBarMenus/SettingsDialog/SettingsMenuSections";
 import ThemeTypeSection from "@/app/_components/TopBarMenus/SettingsDialog/sections/theme/ThemeTypeSection";
+import {EBackgroundType, ITheme} from "@/app/_lib/theme/ITheme";
+import {
+	useUserPreferences
+} from "@/app/_lib/theme/IUserPreferencesContext";
+import globalThemes from "@/app/_lib/theme/globalThemes";
 
 type TypeThemes = { [type in EBackgroundType]: ITheme[] }
 
 function ThemeSelectorContent() {
-	const themeContext = useContext<IThemeContext | null>(ThemeContext)
-	const activeTheme: ITheme | undefined = themeContext?.theme
+	const {theme} = useUserPreferences()
 
-	const availableThemesByType = (themeContext?.globalThemes ?? []).reduce((acc, curr) => {
+	const availableThemesByType = (globalThemes ?? []).reduce((acc, curr) => {
 		if (!acc[curr.backgroundType])
 			acc[curr.backgroundType] = []
 		acc[curr.backgroundType].push(curr)
@@ -23,7 +24,7 @@ function ThemeSelectorContent() {
 			key={key}
 			type={EBackgroundType[key as keyof typeof EBackgroundType]}
 			themes={value}
-			activeTheme={activeTheme}
+			activeTheme={theme}
 		/>
 	))
 }

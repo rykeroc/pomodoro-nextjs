@@ -13,9 +13,13 @@ interface IFocusTasksDialogProps {
 }
 
 export default function ActiveFocusTasksDialog({isOpen, handleClose, focusTasksData}: IFocusTasksDialogProps) {
-	const todoTasks: FocusTask[] = filterTodoTasks(focusTasksData.query.data ?? [])
+	const {
+		data: tasks = []
+	} = focusTasksData.query
 
-	const completedTasks: FocusTask[] = filterCompletedTasks(focusTasksData.query.data ?? [])
+	const todoTasks: FocusTask[] = filterTodoTasks(tasks ?? [])
+
+	const completedTasks: FocusTask[] = filterCompletedTasks(tasks ?? [])
 
 	return (
 		<Dialog open={isOpen} as={"div"} onClose={handleClose}>

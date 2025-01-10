@@ -1,7 +1,7 @@
 "use client"
 
 import {cn} from "@/app/_lib/utils/cn";
-import useQuoteQuery from "@/app/_lib/hooks/useQuoteQuery";
+import useQuoteQuery from "@/app/_lib/react-query/queries/useQuoteQuery";
 
 export default function FocusQuote() {
 	const quoteQuery = useQuoteQuery()
