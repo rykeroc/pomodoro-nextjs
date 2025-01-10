@@ -1,5 +1,5 @@
 import {useContext} from "react";
-import UserPreferencesContext from "@/app/_lib/theme/IUserPreferencesContext";
+import UserPreferencesContext from "@/app/_providers/UserPreferencesProvider";
 
 const useUserPreferences = () => {
 	const context = useContext(UserPreferencesContext)

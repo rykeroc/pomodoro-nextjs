@@ -8,7 +8,7 @@ import getQueryClient from "@/app/_lib/react-query/getQueryClient";
 import {dehydrate, HydrationBoundary,} from "@tanstack/react-query";
 import QueryProvider from "@/app/_components/QueryProvider";
 import prefetchUserPreferencesQuery from "@/app/_lib/react-query/prefetch-queries/prefetchUserPreferencesQuery";
-import {UserPreferencesProvider} from "@/app/_lib/theme/IUserPreferencesContext";
+import {UserPreferencesProvider} from "@/app/_providers/UserPreferencesProvider";
 import {SessionProvider} from "next-auth/react";
 
 const montserrat = Montserrat({
