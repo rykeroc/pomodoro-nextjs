@@ -106,6 +106,8 @@ function DialogContent() {
 
 	return (
 		<>
+			<EmbeddedSpotifyPlaylist playlistUrl={playlistUrl}/>
+
 			<Form action={handleFormSubmit}>
 				<Field className={cn(
 					"flex", "flex-col", "gap-1"
@@ -135,8 +137,6 @@ function DialogContent() {
 
 				<Input type={"submit"} hidden/>
 			</Form>
-
-			<EmbeddedSpotifyPlaylist playlistUrl={playlistUrl}/>
 		</>
 	)
 }
