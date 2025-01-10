@@ -1,14 +1,14 @@
-import ThemeBackground from "@/app/_components/ThemeBackground";
-import {cn} from "@/app/_lib/utils/cn";
-import FocusQuote from "@/app/_components/FocusQuote";
-import PomodoroComponents from "@/app/_components/PomodoroComponents";
-import TopBarMenus from "@/app/_components/TopBarMenus";
-import SpotifyPlaylistDialog from "@/app/_components/SpotifyPlaylistDialog";
-import getQueryClient from "@/app/_lib/react-query/getQueryClient";
+import ThemeBackground from "@/components/feature/theme/ThemeBackground";
+import {cn} from "@/lib/cn";
+import FocusQuote from "@/components/feature/focus-quote/FocusQuote";
+import PomodoroComponents from "@/components/feature/pomodoro/PomodoroComponents";
+import TopBarMenus from "@/components/layout/TopBarMenus";
+import SpotifyPlaylistDialog from "@/components/feature/music/SpotifyPlaylistDialog";
+import getQueryClient from "@/lib/react-query/getQueryClient";
 import {dehydrate, HydrationBoundary} from "@tanstack/react-query";
-import prefetchQuotesQuery from "@/app/_lib/react-query/prefetch-queries/prefetchQuotesQuery";
-import {auth} from "@/auth";
-import prefetchFocusTasksQuery from "@/app/_lib/react-query/prefetch-queries/prefetchFocusTasksQuery";
+import prefetchQuotesQuery from "@/lib/react-query/prefetch-queries/prefetchQuotesQuery";
+import {auth} from "@/lib/auth";
+import prefetchFocusTasksQuery from "@/lib/react-query/prefetch-queries/prefetchFocusTasksQuery";
 
 export default async function Page() {
 	const session = await auth()
