@@ -58,9 +58,10 @@ model User {
 }
 
 model UserPreference {
-  id      String @id @default(cuid())
-  userId  String @unique @map("user_id")
-  themeId Int    @default(1)
+  id              String  @id @default(cuid())
+  userId          String  @unique @map("user_id")
+  themeId         Int     @default(1)
+  lastPlaylistUrl String?
 
   user User @relation(fields: [userId], references: [id])
 
