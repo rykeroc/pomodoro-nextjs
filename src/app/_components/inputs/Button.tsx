@@ -1,12 +1,11 @@
 "use client"
 
 import {Button as HeadlessUiButton} from "@headlessui/react";
-import {ButtonHTMLAttributes, useContext,} from "react";
+import {ButtonHTMLAttributes, } from "react";
 import {fadeTransitionClasses, glassEffectClasses} from "@/app/_components/common";
 import {cva, VariantProps} from "class-variance-authority";
 import {cn} from "@/app/_lib/utils/cn";
-import {IThemeContext} from "@/app/_lib/contexts/theme/IThemeContext";
-import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";
+import {useUserPreferences} from "@/app/_lib/theme/IUserPreferencesContext";
 
 const buttonClasses = cva(
 	[
@@ -49,10 +48,10 @@ interface IButtonProps
 }
 
 const Button = ({className, variant = "none", active = false, ...props}: IButtonProps) => {
-	const theme = useContext<IThemeContext | null>(ThemeContext)
+	const {theme} = useUserPreferences()
 	// Apply color theme to button if primary variant
-	const themeClasses: string[] | null = variant === "primary" && theme?.theme ?
-		[theme.theme.colorClasses.background, theme.theme.colorClasses.border] : null
+	const themeClasses: string[] | null = variant === "primary" ?
+		[theme.colorClasses.background, theme.colorClasses.border] : null
 
 	return <HeadlessUiButton
 		className={cn(

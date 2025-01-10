@@ -12,6 +12,7 @@ import Form from "next/form";
 import ErrorMessage from "@/app/_components/ErrorMessage";
 import EmbeddedSpotifyPlaylist from "@/app/_components/SpotifyPlaylistDialog/EmbeddedSpotifyPlaylist";
 import {validatePlaylistUrl} from "@/app/_components/SpotifyPlaylistDialog/utils";
+import {useUserPreferences} from "@/app/_lib/theme/IUserPreferencesContext";
 
 export default function SpotifyPlaylistDialog() {
 	// Focus Tasks menu dialog handlers
@@ -59,7 +60,6 @@ export default function SpotifyPlaylistDialog() {
 }
 
 interface IFormState {
-	playlistUrl: string | null
 	error: string | null
 }
 
@@ -69,35 +69,39 @@ function DialogContent() {
 		if (inputRef.current) inputRef.current.blur()
 	}
 
+	const {
+		playlistUrl,
+		setPlaylistUrl
+	} = useUserPreferences()
+
 	const [formState, setFormState] = useState<IFormState>({
-		playlistUrl: null,
 		error: null
 	})
 
 	function handleFormSubmit(formData: FormData) {
 		const url = formData.get("url")
 		if (!url) {
-			setFormState(prev => ({
-				...prev,
+			setFormState({
 				error: "Please enter a Spotify playlist URL"
-			}))
+			})
 			return
 		}
 
-		const isValidUrl = validatePlaylistUrl(url as string)
+		const urlString = url.toString()
+		const isValidUrl = validatePlaylistUrl(urlString)
 		if (!isValidUrl) {
-			setFormState(prev => ({
-				...prev,
+			setFormState({
 				error: "Please enter a valid Spotify playlist URL"
-			}))
+			})
 			return
 		}
 
 		setFormState({
 			error: null,
-			playlistUrl: url as string
 		})
 		handleBlur()
+
+		setPlaylistUrl(urlString)
 	}
 
 	return (
@@ -132,7 +136,7 @@ function DialogContent() {
 				<Input type={"submit"} hidden/>
 			</Form>
 
-			<EmbeddedSpotifyPlaylist playlistUrl={formState.playlistUrl}/>
+			<EmbeddedSpotifyPlaylist playlistUrl={playlistUrl}/>
 		</>
 	)
 }

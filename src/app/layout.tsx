@@ -2,9 +2,14 @@ import type {Metadata} from "next";
 import "./globals.css";
 import {Montserrat} from 'next/font/google'
 import {cn} from "@/app/_lib/utils/cn";
-import Providers from "@/app/providers";
 import {auth} from "@/auth";
 import {ReactNode} from "react";
+import getQueryClient from "@/app/_lib/react-query/getQueryClient";
+import {dehydrate, HydrationBoundary,} from "@tanstack/react-query";
+import QueryProvider from "@/app/_components/QueryProvider";
+import prefetchUserPreferencesQuery from "@/app/_lib/react-query/prefetch-queries/prefetchUserPreferencesQuery";
+import {UserPreferencesProvider} from "@/app/_lib/theme/IUserPreferencesContext";
+import {SessionProvider} from "next-auth/react";
 
 const montserrat = Montserrat({
 	subsets: ['latin'],
@@ -18,13 +23,25 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({children,}: Readonly<{ children: ReactNode; }>) {
 	const session = await auth()
+	const userId = session?.user?.id ?? null
+
+	const queryClient = getQueryClient()
+	await prefetchUserPreferencesQuery(queryClient, userId)
 
 	return (
 		<html lang="en">
 		<body className={cn(montserrat.className, 'antialiased')}>
-			<Providers initialSession={session}>
-				{children}
-			</Providers>
+
+		<QueryProvider>
+			<HydrationBoundary state={dehydrate(queryClient)}>
+				<SessionProvider session={session}>
+					<UserPreferencesProvider>
+						{children}
+					</UserPreferencesProvider>
+				</SessionProvider>
+			</HydrationBoundary>
+		</QueryProvider>
+
 		</body>
 		</html>
 	);

@@ -9,7 +9,7 @@ enum EBackgroundType {
 	Static, Live
 }
 
-interface ITheme {
+interface ITheme{
 	id: number
 	themeName: string
 	thumbnail: string
@@ -19,18 +19,10 @@ interface ITheme {
 	colorClasses: IColorClasses
 }
 
-interface IThemeContext {
-	theme: ITheme
-	setTheme: (theme: ITheme) => void
-	error: string | null
-	globalThemes: ITheme[]
-}
-
 export {
 	EBackgroundType,
 }
 
 export type {
 	ITheme,
-	IThemeContext
 }
