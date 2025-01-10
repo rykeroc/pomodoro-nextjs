@@ -4,10 +4,9 @@ import PomodoroStages, {PomodoroStageInfo} from "@/app/_lib/constants/PomodoroSt
 import useFocusTasksData, {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 import {FocusTask} from "@prisma/client";
 import {IFocusTaskUpdateArgs} from "@/app/_lib/actions/focusTasks/types";
-import useCountdown from "@/app/_lib/hooks/useCountdown";
+import useCountdown, {ECountdownStatus} from "@/app/_lib/hooks/useCountdown";
 import {IUseDocumentTitle, useDocumentTitle} from "@/app/_lib/hooks/useDocumentTitle";
 import {secondsToMinutes} from "@/app/_lib/utils/dateTimeUtils";
-import CountdownStatus from "@/app/_lib/constants/CountdownStatus";
 
 interface PomodoroInfo {
 	state: PomodoroState
@@ -120,7 +119,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 	// Start a focus session
 	const startFocus = useCallback(() => {
 		countdown.start(PomodoroStages.focusSession.seconds)
-		// Update pomodoro state to running
+		// Update PomodoroComponents state to running
 		setPomodoroInfo(prev => (
 			{
 				...prev,
@@ -133,7 +132,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 	// Pause the current focus session
 	const pauseFocus = useCallback(() => {
 		countdown.pause()
-		// Update pomodoro state to paused
+		// Update PomodoroComponents state to paused
 		setPomodoroInfo(prev => (
 			{
 				...prev,
@@ -145,7 +144,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 	// Pause the current focus session
 	const resumeFocus = useCallback(() => {
 		countdown.resume()
-		// Update pomodoro state to paused
+		// Update PomodoroComponents state to paused
 		setPomodoroInfo(prev => (
 			{
 				...prev,
@@ -187,7 +186,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 	}, [countdown, onBreakComplete])
 
 	const getTitle = useCallback((): string | null => {
-		if (countdown.status !== CountdownStatus.Running || countdown.remaining <= 0) return null
+		if (countdown.status !== ECountdownStatus.Running || countdown.remaining <= 0) return null
 		const minutesString = secondsToMinutes(countdown.remaining)
 		return `${pomodoroInfo.stage.name} - ${minutesString}`
 	}, [pomodoroInfo.stage, countdown])
