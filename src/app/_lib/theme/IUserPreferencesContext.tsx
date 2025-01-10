@@ -1,6 +1,6 @@
 "use client"
 
-import {createContext, ReactNode, useContext, useState} from "react";
+import {createContext, ReactNode, useState} from "react";
 import {useSession} from "next-auth/react";
 import useUpsertUserPreferencesMutation from "@/app/_lib/react-query/mutations/useUpsertUserPreferencesMutation";
 import {IUpsertUserPreferences} from "@/app/_lib/actions/userPreferences/types";
@@ -18,15 +18,6 @@ interface IUserPreferencesContext {
 }
 
 const UserPreferencesContext = createContext<IUserPreferencesContext>(null!)
-
-const useUserPreferences = () => {
-	const context = useContext(UserPreferencesContext)
-	if (!context) {
-		throw new Error("useUserPreferences must be used within a UserPreferencesProvider")
-	}
-
-	return context
-}
 
 interface IUserPreferencesProviderProps {
 	children: ReactNode
@@ -112,7 +103,6 @@ const UserPreferencesProvider = (
 export default UserPreferencesContext
 
 export {
-	useUserPreferences,
 	UserPreferencesProvider
 }
 

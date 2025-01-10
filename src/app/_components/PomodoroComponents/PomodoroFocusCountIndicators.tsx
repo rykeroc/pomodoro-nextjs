@@ -1,6 +1,6 @@
 import {cn} from "@/app/_lib/utils/cn";
 import {PomodoroValues} from "@/app/_lib/hooks/usePomodoro";
-import {useUserPreferences} from "@/app/_lib/theme/IUserPreferencesContext";
+import useUserPreferences from "@/app/_lib/hooks/useUserPreferences";
 
 interface IIndicatorProps {
 	isActive: boolean

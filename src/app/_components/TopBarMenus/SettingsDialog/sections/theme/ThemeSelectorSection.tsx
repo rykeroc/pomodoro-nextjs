@@ -2,10 +2,9 @@ import {PaintBrushIcon} from "@heroicons/react/24/solid";
 import {ISettingsMenuSection} from "@/app/_components/TopBarMenus/SettingsDialog/SettingsMenuSections";
 import ThemeTypeSection from "@/app/_components/TopBarMenus/SettingsDialog/sections/theme/ThemeTypeSection";
 import {EBackgroundType, ITheme} from "@/app/_lib/theme/ITheme";
-import {
-	useUserPreferences
-} from "@/app/_lib/theme/IUserPreferencesContext";
+
 import globalThemes from "@/app/_lib/theme/globalThemes";
+import useUserPreferences from "@/app/_lib/hooks/useUserPreferences";
 
 type TypeThemes = { [type in EBackgroundType]: ITheme[] }
 
