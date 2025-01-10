@@ -1,6 +1,4 @@
 import {useCallback, useEffect, useState} from "react";
-import PomodoroState from "@/app/_lib/constants/PomodoroState";
-import PomodoroStages, {PomodoroStageInfo} from "@/app/_lib/constants/PomodoroStages";
 import useFocusTasksData, {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 import {FocusTask} from "@prisma/client";
 import {IFocusTaskUpdateArgs} from "@/app/_lib/actions/focusTasks/types";
@@ -8,18 +6,49 @@ import useCountdown, {ECountdownStatus} from "@/app/_lib/hooks/useCountdown";
 import {IUseDocumentTitle, useDocumentTitle} from "@/app/_lib/hooks/useDocumentTitle";
 import {secondsToMinutes} from "@/app/_lib/utils/dateTimeUtils";
 
-interface PomodoroInfo {
-	state: PomodoroState
-	stage: PomodoroStageInfo
+type PomodoroStage = "focusSession" | "shortBreak" | "longBreak"
+
+interface IPomodoroStageInfo {
+	name: string
+	seconds: number
+}
+
+enum EPomodoroState {
+	FocusPending = "Focus Pending",
+	FocusRunning = "Focus Running",
+	FocusPaused = "Focus Paused",
+	FocusComplete = "Focus Complete",
+	ShortBreakRunning = "Short Break Running",
+	LongBreakRunning = "Long Break Running",
+}
+
+const PomodoroStages: { [key in PomodoroStage]: IPomodoroStageInfo } = {
+	focusSession: {
+		name: 'Focus',
+		seconds: 25 * 60
+	},
+	shortBreak: {
+		name: 'Short Break',
+		seconds: 5 * 60
+	},
+	longBreak: {
+		name: 'Long Break',
+		seconds: 15 * 60
+	},
+}
+
+interface IPomodoroInfo {
+	state: EPomodoroState
+	stage: IPomodoroStageInfo
 	focusCount: number
 }
 
-export interface IPomodoroTimer {
+interface IPomodoroTimer {
 	focusCount: number
 	remaining: number
 	total: number
-	stage: PomodoroStageInfo,
-	state: PomodoroState,
+	stage: IPomodoroStageInfo,
+	state: EPomodoroState,
 	relax: () => void
 	start: () => void
 	pause: () => void
@@ -28,16 +57,16 @@ export interface IPomodoroTimer {
 	skip: () => void
 }
 
-export interface IPomodoro extends IPomodoroTimer, IFocusTasksData {
+interface IPomodoro extends IPomodoroTimer, IFocusTasksData {
 }
 
-export const PomodoroValues = {
+const PomodoroValues = {
 	maxFocusCount: 4
 }
 
-export default function usePomodoro(userId: string): IPomodoro {
-	const [pomodoroInfo, setPomodoroInfo] = useState<PomodoroInfo>({
-		state: PomodoroState.FocusPending,
+function usePomodoro(userId: string): IPomodoro {
+	const [pomodoroInfo, setPomodoroInfo] = useState<IPomodoroInfo>({
+		state: EPomodoroState.FocusPending,
 		stage: PomodoroStages.focusSession,
 		focusCount: 0
 	})
@@ -83,7 +112,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 		updateActiveTask()
 		setPomodoroInfo(prev => ({
 			focusCount: prev.focusCount + 1,
-			state: PomodoroState.FocusComplete,
+			state: EPomodoroState.FocusComplete,
 			stage: PomodoroStages.focusSession
 		}))
 	}, [setPomodoroInfo, updateActiveTask])
@@ -96,7 +125,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 
 			return {
 				...prev,
-				state: PomodoroState.FocusPending,
+				state: EPomodoroState.FocusPending,
 				stage: PomodoroStages.focusSession
 			}
 		})
@@ -105,7 +134,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 	const onCompleteAction = useCallback(() => {
 		console.log("onCompleteAction")
 
-		if (pomodoroInfo.state === PomodoroState.FocusRunning)
+		if (pomodoroInfo.state === EPomodoroState.FocusRunning)
 			onFocusComplete()
 		else
 			onBreakComplete()
@@ -124,7 +153,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 			{
 				...prev,
 				stage: PomodoroStages.focusSession,
-				state: PomodoroState.FocusRunning
+				state: EPomodoroState.FocusRunning
 			}
 		))
 	}, [countdown, setPomodoroInfo])
@@ -136,7 +165,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 		setPomodoroInfo(prev => (
 			{
 				...prev,
-				state: PomodoroState.FocusPaused
+				state: EPomodoroState.FocusPaused
 			}
 		))
 	}, [countdown, setPomodoroInfo])
@@ -148,7 +177,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 		setPomodoroInfo(prev => (
 			{
 				...prev,
-				state: PomodoroState.FocusRunning
+				state: EPomodoroState.FocusRunning
 			}
 		))
 	}, [countdown, setPomodoroInfo])
@@ -163,7 +192,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 		setPomodoroInfo(({
 			focusCount: 0,
 			stage: PomodoroStages.focusSession,
-			state: PomodoroState.FocusPending
+			state: EPomodoroState.FocusPending
 		}))
 	}, [pomodoroInfo.stage, updateActiveTask, countdown, setPomodoroInfo])
 
@@ -175,7 +204,7 @@ export default function usePomodoro(userId: string): IPomodoro {
 			{
 				...prev,
 				stage: isLongBreak ? PomodoroStages.longBreak : PomodoroStages.shortBreak,
-				state: isLongBreak ? PomodoroState.LongBreakRunning : PomodoroState.ShortBreakRunning
+				state: isLongBreak ? EPomodoroState.LongBreakRunning : EPomodoroState.ShortBreakRunning
 			}
 		))
 	}, [pomodoroInfo.focusCount, countdown, setPomodoroInfo])
@@ -208,4 +237,18 @@ export default function usePomodoro(userId: string): IPomodoro {
 		relax: startBreak,
 		skip: skipBreak,
 	}
+}
+
+export default usePomodoro
+
+export {
+	PomodoroStages,
+	EPomodoroState,
+	PomodoroValues
+}
+
+export type {
+	IPomodoroStageInfo,
+	IPomodoroTimer,
+	IPomodoro
 }

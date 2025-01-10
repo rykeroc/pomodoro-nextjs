@@ -1,12 +1,10 @@
 import Button, {IButtonProps} from "@/app/_components/Button";
 import {ChevronRightIcon} from "@heroicons/react/16/solid";
 import {secondsToMinutes} from "@/app/_lib/utils/dateTimeUtils";
-import PomodoroStages from "@/app/_lib/constants/PomodoroStages";
 import {cn} from "@/app/_lib/utils/cn";
 import {glassEffectClasses} from "@/app/_components/common";
-import PomodoroState from "@/app/_lib/constants/PomodoroState";
 import {useUserPreferences} from "@/app/_lib/theme/IUserPreferencesContext";
-import {IPomodoroTimer} from "@/app/_lib/hooks/usePomodoro";
+import {IPomodoroTimer, PomodoroStages, EPomodoroState} from "@/app/_lib/hooks/usePomodoro";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 import PomodoroFocusCountIndicators from "@/app/_components/PomodoroComponents/PomodoroFocusCountIndicators";
 import {useSession} from "next-auth/react";
@@ -36,7 +34,7 @@ function PomodoroTimer({pomodoroTimer, focusTasksData, handleOpen}: IPomodoroTim
 
 	const getElapsedSeconds = (remaining: number, total: number) => total - remaining
 
-	const PomodoroButtons = ({state}: { state: PomodoroState }) => {
+	const PomodoroButtons = ({state}: { state: EPomodoroState }) => {
 		const buttonsMap: { [key: string]: IButtonProps } = {
 			start: {children: "Start", onClick: pomodoroTimer.start, variant: "primary"},
 			resume: {children: "Resume", onClick: pomodoroTimer.resume, variant: "primary"},
@@ -48,16 +46,16 @@ function PomodoroTimer({pomodoroTimer, focusTasksData, handleOpen}: IPomodoroTim
 
 		const selectedButtons = []
 		switch (state) {
-			case PomodoroState.FocusPending:
+			case EPomodoroState.FocusPending:
 				selectedButtons.push(buttonsMap.start)
 				break
-			case PomodoroState.FocusRunning:
+			case EPomodoroState.FocusRunning:
 				selectedButtons.push(buttonsMap.pause)
 				break
-			case PomodoroState.FocusPaused:
+			case EPomodoroState.FocusPaused:
 				selectedButtons.push(buttonsMap.resume, buttonsMap.finish)
 				break
-			case PomodoroState.FocusComplete:
+			case EPomodoroState.FocusComplete:
 				selectedButtons.push(buttonsMap.relax, buttonsMap.skip)
 				break
 			default:
