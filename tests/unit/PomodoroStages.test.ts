@@ -1,5 +1,5 @@
 import {describe, expect, test} from "@jest/globals";
-import {PomodoroStages} from "../../src/app/_lib/hooks/usePomodoro";
+import {PomodoroStages} from "@/hooks/usePomodoro";
 
 /*
 Tests to ensure that each stage has the proper duration.

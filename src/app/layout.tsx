@@ -1,14 +1,14 @@
 import type {Metadata} from "next";
 import "./globals.css";
 import {Montserrat} from 'next/font/google'
-import {cn} from "@/app/_lib/utils/cn";
-import {auth} from "@/auth";
+import {cn} from "@/lib/cn";
+import {auth} from "@/lib/auth";
 import {ReactNode} from "react";
-import getQueryClient from "@/app/_lib/react-query/getQueryClient";
+import getQueryClient from "@/lib/react-query/getQueryClient";
 import {dehydrate, HydrationBoundary,} from "@tanstack/react-query";
-import QueryProvider from "@/app/_components/QueryProvider";
-import prefetchUserPreferencesQuery from "@/app/_lib/react-query/prefetch-queries/prefetchUserPreferencesQuery";
-import {UserPreferencesProvider} from "@/app/_providers/UserPreferencesProvider";
+import QueryProvider from "@/providers/QueryProvider";
+import prefetchUserPreferencesQuery from "@/lib/react-query/prefetch-queries/prefetchUserPreferencesQuery";
+import {UserPreferencesProvider} from "@/providers/UserPreferencesProvider";
 import {SessionProvider} from "next-auth/react";
 
 const montserrat = Montserrat({

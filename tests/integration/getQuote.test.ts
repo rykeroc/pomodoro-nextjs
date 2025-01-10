@@ -1,5 +1,5 @@
 import {describe, expect, test} from "@jest/globals";
-import getQuote from "../../src/app/_lib/actions/getQuote";
+import getQuote from "@/lib/actions/getQuote";
 
 describe.skip("getQuote action", () => {
 
