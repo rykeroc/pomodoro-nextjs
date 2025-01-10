@@ -1,9 +1,7 @@
-import {
-	useUserPreferences
-} from "@/app/_lib/theme/IUserPreferencesContext";
 import ThemeButton from "@/app/_components/TopBarMenus/SettingsDialog/sections/theme/ThemeButton";
 import {cn} from "@/app/_lib/utils/cn";
 import {EBackgroundType, ITheme} from "@/app/_lib/theme/ITheme";
+import useUserPreferences from "@/app/_lib/hooks/useUserPreferences";
 
 interface IThemeTypeSectionProps {
 	type: EBackgroundType

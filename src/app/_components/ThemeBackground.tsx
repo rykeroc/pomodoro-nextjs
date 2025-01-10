@@ -2,8 +2,8 @@
 
 import {cn} from "@/app/_lib/utils/cn";
 import {ReactElement, } from "react";
-import {useUserPreferences} from "@/app/_lib/theme/IUserPreferencesContext";
 import {EBackgroundType, ITheme} from "@/app/_lib/theme/ITheme";
+import useUserPreferences from "@/app/_lib/hooks/useUserPreferences";
 
 type Dimensions = [width: number, height: number]
 const backgroundDimensions: Dimensions = [3840, 2160]

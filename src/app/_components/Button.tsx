@@ -5,7 +5,7 @@ import {ButtonHTMLAttributes, } from "react";
 import {fadeTransitionClasses, glassEffectClasses} from "@/app/_components/common";
 import {cva, VariantProps} from "class-variance-authority";
 import {cn} from "@/app/_lib/utils/cn";
-import {useUserPreferences} from "@/app/_lib/theme/IUserPreferencesContext";
+import useUserPreferences from "@/app/_lib/hooks/useUserPreferences";
 
 const buttonClasses = cva(
 	[

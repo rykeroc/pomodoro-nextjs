@@ -3,11 +3,11 @@ import {ChevronRightIcon} from "@heroicons/react/16/solid";
 import {secondsToMinutes} from "@/app/_lib/utils/dateTimeUtils";
 import {cn} from "@/app/_lib/utils/cn";
 import {glassEffectClasses} from "@/app/_components/common";
-import {useUserPreferences} from "@/app/_lib/theme/IUserPreferencesContext";
 import {IPomodoroTimer, PomodoroStages, EPomodoroState} from "@/app/_lib/hooks/usePomodoro";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 import PomodoroFocusCountIndicators from "@/app/_components/PomodoroComponents/PomodoroFocusCountIndicators";
 import {useSession} from "next-auth/react";
+import useUserPreferences from "@/app/_lib/hooks/useUserPreferences";
 
 interface IPomodoroTimerIndicatorProps {
 	pomodoroTimer: IPomodoroTimer

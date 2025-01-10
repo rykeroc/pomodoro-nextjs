@@ -12,7 +12,7 @@ import Form from "next/form";
 import ErrorMessage from "@/app/_components/ErrorMessage";
 import EmbeddedSpotifyPlaylist from "@/app/_components/SpotifyPlaylistDialog/EmbeddedSpotifyPlaylist";
 import {validatePlaylistUrl} from "@/app/_components/SpotifyPlaylistDialog/utils";
-import {useUserPreferences} from "@/app/_lib/theme/IUserPreferencesContext";
+import useUserPreferences from "@/app/_lib/hooks/useUserPreferences";
 
 export default function SpotifyPlaylistDialog() {
 	// Focus Tasks menu dialog handlers
