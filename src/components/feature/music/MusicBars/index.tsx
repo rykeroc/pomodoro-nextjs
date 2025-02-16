@@ -40,6 +40,7 @@ function MusicBar({heightsList}: MusicBarProps) {
 
 interface MusicBarsProps {
   isPlaying: boolean
+  className?: string
 }
 export default function MusicBars({isPlaying}: MusicBarsProps) {
   const barHeights = isPlaying ? [
