@@ -8,6 +8,9 @@ import {cx} from "class-variance-authority";
 import * as React from "react";
 import FocusTasksDialog from "@/components/feature/focus-tasks/FocusTasksDialog";
 import SettingsDialog from "@/components/feature/settings/SettingsDialog";
+import MusicBars from "@/components/feature/music/MusicBars";
+import useSpotifyState from "@/hooks/useSpotifyEmbedState";
+import SpotifyPlaylistDialog from "@/components/feature/music/SpotifyPlaylistDialog";
 
 interface TopBarButtons {
 	isOpen: boolean
@@ -21,6 +24,14 @@ export default function TopBarMenus() {
 	const closeTasks = () => setIsTasksOpen(false)
 	const openTasks = () => setIsTasksOpen(true)
 
+	// Spotify menu dialog handlers
+	const [isSpotifyOpen, setIsSpotifyOpen] = useState(false)
+	const closeSpotify = () => setIsSpotifyOpen(false)
+	const openSpotify = () => setIsSpotifyOpen(true)
+	const {
+		isPlaying,
+	} = useSpotifyState()
+
 	// Settings menu dialog handlers
 	const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 	const closeSettings = () => setIsSettingsOpen(false)
@@ -33,14 +44,22 @@ export default function TopBarMenus() {
 			isOpen: isTasksOpen,
 			onClick: openTasks,
 			icon: <ListBulletIcon className={cn(iconClasses)}/>
-
+		},
+		// Spotify menu
+		{
+			isOpen: isSpotifyOpen,
+			onClick: openSpotify,
+			icon: (
+				<div className={cn('flex', 'flex-row', 'items-center', 'justify-center', 'gap-1', 'h-6')}>
+					<MusicBars isPlaying={isPlaying}/>
+				</div>)
 		},
 		// Settings menu
 		{
 			isOpen: isSettingsOpen,
 			onClick: openSettings,
 			icon: <Bars3Icon className={cn(iconClasses)}/>
-		}
+		},
 	]
 
 	const topBarButtons = topBarButtonsList.map((item, index) => (
@@ -63,6 +82,7 @@ export default function TopBarMenus() {
 			{topBarButtons}
 
 			<FocusTasksDialog isOpen={isTasksOpen} onClose={closeTasks}/>
+			<SpotifyPlaylistDialog isOpen={isSpotifyOpen} close={closeSpotify}/>
 			<SettingsDialog isOpen={isSettingsOpen} onClose={closeSettings}/>
 		</div>
 	)
