@@ -3,7 +3,7 @@ import {cn} from "@/lib/cn";
 import FocusQuote from "@/components/feature/focus-quote/FocusQuote";
 import PomodoroComponents from "@/components/feature/pomodoro/PomodoroComponents";
 import TopBarMenus from "@/components/layout/TopBarMenus";
-import SpotifyPlaylistDialog from "@/components/feature/music/SpotifyPlaylistDialog";
+import SpotifyPlaylistButton from "@/components/feature/music/SpotifyPlaylistButton";
 import getQueryClient from "@/lib/react-query/getQueryClient";
 import {dehydrate, HydrationBoundary} from "@tanstack/react-query";
 import prefetchQuotesQuery from "@/lib/react-query/prefetch-queries/prefetchQuotesQuery";
@@ -33,7 +33,7 @@ export default async function Page() {
 					<div className={cn(
 						"flex", "flex-col", "items-center", "gap-3"
 					)}>
-						<SpotifyPlaylistDialog/>
+						<SpotifyPlaylistButton/>
 						<FocusQuote/>
 					</div>
 				</div>
