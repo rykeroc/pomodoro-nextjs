@@ -12,6 +12,7 @@ export default function EmbeddedSpotifyPlaylist({playlistUrl}: IEmbeddedSpotifyP
 	if (!playlistUrl) return null
 	const playlistId = extractPlaylistId(playlistUrl)
 	const embeddingSrc = `https://open.spotify.com/embed/playlist/${playlistId}?utm_source=generator&theme=1`
+
 	return (
 		<iframe
 			className={cn(
