@@ -8,8 +8,6 @@ import * as React from "react";
 import {MusicalNoteIcon} from "@heroicons/react/24/solid";
 import {Dialog, DialogPanel, DialogTitle, Field, Input} from "@headlessui/react";
 import {glassEffectClasses} from "@/app/_components/common";
-import {DialogBody, DialogHeader} from "next/dist/client/components/react-dev-overlay/internal/components/Dialog";
-import {CloseIcon} from "next/dist/client/components/react-dev-overlay/internal/icons/CloseIcon";
 import Form from "next/form";
 import ErrorMessage from "@/app/_components/ErrorMessage";
 import EmbeddedSpotifyPlaylist from "@/app/_components/SpotifyPlaylistDialog/EmbeddedSpotifyPlaylist";
@@ -44,19 +42,14 @@ export default function SpotifyPlaylistDialog() {
 								"duration-300", "ease-in-out",
 								"data-[closed]:translate-y-full", "data-[closed]:transform-[scale(95%)]", "data-[closed]:opacity-0"
 							)}>
-							<DialogHeader className={"w-full"}>
-								<Button onClick={close}>
-									<CloseIcon/>
-								</Button>
-							</DialogHeader>
 							<DialogTitle as={"h3"}>
 								Spotify Playlist
 							</DialogTitle>
-							<DialogBody className={cn("flex", "flex-col", "w-full", "gap-4",)}>
+							<div className={cn("flex", "flex-col", "w-full", "gap-4",)}>
 
 								<DialogContent/>
 
-							</DialogBody>
+							</div>
 						</DialogPanel>
 					</div>
 				</div>

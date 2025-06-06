@@ -1,8 +1,6 @@
 import {cn} from "@/app/_lib/utils/cn";
 import {Dialog, DialogPanel, DialogTitle,} from "@headlessui/react";
 import {glassEffectClasses} from "@/app/_components/common";
-import {DialogBody, DialogHeader} from "next/dist/client/components/react-dev-overlay/internal/components/Dialog";
-import {CloseIcon} from "next/dist/client/components/react-dev-overlay/internal/icons/CloseIcon";
 import {FocusTask} from "@prisma/client";
 import Button from "@/app/_components/inputs/Button";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
@@ -33,15 +31,10 @@ export default function ActiveFocusTasksDialog({isOpen, handleClose, focusTasksD
 							"duration-300", "ease-in-out",
 							"data-[closed]:translate-y-full", "data-[closed]:transform-[scale(95%)]", "data-[closed]:opacity-0"
 						)}>
-						<DialogHeader className={"w-full"}>
-							<Button onClick={handleClose}>
-								<CloseIcon/>
-							</Button>
-						</DialogHeader>
 						<DialogTitle as={"h3"}>
 							Focus Tasks
 						</DialogTitle>
-						<DialogBody className={cn("flex", "flex-col", "w-full", "gap-4", "min-w-96")}>
+						<div className={cn("flex", "flex-col", "w-full", "gap-4", "min-w-96")}>
 
 							{
 								todoTasks.length === 0 && (
@@ -66,7 +59,7 @@ export default function ActiveFocusTasksDialog({isOpen, handleClose, focusTasksD
 								)
 							}
 
-						</DialogBody>
+						</div>
 					</DialogPanel>
 				</div>
 			</div>

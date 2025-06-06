@@ -6,7 +6,6 @@ import {signOut, useSession} from "next-auth/react";
 import {ISettingsMenuSection} from "@/app/_components/TopBarMenus/SettingsDialog/SettingsMenuSections";
 import {User} from "next-auth";
 import LoginProviderButtons from "@/app/_components/LoginProviderButtons";
-import {revalidatePath} from "next/cache";
 
 const AccountSectionContent = () => {
 	const { data: session } = useSession()
@@ -27,7 +26,6 @@ interface ISignedInContentProps {
 function SignedInContent({user}: ISignedInContentProps) {
 	const handleSignOut = async () => {
 		await signOut({redirectTo: "/"})
-		revalidatePath("/")
 	}
 
 	return (
