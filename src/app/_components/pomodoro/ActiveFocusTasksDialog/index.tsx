@@ -2,7 +2,6 @@ import {cn} from "@/app/_lib/utils/cn";
 import {Dialog, DialogPanel, DialogTitle,} from "@headlessui/react";
 import {glassEffectClasses} from "@/app/_components/common";
 import {FocusTask} from "@prisma/client";
-import Button from "@/app/_components/inputs/Button";
 import {IFocusTasksData} from "@/app/_lib/hooks/useFocusTasksData";
 import {filterCompletedTasks, filterTodoTasks} from "@/app/_lib/utils/focusTasksHelpers";
 import ActiveFocusTasksSection from "@/app/_components/pomodoro/ActiveFocusTasksDialog/ActiveFocusTaskSection";
