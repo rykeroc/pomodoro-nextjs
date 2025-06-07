@@ -1,13 +1,9 @@
-import {ITheme} from "@/app/_lib/contexts/theme/IThemeContext";
 import {HTMLProps} from "react";
-import Button from "@/app/_components/inputs/Button";
-import {cn} from "@/app/_lib/utils/cn";
 import Button from "@/components/common/Button";
-import Image from "next/image";
 import {cn} from "@/lib/cn";
 import {cx} from "class-variance-authority";
 import {LinkIcon} from "@heroicons/react/24/solid";
-import {EBackgroundType, ITheme} from "@/lib/theme/types";
+import {ITheme} from "@/lib/theme/types";
 
 interface IThemeButtonProps extends HTMLProps<HTMLButtonElement> {
 	theme: ITheme

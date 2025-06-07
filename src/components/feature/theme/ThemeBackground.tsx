@@ -1,7 +1,5 @@
 "use client"
 
-import {cn} from "@/app/_lib/utils/cn";
-import Image from "next/image";
 import {cn} from "@/lib/cn";
 import {ReactElement, } from "react";
 import {EBackgroundType, ITheme} from "@/lib/theme/types";
