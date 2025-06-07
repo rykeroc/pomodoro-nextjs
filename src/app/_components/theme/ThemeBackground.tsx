@@ -1,6 +1,5 @@
 "use client"
 
-import Image from "next/image";
 import {cn} from "@/app/_lib/utils/cn";
 import {ReactElement, useContext} from "react";
 import ThemeContext from "@/app/_lib/contexts/theme/ThemeContext";

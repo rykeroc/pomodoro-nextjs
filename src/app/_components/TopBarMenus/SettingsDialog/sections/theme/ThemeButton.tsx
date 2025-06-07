@@ -1,7 +1,6 @@
-import {EBackgroundType, ITheme} from "@/app/_lib/contexts/theme/IThemeContext";
+import {ITheme} from "@/app/_lib/contexts/theme/IThemeContext";
 import {HTMLProps} from "react";
 import Button from "@/app/_components/inputs/Button";
-import Image from "next/image";
 import {cn} from "@/app/_lib/utils/cn";
 import {cx} from "class-variance-authority";
 import {LinkIcon} from "@heroicons/react/24/solid";
