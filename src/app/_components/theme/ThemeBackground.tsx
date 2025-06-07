@@ -33,10 +33,9 @@ interface IBackgroundImageProps {
 }
 
 function StaticBackground({theme}: IBackgroundImageProps) {
-	const imageSrc = `/backgrounds/images/${theme.backgroundFilename}`
-	return <Image
+	return <img
 		className={cn('object-cover', 'brightness-75', 'h-screen', 'w-screen',)}
-		src={imageSrc}
+		src={theme.backgroundFile}
 		alt={theme.themeName}
 		width={backgroundDimensions[0]}
 		height={backgroundDimensions[1]}
@@ -48,13 +47,12 @@ interface IBackgroundVideoProps {
 }
 
 function LiveBackground({theme}: IBackgroundVideoProps) {
-	const videoSrc = `/backgrounds/videos/${theme.backgroundFilename}`
 	const srcType = "video/mp4"
 	return (
 		<video
 			className={cn('object-cover', 'brightness-80', 'h-screen', 'w-screen',)}
 			autoPlay loop muted>
-			<source src={videoSrc} type={srcType}/>
+			<source src={theme.backgroundFile} type={srcType}/>
 		</video>
 	)
 }

@@ -12,8 +12,6 @@ interface IThemeButtonProps extends HTMLProps<HTMLButtonElement> {
 }
 
 function ThemeButton({theme, isActive, onClick}: IThemeButtonProps) {
-	const themeImageFile = theme.backgroundType === EBackgroundType.Static ?
-		`/backgrounds/images/${theme.backgroundFilename}` : `/backgrounds/videos/thumbnails/${theme.backgroundFilename}.png`
 
 	return (
 		<div className={cn(
@@ -25,7 +23,7 @@ function ThemeButton({theme, isActive, onClick}: IThemeButtonProps) {
 					<div className={cn(
 						'h-full', 'aspect-video', "flex-grow"
 					)}>
-						<Image
+						<img
 							className={cn(
 								'h-full', 'w-full', 'object-cover', 'rounded-xl', 'border-2',
 								cx({
@@ -33,8 +31,8 @@ function ThemeButton({theme, isActive, onClick}: IThemeButtonProps) {
 									'border-primary-container': !isActive
 								})
 							)}
-							src={themeImageFile}
-							alt={`${theme.backgroundFilename}`}
+							src={theme.thumbnail}
+							alt={`${theme.backgroundFile}`}
 							width={500}
 							height={500}
 						/>

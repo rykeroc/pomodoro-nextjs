@@ -12,7 +12,8 @@ enum EBackgroundType {
 interface ITheme {
 	id: number
 	themeName: string
-	backgroundFilename: string
+	thumbnail: string
+	backgroundFile: string
 	backgroundSrc?: string
 	backgroundType: EBackgroundType
 	colorClasses: IColorClasses
