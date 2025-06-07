@@ -1,11 +1,7 @@
 import {cn} from "@/lib/cn";
 import {Dialog, DialogPanel, DialogTitle,} from "@headlessui/react";
-import {glassEffectClasses} from "@/app/_components/common";
 import {glassEffectClasses} from "@/components/common";
-import {DialogBody, DialogHeader} from "next/dist/client/components/react-dev-overlay/internal/components/Dialog";
-import {CloseIcon} from "next/dist/client/components/react-dev-overlay/internal/icons/CloseIcon";
 import {FocusTask} from "@prisma/client";
-import Button from "@/components/common/Button";
 import {IFocusTasksData} from "@/hooks/useFocusTasksData";
 import {filterCompletedTasks, filterTodoTasks} from "@/lib/focusTasksHelpers";
 import ActiveFocusTasksSection from "@/components/feature/pomodoro/ActiveFocusTasksSection";

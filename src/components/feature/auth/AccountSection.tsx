@@ -5,7 +5,6 @@ import Button from "@/components/common/Button";
 import {signOut, useSession} from "next-auth/react";
 import {ISettingsMenuSection} from "@/components/feature/settings/settingsMenuSections";
 import {User} from "next-auth";
-import LoginProviderButtons from "@/app/_components/LoginProviderButtons";
 import LoginProviderButtons from "@/components/feature/auth/LoginProviderButtons";
 
 const AccountSectionContent = () => {
