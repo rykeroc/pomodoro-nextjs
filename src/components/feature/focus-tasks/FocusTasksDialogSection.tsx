@@ -43,7 +43,6 @@ export default function FocusTasksDialogSection({title, focusTasks, focusTasksDa
 
 		await focusTasksData.updateMutation.mutateAsync(updateArgs)
 		if (checked) focusTasksData.setActiveTask(null)
-		await focusTasksData.query.refetch()
 	}
 
 	async function handleDelete(focusTask: FocusTask) {
@@ -53,7 +52,6 @@ export default function FocusTasksDialogSection({title, focusTasks, focusTasksDa
 		}
 		await focusTasksData.deleteMutation.mutateAsync(deleteArgs)
 		focusTasksData.setActiveTask(null)
-		await focusTasksData.query.refetch()
 	}
 
 	const checkboxes = focusTasks.map(task => {
@@ -141,7 +139,7 @@ function FocusItem(
 				checked={focusTask.isComplete}
 				onChange={onChange}>
 				<div className={cn("flex", "items-center", "justify-between")}>
-					<Form action={handleUpdate}>
+					<Form action={handleUpdate} className={"w-full"}>
 						<Input name={"id"} value={focusTask.id} hidden readOnly/>
 						<Input
 							ref={inputRef}

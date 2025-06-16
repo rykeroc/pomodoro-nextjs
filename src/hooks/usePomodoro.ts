@@ -85,7 +85,6 @@ function usePomodoro(userId: string): IPomodoro {
 		// Return if not active task
 		if (!focusTasksData.activeTask) return
 
-		console.log("updateActiveTask")
 		const activeTask: FocusTask = focusTasksData.activeTask
 
 		// Calculate elapsed time
@@ -185,8 +184,9 @@ function usePomodoro(userId: string): IPomodoro {
 	// Finish a focus session early
 	const finishFocus = useCallback(() => {
 		// Update the active task if focus session
-		if (pomodoroInfo.stage === PomodoroStages.focusSession)
+		if (pomodoroInfo.stage === PomodoroStages.focusSession) {
 			updateActiveTask()
+		}
 
 		countdown.reset(PomodoroStages.focusSession.seconds)
 		setPomodoroInfo(({

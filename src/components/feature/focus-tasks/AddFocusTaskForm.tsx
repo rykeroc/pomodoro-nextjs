@@ -41,6 +41,7 @@ export default function AddFocusTaskForm({focusTasksData}: IAddFocusTaskFormProp
 					placeholder={"Add task"}
 					className={cn(
 						"bg-transparent", "border-transparent", "text-primary-text", "placeholder-secondary-text",
+						"w-full",
 						"focus:outline-none", "peer"
 					)}
 					required

@@ -21,7 +21,10 @@ function PomodoroTimer({pomodoroTimer, focusTasksData, handleOpen}: IPomodoroTim
 
 	const focusTaskSelectorButton = (
 		<Button onClick={handleOpen} disabled={!session}>
-			<h4 className={"text-secondary-text"}>
+			<h4 className={cn(
+				"text-left", "line-clamp-1", "overflow-ellipsis",
+				"text-secondary-text",
+			)}>
 				{activeTaskName}
 			</h4>
 			{
@@ -147,15 +150,18 @@ function PomodoroTimer({pomodoroTimer, focusTasksData, handleOpen}: IPomodoroTim
 								{pomodoroTimer.stage.name}
 							</h5>
 
-							<div className={cn("flex", "flex-col", "gap-1", "items-center")}>
-								<PomodoroFocusCountIndicators focusCount={pomodoroTimer.focusCount}/>
+							<div className={cn("w-3/4", "flex", "flex-col", "gap-4", "items-center")}>
+								<div className={cn("flex", "flex-col", "gap-1", "items-center")}>
+									<PomodoroFocusCountIndicators focusCount={pomodoroTimer.focusCount}/>
 
-								<h1>
-									{minutesString}
-								</h1>
+									<h1>
+										{minutesString}
+									</h1>
+								</div>
+
+								{focusTaskSelectorButton}
 							</div>
 
-							{focusTaskSelectorButton}
 
 						</div>
 					</foreignObject>

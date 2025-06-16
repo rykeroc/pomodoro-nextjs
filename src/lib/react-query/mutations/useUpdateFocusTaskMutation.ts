@@ -3,7 +3,7 @@ import {FocusTask} from "@prisma/client";
 import {updateFocusTask} from "@/lib/actions/focus-tasks";
 import {IFocusTaskUpdateArgs} from "@/lib/actions/focus-tasks/types";
 
-type UseUpdateFocusTaskMutationOptions = UseMutationOptions<FocusTask, Error, IFocusTaskUpdateArgs, unknown>
+type UseUpdateFocusTaskMutationOptions = UseMutationOptions<FocusTask, Error, IFocusTaskUpdateArgs, { wasActive: boolean }>
 
 function useUpdateFocusTaskMutation(
 	options?: UseUpdateFocusTaskMutationOptions
