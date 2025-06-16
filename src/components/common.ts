@@ -9,7 +9,7 @@ const glassEffectClasses: string[] = [
 	"border-primary-container",
 	"bg-gradient-to-br",
 	"from-primary-container",
-	"backdrop-blur-sm",
+	"backdrop-blur",
 ]
 
 interface IDialogMenuProps {
