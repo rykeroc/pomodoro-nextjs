@@ -1,4 +1,4 @@
-import type {Metadata} from "next";
+import type {Metadata, Viewport} from "next";
 import "./globals.css";
 import {Montserrat} from 'next/font/google'
 import {cn} from "@/lib/cn";
@@ -20,6 +20,13 @@ export const metadata: Metadata = {
 	title: "Focus Cafe",
 	description: "Pomodoro timer app to manage focus duration.",
 };
+
+export const viewport: Viewport = {
+	width: 'device-width',
+	initialScale: 1.0,
+	minimumScale: 1.0,
+	userScalable: false,
+}
 
 export default async function RootLayout({children,}: Readonly<{ children: ReactNode; }>) {
 	const session = await auth()

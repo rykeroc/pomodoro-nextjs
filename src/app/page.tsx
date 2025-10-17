@@ -23,10 +23,11 @@ export default async function Page() {
 			<div>
 
 				<div className={cn(
-					"fixed", 'h-screen', 'w-screen', 'z-10', 'p-5',
+					"fixed", "h-screen", "w-screen", "min-h-[100vh]", 'z-10', 'p-5',
 					"flex", 'flex-col', 'justify-between'
 				)}>
 					<TopBarMenus/>
+
 					<PomodoroComponents/>
 
 					<div className={cn(
@@ -37,7 +38,7 @@ export default async function Page() {
 				</div>
 
 				<div className={cn(
-					"z-0", 'h-screen', 'w-screen',
+					"z-0", 'h-dvh', 'w-screen',
 					'fixed', 'top-1/2', 'left-1/2', '-translate-x-1/2', '-translate-y-1/2',
 				)}>
 					<ThemeBackground/>

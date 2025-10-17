@@ -72,10 +72,10 @@ function PomodoroTimer({pomodoroTimer, focusTasksData, handleOpen}: IPomodoroTim
 		)
 	}
 
-	const size = 450
+	const baseSize = 450
 	const strokeWidth = 8
-	const viewBox = `0 0 ${size} ${size}`
-	const radius = (size - strokeWidth) / 2
+	const viewBox = `0 0 ${baseSize} ${baseSize}`
+	const radius = (baseSize - strokeWidth) / 2
 	const dashArray = radius * Math.PI * 2
 
 	const remainingSeconds = pomodoroTimer.stage === PomodoroStages.focusSession ?
@@ -89,31 +89,24 @@ function PomodoroTimer({pomodoroTimer, focusTasksData, handleOpen}: IPomodoroTim
 	const {theme} = useUserPreferences()
 	const strokeClass = theme.colorClasses.stroke ?? "stroke-primary-text"
 
-
 	return (
-		<>
 			<div className={cn(
-				'flex', 'flex-col', 'justify-center', 'items-center', 'gap-6'
+				'flex', 'flex-col', 'justify-center', 'items-center', 'gap-6', 'w-full'
 			)}>
-				<svg width={size} height={size} viewBox={viewBox}>
-					{/* Background */}
-					<foreignObject
-						x={"0%"}
-						y={"0%"}
-						width={size}
-						height={size}>
-						<div className={cn(
-							...glassEffectClasses,
-							'rounded-full', 'absolute',
-							'h-full', 'w-full'
-						)}/>
-					</foreignObject>
-
+				<svg viewBox={viewBox}
+				     className={cn(
+						 'w-full',
+						 'max-w-[450px]',
+						 'h-auto',
+					     'rounded-full',
+						 ...glassEffectClasses,
+				     )}
+				>
 					{/* Outline circle */}
 					<circle
 						className={"fill-none stroke-primary-container opacity-75"}
-						cx={size / 2}
-						cy={size / 2}
+						cx={baseSize / 2}
+						cy={baseSize / 2}
 						strokeWidth={`${strokeWidth - 1}px`}
 						r={radius}
 					/>
@@ -125,55 +118,44 @@ function PomodoroTimer({pomodoroTimer, focusTasksData, handleOpen}: IPomodoroTim
 							"fill-none",
 							"transition-all", "ease-linear",
 						)}
-						cx={size / 2}
-						cy={size / 2}
+						cx={baseSize / 2}
+						cy={baseSize / 2}
 						r={radius}
 						strokeLinecap={"butt"}
 						strokeWidth={`${strokeWidth}px`}
 						strokeDasharray={dashArray}
 						strokeDashoffset={isNaN(dashOffset) ? 0 : dashOffset}
-						transform={`rotate(-90 ${size / 2} ${size / 2})`}
+						transform={`rotate(-90 ${baseSize / 2} ${baseSize / 2})`}
 					/>
-
-					{/* Timer details */}
-					<foreignObject
-						x={"0%"}
-						y={"0%"}
-						width={size}
-						height={size}>
-						<div
-							className={"flex flex-col items-center justify-center w-full h-full gap-5"}>
-							<h5 className={cn(
-									["text-primary-text"],
-									{ "invisible": pomodoroTimer.stage === PomodoroStages.focusSession }
-								)}>
-								{pomodoroTimer.stage.name}
-							</h5>
-
-							<div className={cn("w-3/4", "flex", "flex-col", "gap-4", "items-center")}>
-								<div className={cn("flex", "flex-col", "gap-1", "items-center")}>
-									<PomodoroFocusCountIndicators focusCount={pomodoroTimer.focusCount}/>
-
-									<h1>
-										{minutesString}
-									</h1>
-								</div>
-
-								{focusTaskSelectorButton}
-							</div>
-
-
-						</div>
-					</foreignObject>
 				</svg>
+
+
+				{/* Overlay timer content */}
+				<div className="absolute inset-0 flex flex-col items-center justify-center gap-5 z-50 pointer-events-none">
+					<h5 className={cn(
+						'text-primary-text',
+						{ 'invisible': pomodoroTimer.stage === PomodoroStages.focusSession }
+					)}>
+						{pomodoroTimer.stage.name}
+					</h5>
+
+					<div className="flex flex-col gap-1 items-center">
+						<PomodoroFocusCountIndicators focusCount={pomodoroTimer.focusCount} />
+						<h1 className={cn("text-7xl", "md:text-8xl")}>{minutesString}</h1>
+					</div>
+
+					{focusTaskSelectorButton}
+
+					<h5 className={'invisible'}>
+						Hidden spacer
+					</h5>
+				</div>
 
 				<div className={"flex flex-row gap-3"}>
 					<PomodoroButtons state={pomodoroTimer.state}/>
 				</div>
 			</div>
-		</>
 	)
 }
-
 
 export default PomodoroTimer

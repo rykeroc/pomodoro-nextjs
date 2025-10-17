@@ -32,7 +32,7 @@ export default function PomodoroFocusCountIndicators({focusCount}: IPomodoroFocu
 
 	return (
 		<div className={cn(
-			"flex", "flex-row", "gap-6"
+			"flex", "flex-row", "gap-6", "justify-center", "w-full"
 		)}>
 			{indicators}
 		</div>

@@ -38,7 +38,7 @@ export default function LoginProviderButtons() {
 		return (
 			<Button key={p.name} onClick={handleSignIn}>
 				<Image src={`/logos/${p.logo}`} alt={p.logoAlt} width={logoSize} height={logoSize}/>
-				<p>Continue with {p.name}</p>
+				<p>{p.name}</p>
 			</Button>
 		)
 	})
