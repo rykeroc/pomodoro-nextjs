@@ -1,7 +1,7 @@
 "use client"
 
 import {cn} from "@/lib/cn";
-import {ReactElement, } from "react";
+import {ReactElement,} from "react";
 import {EBackgroundType, ITheme} from "@/lib/theme/types";
 import useUserPreferences from "@/hooks/useUserPreferences";
 
@@ -15,7 +15,6 @@ export default function ThemeBackground() {
 		<StaticBackground theme={theme}/>
 	) : (
 		// Display video background
-
 		<LiveBackground theme={theme}/>
 	)
 	return (
@@ -48,7 +47,11 @@ function LiveBackground({theme}: IBackgroundVideoProps) {
 	return (
 		<video
 			className={cn('object-cover', 'brightness-80', 'h-screen', 'w-screen',)}
-			autoPlay loop muted>
+			autoPlay
+			loop
+			muted
+			playsInline
+		>
 			<source src={theme.backgroundFile} type={srcType}/>
 		</video>
 	)
