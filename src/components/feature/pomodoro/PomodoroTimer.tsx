@@ -99,6 +99,7 @@ function PomodoroTimer({pomodoroTimer, focusTasksData, handleOpen}: IPomodoroTim
 						 'max-w-[450px]',
 						 'h-auto',
 					     'rounded-full',
+						 'z-40',
 						 ...glassEffectClasses,
 				     )}
 				>
@@ -144,7 +145,9 @@ function PomodoroTimer({pomodoroTimer, focusTasksData, handleOpen}: IPomodoroTim
 						<h1 className={cn("text-7xl", "md:text-8xl")}>{minutesString}</h1>
 					</div>
 
-					{focusTaskSelectorButton}
+					<div className={cn("pointer-events-auto")}>
+						{focusTaskSelectorButton}
+					</div>
 
 					<h5 className={'invisible'}>
 						Hidden spacer
